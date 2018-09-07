@@ -1,0 +1,203 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background-color: #C1BDBA;
+  }
+  
+a { 
+    text-decoration: none;
+} 
+    a:visited {
+        color: #9D9D9D;
+    }
+    a:active {
+        color: #9D9D9D; 
+    }
+    
+   
+.Layout{
+    width: 100%;
+    max-width: 520px;
+    padding: 5px;
+    padding-bottom: 40px;
+    margin: auto;
+    margin-top: 100px;
+}
+
+.form{
+    background-color: #24313C;
+    color: #E1E3E5;
+    box-shadow:0 4px 10px 4px #959696;
+    border-radius: 4px;
+    max-width:700px;
+    padding: 40px;
+    min-width: 220px;
+}
+
+.AuthForm{
+   padding: 10px;
+}
+
+.AuthFormLayout{
+    width: 100%;
+    margin: auto;
+    text-align: left;
+}
+
+.InputName{
+    font-size: 18px;
+    padding-top: 10px;
+}
+
+input {
+    box-sizing: border-box;
+    font-size: 17px;
+    display:block;
+    height:100%;
+    width: 100%;
+    padding:5px 10px;
+    background:none;
+    background-image:none;
+    border:1px solid #a0b3b0;
+    color:#ffffff;
+    border-radius:0;
+    transition:border-color .5s ease-in, box-shadow .25s ease-in;
+    border-color: #8EA09F;
+    outline:0;
+
+}
+
+button, input[type=submit] {
+    width: 100%;
+    border:0;
+    outline:none;
+    border-radius:0;
+    padding:15px 0;
+    font-size:2rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    background:#1ab188;
+    color:#fff;
+    transition:all.4s ease;
+    -webkit-appearance: none;
+    
+  }
+
+  .formLink{
+    display: inline-block;
+    padding: 15px 0px;
+    text-decoration: underline
+ }
+
+  button:hover,  button:focus, input[type=submit]:hover, input[type=submit]:focus {
+    background: #18a17d;
+    cursor: pointer;
+  }
+
+  button:disabled, input[type=submit]:disabled {
+    background: #75ac9d;
+    cursor: pointer;
+  }
+  
+
+input:focus {
+    outline:0;
+    border-color:#169674;
+}
+/* HEADER */
+
+.Header{
+    width: 100%;
+    background-color: #222222;
+    color: #9D9D9D;
+    height: 60px;
+}
+
+.HeaderLink{
+    height: 100%;
+    width: 120px;
+    display: inline-block;
+    text-align: center;
+    line-height: 60px;
+    cursor: pointer;
+    color: white;
+}
+
+.AuthLinks{
+    display: block;
+    float: right;
+    border: none;
+}
+
+.currentHeaderLink{
+    background-color: #080808;
+}
+
+.HeaderLink:hover{
+    color: white;
+}
+
+.LogoutButton{
+   float: right;
+   border-right: none;
+}
+
+.ErrorMessage{
+    color: red;
+    font-size: 13px;
+    margin-top: 15px;
+}
+
+.ErrorMessage > p {
+    margin-top: 0px;
+    margin-bottom: 5px;
+
+}
+
+.Footer{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.friendBlock{
+    display: block;
+    border-bottom: 1px solid rgba(156, 155, 155, 0.192);
+    height: 60px;
+    line-height: 60px;
+}
+
+.friendBlock:last-child{
+    border: none;
+}
+
+.friendListBlock{
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    padding: 0px;
+}
+
+.friendNameBlock{
+    float: left;
+    line-height: 30px; 
+    overflow: hidden;
+    width: 60%;
+    height: 100%;
+}
+
+.friendNameUserInfo{
+   font-size: 13px;
+}
+
+.friendRemoveButton{
+    float: right;
+    height: 100%;
+    width: 20%;
+    line-height: 30px;
+    max-width: 60px;
+    /* min-width: 60px; */
+}
