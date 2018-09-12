@@ -61,32 +61,35 @@ class LoginForm extends Component {
     render() {
         if (AuthService.loggedIn())
             return (<div>Please, log out</div>);
-        return (
-            <div className="AuthFormLayout">
-                <form onSubmit={this.onSubmit} className="AuthForm">
-                    <h1>Login</h1>
-                    <br />
-                    <TextField type="text" name="email" value={this.state.email} valid={!this.state.emailError} inputName="Email" onChange={(e) => this.onInputChange(e, "email")} />
-                    <TextField type="password" name="password" value={this.state.password} valid={!this.state.passwordError} inputName="Password" onChange={(e) => this.onInputChange(e, "password")} />
-                    <br />
-                    <br />
-                    <input type="submit" value="Log in" disabled={!this.state.valid}></input>
-                    <Link to="/registration" className="formLink">new here?</Link>
-                    
-                    {this.renderError()}
-                </form>
+        return (<div className="Layout">
+            <div className="form">
+                <div className="AuthFormLayout">
+                    <form onSubmit={this.onSubmit} className="authForm">
+                        <h1>Welcome back in Collector!</h1>
+                        <br />
+                        <h2>Please, log in</h2>
+
+                        <TextField type="text" name="email" value={this.state.email} valid={!this.state.emailError} inputName="Email" errorText={this.state.emailError} onChange={(e) => this.onInputChange(e, "email")} />
+                        <TextField type="password" name="password" value={this.state.password} valid={!this.state.passwordError} inputName="Password" errorText={this.state.passwordError} onChange={(e) => this.onInputChange(e, "password")} />
+                        <br />
+                        <input type="submit" value="Log in" disabled={!this.state.valid} className="buttonBigGreen"></input>
+                        <Link to="/registration" className="formLink">new here?</Link>
+                        <br />
+                        <br />
+                        {this.renderError()}
+                    </form>
+                </div>
             </div>
+        </div>
         );
     }
 
 
 
     renderError() {
-        var display = this.state.emailError || this.state.passwordError || this.state.errorMessage || false;
+        var display = this.state.errorMessage || false;
         return (
-            <div className="ErrorMessage" style={{ display: display ? "" : "none" }}>
-                <p>{this.state.emailError}</p>
-                <p>{this.state.passwordError}</p>
+            <div className="errorMessage" style={{ display: display ? "" : "none" }}>
                 <p>{this.state.errorMessage}</p>
             </div>
         )

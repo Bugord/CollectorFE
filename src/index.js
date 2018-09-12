@@ -10,33 +10,36 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './components/styles.css';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
-import {friendsApp} from './Reducers/friendsReducers'
+import App from './Reducers/mainReducer'
+import friendListPage from './friendListPage';
 
-const store = createStore(friendsApp, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
-store.subscribe(() =>{
-  var state = store.getState()
-  console.log(state);
-  localStorage.setItem("storage", JSON.stringify(state))}
+export const store = createStore(App, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+store.subscribe(() => {
+    var state = store.getState()
+    //   console.log(state);
+    localStorage.setItem("storage", JSON.stringify(state))
+}
 
 )
 
 var routes = (
     <Provider store={store}>
-    <BrowserRouter>
-        <main>
-            <Header/>
-            <div className="Layout">
-                <div className="form">
-                    <Switch>
-                        <Route exact path="/" component={MainPage}/>
-                        <Route path="/registration" component={RegistrationForm} />
-                        <Route path="/login" component={LoginForm} />
-                    </Switch>
-                </div>
-            </div>
-            <Footer/>
-        </main>
-    </BrowserRouter>
+        <BrowserRouter>
+            <main>
+                <Header />
+                <Switch>
+                    <Route exact path="/" component={MainPage} />
+                    {/* <div className="Layout">
+                        <div className="form"> */}
+                            <Route path="/registration" component={RegistrationForm} />
+                            <Route path="/friends" component={friendListPage} />
+                            <Route path="/login" component={LoginForm} />
+                        {/* </div>
+                    </div> */}
+                </Switch>
+                <Footer />
+            </main>
+        </BrowserRouter>
     </Provider>
 );
 ReactDOM.render(routes, document.getElementById('root'));

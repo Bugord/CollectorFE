@@ -1,4 +1,6 @@
 import AuthService from './AuthService'
+import {store} from './index'
+import { updateFriends, invitesFriend } from './Actions/friendsActions'
 
 export default class FriendsService {
 
@@ -17,7 +19,10 @@ export default class FriendsService {
     }
    
     static getAllFriends() {
-        return AuthService.request('api/getAllFriends')
+        return AuthService.request('api/getAllFriends').then((res) => {
+            store.dispatch(updateFriends(res.data.friends));
+            store.dispatch(invitesFriend(res.data.invites));            
+        })
     }
     
     static inviteFriend(friendId, userId) {

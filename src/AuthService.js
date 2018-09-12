@@ -1,6 +1,8 @@
 import axios from 'axios';
 import decode from 'jwt-decode';
 import Conf from './Configuration'
+import {store} from './index'
+import { userLogin, userLogout } from './Actions/userActions'
 
 export default class AuthService{
     static register(email, username, password, firstName, lastName,callback){ 
@@ -12,7 +14,7 @@ export default class AuthService{
             lastName : lastName
         }).then(res => {
             AuthService.setToken(res.data.data.token);
-            localStorage.setItem("user", res.data.data.user)
+            AuthService.setUser(res.data.data.user);
             callback();
         })
         .catch(res => 
@@ -39,7 +41,7 @@ export default class AuthService{
             password : password}
         ).then(res => {
             AuthService.setToken(res.data.data.token);
-            localStorage.setItem("user", JSON.stringify(res.data.data.user))
+            AuthService.setUser(res.data.data.user);
             callback();
         })
         .catch(res => 
@@ -48,18 +50,6 @@ export default class AuthService{
                 callback(message);
             });
     };
-
-    static getInfo(callback)
-    {
-         axios.post(Conf.domain + 'api/info'
-        ).then(res => {
-            AuthService.setLogin(res.data.login);
-            callback(AuthService.getLogin());
-        })
-        .catch(res => 
-            {
-            });
-    }
 
     static handleException(res)
     {
@@ -94,15 +84,15 @@ export default class AuthService{
             return false;
         }
     }
-
-    static setLogin(login)
-    {
-        localStorage.setItem("login", login);
-    }
-
     static getLogin()
     {
-        return localStorage.getItem("login");
+        var user = store.getState().userApp.user;
+        return  user ? user.username : "";
+    }
+
+    static setUser(user)
+    {
+        store.dispatch(userLogin(user));
     }
 
     static setToken(token)
@@ -125,7 +115,7 @@ export default class AuthService{
 
     static logout() {
         localStorage.removeItem('token');
-        localStorage.removeItem('login');
+        store.dispatch(userLogout());
         AuthService.updateAuthHeader();
     }
 }

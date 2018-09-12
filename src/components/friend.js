@@ -1,12 +1,16 @@
 import React from 'react'
 
-export const Friend = ({ id, friend, onClickDelete, onClickInvite }) => (
+export const Friend = ({ id, friend, onClickDelete, onClickInvite, editable }) => (
   <li key={id} className="friendBlock">
-    <div className="friendNameBlock" style = {{width: !friend.isSynchronized ? "60%" : "80%"}}> {friend.name} {friend.isSynchronized ?
-      <div className="friendNameUserInfo">{friend.firstName} {friend.lastName} ({friend.email})</div> : " "} 
-    </div>
-    <button className="friendRemoveButton" type="button" value={id} onClick={(e) => { onClickDelete(e.target.value) }}>✕</button>
-    {!friend.isSynchronized ? <button className="friendRemoveButton" type="button" value={id} onClick={(e) => { onClickInvite(e.target.value) }}>V</button> : ""}
-    
+    <img className="friendIcon" src={require('../images/friendIcon.png')} alt="Notifications" />
+    <div className="friendInfo">{friend.name} {friend.isSynchronized ? <span>({friend.firstName} {friend.lastName})</span> : null} <br /> {friend.email}</div>
+
+    {editable ?
+      <div>
+        {!friend.isSynchronized ? <img className="friendIcon buttonIcon" src={require('../images/synchronizeIcon.png')} alt="synchronize" onClick={(e) => { onClickInvite(id)}}/> : null}
+        <img className="friendIcon buttonIcon" src={require('../images/deleteIcon.png')} alt="delete" onClick={(e) => onClickDelete(id)} />
+      </div> :
+      <div className="friendDebt friendDebtMoreZero" >+256 BYR</div>
+    }
   </li>
 )

@@ -1,7 +1,7 @@
 import React from 'react'
 import {Friend} from './friend'
 
-export const FriendsList = ({ friends, onClickDelete, onClickInvite }) => (
+export const FriendsList = ({ friends, onClickDelete, onClickInvite, editable }) => (
   <ul className="friendListBlock">
     {friends.map(friend =>
       <Friend
@@ -10,6 +10,7 @@ export const FriendsList = ({ friends, onClickDelete, onClickInvite }) => (
         friend={friend}
         onClickDelete={onClickDelete}
         onClickInvite={onClickInvite}
+        editable={editable}
       />
     )}
   </ul>

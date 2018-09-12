@@ -6,7 +6,6 @@ import {
     FRIEND_INVITES
  } from '../Actions/friendsActions'
 
-
 const initialState = {
     friends: [],
     invites: []
