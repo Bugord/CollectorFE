@@ -3,9 +3,6 @@ import AuthService from './AuthService'
 import TextField from './TextField'
 import { Link } from "react-router-dom";
 
-
-import './components/styles.css';
-
 class LoginForm extends Component {
     constructor(props) {
         super(props);
@@ -61,7 +58,8 @@ class LoginForm extends Component {
     render() {
         if (AuthService.loggedIn())
             return (<div>Please, log out</div>);
-        return (<div className="Layout">
+        return (
+        <div className="Layout">
             <div className="form">
                 <div className="AuthFormLayout">
                     <form onSubmit={this.onSubmit} className="authForm">

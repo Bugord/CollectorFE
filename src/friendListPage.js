@@ -88,7 +88,7 @@ class FriendListPage extends Component {
 
     authorizedRender() {
         return (
-            <div className="Layout">
+            // <div className="Layout">
                 <div className="form">
                     <TextField type="text" name="friendName" value={this.state.friendName} valid={true} inputName="Friend name" onChange={(e) => this.onInputChange(e, "friendName")} />
                     <button type="button" onClick={this.addFriend} disabled={!this.state.valid} className="buttonBigGreen">Add friend</button>
@@ -98,7 +98,7 @@ class FriendListPage extends Component {
                     {this.renderError()}
                     {/* <InvitesList invites={this.props.invites} onInviteDeny={(e) => this.onInviteDeny(e)} onInviteApprove={(e) => this.onInviteApprove(e)} /> */}
                 </div>
-            </div>
+            // </div>
 
 
         )

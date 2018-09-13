@@ -3,8 +3,6 @@ import AuthService from './AuthService'
 import TextField from './TextField'
 import { Link } from "react-router-dom";
 
-import './components/styles.css';
-
 class RegistrationForm extends Component {
     constructor(props) {
         super(props);

@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import AuthService from './AuthService'
 import { Link } from "react-router-dom";
 
-import './components/styles.css';
-
 class Popup extends Component {
     constructor(props) {
         super(props);
@@ -37,7 +35,7 @@ class Popup extends Component {
                 <hr />
                 <div>
                     <ul className="popupList">
-                        <li><a>Profile</a></li>
+                        <li><Link to="/profile">Profile</Link></li>
                         <li><a>Settings</a></li>
                         <li><Link to="/friends" onClick={this.props.togglePopup}>Friends</Link></li>
                     </ul>

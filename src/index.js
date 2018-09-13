@@ -7,11 +7,11 @@ import LoginForm from './LoginForm'
 import MainPage from './MainPage'
 import registerServiceWorker from './registerServiceWorker';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import './components/styles.css';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import App from './Reducers/mainReducer'
 import friendListPage from './friendListPage';
+import profilePage from './profilePage';
 
 export const store = createStore(App, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 store.subscribe(() => {
@@ -29,13 +29,14 @@ var routes = (
                 <Header />
                 <Switch>
                     <Route exact path="/" component={MainPage} />
-                    {/* <div className="Layout">
-                        <div className="form"> */}
+                    <div className="Layout">
+                        <div className="form">
                             <Route path="/registration" component={RegistrationForm} />
                             <Route path="/friends" component={friendListPage} />
                             <Route path="/login" component={LoginForm} />
-                        {/* </div>
-                    </div> */}
+                            <Route path="/profile" component={profilePage} />
+                        </div>
+                    </div>
                 </Switch>
                 <Footer />
             </main>
