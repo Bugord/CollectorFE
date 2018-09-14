@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import AuthService from './AuthService'
-import TextField from './TextField'
+import AuthService from './authService'
+import TextField from './textField'
 import { Link } from "react-router-dom";
 
 class RegistrationForm extends Component {
@@ -115,28 +115,26 @@ class RegistrationForm extends Component {
         if (AuthService.loggedIn())
             return (<div>Please, log out</div>);
         return (
-            <div className="Layout">
-                <div className="form">
-                    <div className="AuthFormLayout">
-                        <form onSubmit={this.onSubmit} className="authForm">
-                            <h1>I see you're new here?</h1>
-                            <br />
-                            <h2>Please, register</h2>
-                            <TextField type="email" name="email" value={this.state.email} valid={!this.state.emailError} inputName="Email" errorText={this.state.emailError} onChange={(e) => this.onInputChange(e, "email")} />
-                            <TextField type="text" name="username" value={this.state.username} valid={!this.state.usernameError} inputName="Username" errorText={this.state.usernameError} onChange={(e) => this.onInputChange(e, "username")} />
-                            <TextField type="password" name="password" value={this.state.password} valid={!this.state.passwordError} inputName="Password" errorText={this.state.passwordError} onChange={(e) => this.onInputChange(e, "password")} />
-                            <TextField type="password" name="passwordRepeat" value={this.state.passwordRepeat} valid={!this.state.passwordRepeatError} inputName="Repeat password" errorText={this.state.passwordRepeatError} onChange={(e) => this.onInputChange(e, "passwordRepeat")} />
-                            <TextField type="text" name="firstName" value={this.state.firstName} valid={!this.state.firstNameError} inputName="First name" errorText={this.state.firstNameError} onChange={(e) => this.onInputChange(e, "firstName")} />
-                            <TextField type="text" name="lastName" value={this.state.lastName} valid={!this.state.lastNameError} inputName="Last name" errorText={this.state.lastNameError} onChange={(e) => this.onInputChange(e, "lastName")} />
-                            <br />
-                            <input type="submit" value="Register" disabled={!this.state.valid} className="buttonBigGreen"></input>
-                            <Link to="/login" className="formLink">already registered?</Link>
-                            <br />
-                            <br />
-                            {this.renderError()}
-                        </form>
-                    </div>
-                </div>
+            <div className="authFormLayout">
+                <form onSubmit={this.onSubmit} className="authForm">
+                    <h1>I see you're new here?</h1>
+                    <br />
+                    <h2>Please, register</h2>
+                    <TextField type="email" name="email" value={this.state.email} valid={!this.state.emailError} inputName="Email" errorText={this.state.emailError} onChange={(e) => this.onInputChange(e, "email")} />
+                    <TextField type="text" name="username" value={this.state.username} valid={!this.state.usernameError} inputName="Username" errorText={this.state.usernameError} onChange={(e) => this.onInputChange(e, "username")} />
+                    <TextField type="password" name="password" value={this.state.password} valid={!this.state.passwordError} inputName="Password" errorText={this.state.passwordError} onChange={(e) => this.onInputChange(e, "password")} />
+                    <TextField type="password" name="passwordRepeat" value={this.state.passwordRepeat} valid={!this.state.passwordRepeatError} inputName="Repeat password" errorText={this.state.passwordRepeatError} onChange={(e) => this.onInputChange(e, "passwordRepeat")} />
+                    <TextField type="text" name="firstName" value={this.state.firstName} valid={!this.state.firstNameError} inputName="First name" errorText={this.state.firstNameError} onChange={(e) => this.onInputChange(e, "firstName")} />
+                    <TextField type="text" name="lastName" value={this.state.lastName} valid={!this.state.lastNameError} inputName="Last name" errorText={this.state.lastNameError} onChange={(e) => this.onInputChange(e, "lastName")} />
+                    <br />
+                    <input type="submit" value="Register" disabled={!this.state.valid} className="button button--green"></input>
+                    <br />
+                    <br />
+                    <Link to="/login" className="formLink">already registered?</Link>
+                    <br />
+                    <br />
+                    {this.renderError()}
+                </form>
             </div>
 
         )

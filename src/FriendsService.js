@@ -1,5 +1,5 @@
-import AuthService from './AuthService'
-import {store} from './index'
+import AuthService from './authService'
+import {store} from '.'
 import { updateFriends, invitesFriend } from './Actions/friendsActions'
 
 export default class FriendsService {

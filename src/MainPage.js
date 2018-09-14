@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Redirect } from "react-router-dom";
-import AuthService from './AuthService'
+import AuthService from './authService'
 import { FriendsList } from './components/friendsList'
 import { connect } from 'react-redux'
 import { Link } from "react-router-dom";
-import FriendsService from './FriendsService';
+import FriendsService from './friendsService';
 import DebtBlock from './components/debt/debtBlock';
 
 class MainPage extends Component {
@@ -28,10 +28,9 @@ class MainPage extends Component {
  
                     </div>
                     <div className="friendBlockContent">
-                        <div className="friendsContent">
-                            <FriendsList friends={this.props.friends} editable={false} />                            
-                        </div>
-                        <Link to="/friends" className="buttonBigGreen">Edit</Link>
+                        <FriendsList friends={this.props.friends} editable={false} />
+                        <br/>                                              
+                        <Link to="/friends" className="button button--green">Edit</Link>
                     </div>
                 </div>
             </div>

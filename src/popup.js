@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AuthService from './AuthService'
+import AuthService from './authService'
 import { Link } from "react-router-dom";
 
 class Popup extends Component {
@@ -26,8 +26,8 @@ class Popup extends Component {
     render() {
         return (
             <div className="popup" ref={this.setWrapperRef}>
-                <div className="username">{AuthService.getLogin()}</div>
-                <div type="button" className="buttonClosePopup" onClick={this.props.togglePopup}>✕</div>
+                <div className="popup__username">{AuthService.getLogin()}</div>
+                <div type="button" className="popup__closeButton" onClick={this.props.togglePopup}>✕</div>
                 <hr />
                 <ul className="popupList">
                  <li><Link to="/" onClick={this.props.togglePopup}>Main page</Link></li>

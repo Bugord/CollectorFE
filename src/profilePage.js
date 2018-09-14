@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from "react-router-dom";
-import AuthService from './AuthService'
+import AuthService from './authService'
 import { connect } from 'react-redux'
 
 class ProfilePage extends Component {

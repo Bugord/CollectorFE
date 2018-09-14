@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { Redirect } from "react-router-dom";
-import AuthService from './AuthService'
-import FriendsService from './FriendsService'
-import TextField from './TextField'
+import AuthService from './authService'
+import FriendsService from './friendsService'
+import TextField from './textField'
 import { addFriend, removeFriend, updateFriends, errorFriend, invitesFriend } from './Actions/friendsActions'
 import { connect } from 'react-redux'
 import { FriendsList } from './components/friendsList'
-import { InvitesList } from './components/invitesList';
 
 class FriendListPage extends Component {
     constructor(props) {
@@ -91,7 +90,7 @@ class FriendListPage extends Component {
             // <div className="Layout">
                 <div className="form">
                     <TextField type="text" name="friendName" value={this.state.friendName} valid={true} inputName="Friend name" onChange={(e) => this.onInputChange(e, "friendName")} />
-                    <button type="button" onClick={this.addFriend} disabled={!this.state.valid} className="buttonBigGreen">Add friend</button>
+                    <button type="button" onClick={this.addFriend} disabled={!this.state.valid} className="button button--green">Add friend</button>
                     <br />
                     <br />
                     <FriendsList friends={this.props.friends} onClickDelete={(e) => this.removeFriend(e)} onClickInvite={(e) => this.inviteFriend(e)} editable={true}/>

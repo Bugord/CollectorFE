@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import AuthService from './AuthService'
-import TextField from './TextField'
+import AuthService from './authService'
+import TextField from './textField'
 import { Link } from "react-router-dom";
 
 class LoginForm extends Component {
@@ -59,26 +59,24 @@ class LoginForm extends Component {
         if (AuthService.loggedIn())
             return (<div>Please, log out</div>);
         return (
-        <div className="Layout">
-            <div className="form">
-                <div className="AuthFormLayout">
-                    <form onSubmit={this.onSubmit} className="authForm">
-                        <h1>Welcome back in Collector!</h1>
-                        <br />
-                        <h2>Please, log in</h2>
+            <div className="authFormLayout">
+                <form onSubmit={this.onSubmit} className="authForm">
+                    <h1>Welcome back in Collector!</h1>
+                    <br />
+                    <h2>Please, log in</h2>
 
-                        <TextField type="text" name="email" value={this.state.email} valid={!this.state.emailError} inputName="Email" errorText={this.state.emailError} onChange={(e) => this.onInputChange(e, "email")} />
-                        <TextField type="password" name="password" value={this.state.password} valid={!this.state.passwordError} inputName="Password" errorText={this.state.passwordError} onChange={(e) => this.onInputChange(e, "password")} />
-                        <br />
-                        <input type="submit" value="Log in" disabled={!this.state.valid} className="buttonBigGreen"></input>
-                        <Link to="/registration" className="formLink">new here?</Link>
-                        <br />
-                        <br />
-                        {this.renderError()}
-                    </form>
-                </div>
+                    <TextField type="text" name="email" value={this.state.email} valid={!this.state.emailError} inputName="Email" errorText={this.state.emailError} onChange={(e) => this.onInputChange(e, "email")} />
+                    <TextField type="password" name="password" value={this.state.password} valid={!this.state.passwordError} inputName="Password" errorText={this.state.passwordError} onChange={(e) => this.onInputChange(e, "password")} />
+                    <br />
+                    <input className="button button--green" type="submit" value="Log in" disabled={!this.state.valid}></input>
+                    <br />
+                    <br />
+                    <Link to="/registration" className="formLink">new here?</Link>
+                    <br />
+                    <br />
+                    {this.renderError()}
+                </form>
             </div>
-        </div>
         );
     }
 

@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import RegistrationForm from './RegistrationForm';
-import Header from './Header';
-import Footer from './Footer';
-import LoginForm from './LoginForm'
-import MainPage from './MainPage'
+import RegistrationForm from './registrationForm';
+import Header from './header';
+import Footer from './footer';
+import LoginForm from './loginForm'
+import MainPage from './mainPage'
 import registerServiceWorker from './registerServiceWorker';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux'
@@ -12,6 +12,7 @@ import { createStore } from 'redux'
 import App from './Reducers/mainReducer'
 import friendListPage from './friendListPage';
 import profilePage from './profilePage';
+import './components/styles/styles.css'
 
 export const store = createStore(App, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 store.subscribe(() => {

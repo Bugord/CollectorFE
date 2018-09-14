@@ -1,7 +1,7 @@
 import axios from 'axios';
 import decode from 'jwt-decode';
 import Conf from './Configuration'
-import {store} from './index'
+import {store} from '.'
 import { userLogin, userLogout } from './Actions/userActions'
 
 export default class AuthService{

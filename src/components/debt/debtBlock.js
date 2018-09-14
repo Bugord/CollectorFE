@@ -21,11 +21,15 @@ class DebtBlock extends Component {
     renderRegular() {
         return (
             <div>
-                <span className="debtBlockName">{this.props.name}</span>
-                <span className="debtBlockFriendName">{this.props.friendName}</span>
+                <span className="debtBlock__name">{this.props.name}
+                        <img className="debtBlock__menuIcon" src={require('../../images/menuIcon.png')} alt="Add" />
+                </span>
+
+                <span className="debtBlock__friendName">{this.props.friendName}</span>
                 <hr />
                 <div>Description...</div>
-                <div className="debtBlockDebtValue debtPositive"></div>
+                <br/>
+                <div className="debtBlockDebt__value debt--red">123</div>
             </div>
         )
     }
@@ -34,7 +38,7 @@ class DebtBlock extends Component {
         return (
             <div>
                 <div className="addDebtBlock">
-                    <img src={require('../../images/addIcon.png')} alt="Add" />
+                    <img className="addDebtBlock__img" src={require('../../images/addIcon.png')} alt="Add" />
                 </div>
             </div>
         )
