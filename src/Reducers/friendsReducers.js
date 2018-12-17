@@ -1,50 +1,68 @@
-import { 
-    FRIEND_ADD,
-    FRIEND_REMOVE,
-    FRIEND_UPDATE,
-    FRIEND_ERROR,
-    FRIEND_INVITES
- } from '../Actions/friendsActions'
+import {
+  FRIEND_ADD,
+  FRIEND_REMOVE,
+  FRIEND_UPDATE,
+  FRIEND_ERROR,
+  FRIEND_INVITES,
+  FRIEND_UPDATE_SEND,
+  FRIEND_SUCCESS_MESSAGE_CLEAR,
+  FRIEND_INVITE_SENT,
+  FRIEND_UPDATED
+} from "../Actions/friendsActions";
 
 const initialState = {
-    friends: [],
-    invites: []
-  };
-
+  friends: [],
+  invites: [],
+  loading: false,
+  error: "",
+  successMessage: ""
+};
 
 export function friendsApp(state = initialState, action) {
-    switch (action.type) {
+  switch (action.type) {
     case FRIEND_ADD:
       return Object.assign({}, state, {
-        friends: [...state.friends, {
-            id: action.id,
-            name: action.name
-        }]
-      })
+        friends: [...state.friends, action.friend],
+        successMessage: "Friend added successfully"
+      });
 
-    case FRIEND_REMOVE:
-    {
-      var index = state.friends.map(function(item) { return item.id.toString(); }).indexOf(action.id.toString());
-      var array = Object.assign([], state.friends, []);
-      if(index === -1)
-        return state;
-      array.splice(index,1);
+    case FRIEND_REMOVE: {
       return Object.assign({}, state, {
-      friends: array
-      })
+        friends: state.friends.filter(friend => friend.id !== action.id),
+        successMessage: "Friend removed successfully"
+      });
     }
+    case FRIEND_SUCCESS_MESSAGE_CLEAR:
+      return Object.assign({}, state, {
+        successMessage: ""
+      });
     case FRIEND_UPDATE:
       return Object.assign({}, state, {
-        friends: action.friends
-      })
+        friends: action.friends,
+        loading: false,
+        success: true
+      });
     case FRIEND_ERROR:
       return Object.assign({}, state, {
         error: action.error
-      })
-      case FRIEND_INVITES:
+      });
+    case FRIEND_INVITES:
       return Object.assign({}, state, {
         invites: action.invites
-      })
+      });
+    case FRIEND_UPDATE_SEND:
+      return Object.assign({}, state, {
+        loading: true
+      });
+    case FRIEND_UPDATED:
+      return Object.assign({}, state, {
+        successMessage: "Friend was updated"
+      });
+    case FRIEND_INVITE_SENT:
+      return Object.assign({}, state, {
+        successMessage: "Invite was sent"
+      });
     default:
       return state;
-}}
+  }
+}

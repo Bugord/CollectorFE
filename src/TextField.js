@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 class TextField extends Component {
   render() {
@@ -7,12 +7,21 @@ class TextField extends Component {
     textFieldClass.push(!this.props.valid ? "input--redBorder" : "");
 
     return (
-    <div className="input__name">
-      {this.props.inputName}
-      <br />
-      <input type={this.props.type} name={this.props.name} className={textFieldClass.join(' ')} onChange={this.props.onChange} />
-      <p className="input__errorText">{this.props.valid ? "" : this.props.errorText}</p>
-    </div>
+      <div >
+        {this.props.inputName}
+        <input
+          placeholder={this.props.placeholder}
+          type={this.props.type}
+          name={this.props.name}
+          min={this.props.min}
+          className={textFieldClass.join(" ")}
+          onChange={this.props.onChange}
+          value={this.props.value}
+        />
+        <p className="input__errorText">
+          {this.props.valid ? "" : this.props.errorText}
+        </p>
+      </div>
     );
   }
 }
