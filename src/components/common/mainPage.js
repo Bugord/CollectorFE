@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import AuthService from "../authService";
-import { FriendsList } from "../components/friendsList";
+import AuthService from "../auth/authService";
+import { FriendsList } from "../friends/friendsList";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import FriendsService from "../friendsService";
-import DebtBlock from "../components/debt/debtBlock";
-import DebtService from "../debtService";
-import ChatBlock from "../components/chat/chatBlock";
+import FriendsService from "../friends/friendsService";
+import DebtBlock from "../debt/debtBlock";
+import DebtService from "../debt/debtService";
+import ChatBlock from "../chat/chatBlock";
 import Button from "react-materialize/lib/Button";
 import ReactModal from "react-modal";
 import { Row, Col } from "react-materialize";
-import DebtSearch from "../components/debtSearch/debtSearch";
+import DebtSearch from "../debt/debtSearch";
 import Icon from "react-materialize/lib/Icon";
 import ScrollUpButton from "react-scroll-up-button";
 
@@ -179,7 +179,7 @@ class MainPage extends Component {
             <div className="debtContent debtContent__loading">
               <img
                 className="debtContent__loading"
-                src={require("../images/loadingIcon.svg")}
+                src={require("../../images/loadingIcon.svg")}
                 alt="Notifications"
               />
             </div>

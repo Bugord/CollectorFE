@@ -4,7 +4,7 @@ import {
   CHAT_START_TYPING,
   CHAT_STOP_TYPING,
   CHAT_VIEWED
-} from "../Actions/chatActions";
+} from "./chatActions";
 
 const initialState = {
   messages: [],

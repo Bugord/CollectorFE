@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import AuthService from "./authService";
+import AuthService from "../auth/authService";
 import { Link } from "react-router-dom";
 import Popup from "./popup";
 import { connect } from "react-redux";
-import NotificationsDropdown from "./components/notifications/notificationsDropdown";
-import Conf from "./configuration";
+import NotificationsDropdown from "../notifications/notificationsDropdown";
+import Conf from "../../configuration";
 
 class Header extends Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class Header extends Component {
         <Link to="/">
           <img
             className="header__logo"
-            src={require("./images/Logo.png")}
+            src={require("../../images/Logo.png")}
             alt="Collector"
           />
         </Link>
@@ -43,7 +43,7 @@ class Header extends Component {
                   onMouseDown={() =>
                     this.setState({ showNotificationsDropdown: true })
                   }
-                  src={require("./images/notificationIcon.png")}
+                  src={require("../../images/notificationIcon.png")}
                   alt="Notifications"
                 />
               </div>

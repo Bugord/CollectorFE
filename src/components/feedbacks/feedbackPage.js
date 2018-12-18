@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import FeedbacksService from "../feedbacksService";
-import { FeedbackMessagesList } from "../components/feedbacks/feedbackMessages/feedbackMessagesList";
-import Feedback from "../components/feedbacks/feedback";
+import FeedbacksService from "./feedbacksService";
+import { FeedbackMessagesList } from "./feedbackMessagesList";
+import Feedback from "./feedback";
 import Collection from "react-materialize/lib/Collection";
 import CollectionItem from "react-materialize/lib/CollectionItem";
-import Conf from "../configuration";
+import Conf from "../../configuration";
 import Input from "react-materialize/lib/Input";
 import Row from "react-materialize/lib/Row";
 import Button from "react-materialize/lib/Button";
-import AuthService from "../authService";
+import AuthService from "../auth/authService";
+
 
 class FeedbackPage extends Component {
   constructor(props) {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import AuthService from "./authService";
+import AuthService from "../auth/authService";
 import FriendsService from "./friendsService";
 import { Input, Button, Icon, Col } from "react-materialize";
 import {
@@ -10,9 +10,9 @@ import {
   errorFriend,
   invitesFriend,
   friendSuccessMessageClear
-} from "./Actions/friendsActions";
+} from "./friendsActions";
 import { connect } from "react-redux";
-import { FriendsList } from "./components/friendsList";
+import { FriendsList } from "./friendsList";
 import Row from "react-materialize/lib/Row";
 
 class FriendListPage extends Component {

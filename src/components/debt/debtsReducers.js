@@ -14,7 +14,7 @@ import {
   DEBTS_CHANGES_LOADED,
   DEBTS_CHANGES_START_LOAD,
   DEBTS_CHANGES_NEW_DEBT
-} from "../Actions/debtsActions";
+} from "./debtsActions";
 
 const initialState = {
   // debts: JSON.parse(localStorage.getItem("storage"))

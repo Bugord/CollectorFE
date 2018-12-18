@@ -8,7 +8,7 @@ import {
   FRIEND_SUCCESS_MESSAGE_CLEAR,
   FRIEND_INVITE_SENT,
   FRIEND_UPDATED
-} from "../Actions/friendsActions";
+} from "./friendsActions";
 
 const initialState = {
   friends: [],

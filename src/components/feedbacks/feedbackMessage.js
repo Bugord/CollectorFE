@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Conf from "../../../configuration";
+import Conf from "../../configuration";
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import { CollectionItem } from "react-materialize";

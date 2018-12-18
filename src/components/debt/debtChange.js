@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Collection } from "react-materialize";
 import CollectionItem from "react-materialize/lib/CollectionItem";
-import { convertUTCDateToLocalDate } from "../helperFunctions";
+import { convertUTCDateToLocalDate } from "../common/helperFunctions";
 import Collapsible from "react-collapsible";
 
 export default class DebtChange extends Component {

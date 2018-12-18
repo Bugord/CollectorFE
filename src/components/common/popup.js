@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AuthService from "./authService";
+import AuthService from "../auth/authService";
 import { Link } from "react-router-dom";
 
 class Popup extends Component {

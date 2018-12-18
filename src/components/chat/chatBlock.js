@@ -8,7 +8,7 @@ import {
   chatStartTyping,
   chatStopTyping,
   chatViewed
-} from "../../Actions/chatActions";
+} from "./chatActions";
 import Conf from "../../configuration";
 import ReactTooltip from "react-tooltip";
 import Icon from "react-materialize/lib/Icon";

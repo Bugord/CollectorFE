@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import FriendsService from "../friendsService";
+import FriendsService from "./friendsService";
 import Icon from "react-materialize/lib/Icon";
 import Input from "react-materialize/lib/Input";
 import swal from "sweetalert";
-import Conf from "../configuration";
+import Conf from "../../configuration";
 
 class Friend extends Component {
   constructor(props) {

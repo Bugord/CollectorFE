@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import DebtService from "../../debtService";
+import DebtService from "./debtService";
 import { Collection, Button, Preloader, Row } from "react-materialize";
 import DebtChange from "./debtChange";
-import InfiniteScroll from "react-infinite-scroller";
 
 export default class DebtChangesBlock extends Component {
   render() {
@@ -10,28 +9,6 @@ export default class DebtChangesBlock extends Component {
     this.props.debtChanges.map((debtChange, index) =>
       items.push(<DebtChange key={index} debtChange={debtChange} />)
     );
-
-    // return (
-    //   <InfiniteScroll
-    //     pageStart={0}
-    //     loadMore={() => {
-    //       this.props.debtChangesStartLoad();
-    //       DebtService.getDebtChanges(
-    //         this.props.debtId,
-    //         this.props.debtChanges.length,
-    //         20
-    //       );
-    //     }}
-    //     hasMore={this.props.hasMore}
-    //     loader={
-    //       <div className="center-align">
-    //         <Preloader size="big" color="green" />
-    //       </div>
-    //     }
-    //   >
-    //     <Collection>{items}</Collection>
-    //   </InfiniteScroll>
-    // );
 
     return (
       <div>

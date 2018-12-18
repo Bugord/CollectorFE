@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import DebtService from "../../debtService";
+import DebtService from "./debtService";
 import Button from "react-materialize/lib/Button";
 import Input from "react-materialize/lib/Input";
 import {
@@ -11,7 +11,7 @@ import {
   Autocomplete
 } from "react-materialize";
 import $ from "jquery";
-import Chip from "../chip/Chip";
+import Chip from "../common/chip/chip";
 import Conf from "../../configuration";
 
 export default class DebtSearch extends Component {

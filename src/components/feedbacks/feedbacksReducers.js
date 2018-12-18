@@ -5,7 +5,7 @@ import {
   FEEDBACKS_ADD_MESSAGE,
   FEEDBACKS_ADD_FEEDBACK,
   FEEDBACKS_GET_ALL_LOADING
-} from "../Actions/feedbacksActions";
+} from "./feedbacksActions";
 
 const initialState = {
   feedbacks: [],

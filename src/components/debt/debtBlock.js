@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import AcceptFriendBlock from "../notifications/acceptFriendBlock";
-import DebtService from "../../debtService";
+import DebtService from "./debtService";
 import {
   debtsError,
   debtsViewed,
   debtChangesStartLoad,
   debtChangesNewDebt
-} from "../../Actions/debtsActions";
+} from "./debtsActions";
 import { Card, CardTitle, Modal } from "react-materialize";
 import Icon from "react-materialize/lib/Icon";
 import swal from "sweetalert";
@@ -17,7 +17,7 @@ import Input from "react-materialize/lib/Input";
 import Conf from "../../configuration";
 import $ from "jquery";
 import CollectionItem from "react-materialize/lib/CollectionItem";
-import { convertUTCDateToLocalDate, convertLocalDateToUTCDate } from "../helperFunctions";
+import { convertUTCDateToLocalDate, convertLocalDateToUTCDate } from "../common/helperFunctions";
 import DebtChangesBlock from "./debtChangesBlock";
 
 const customStyles = {

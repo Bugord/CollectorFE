@@ -1,5 +1,5 @@
-import AuthService from "./authService";
-import { store } from ".";
+import AuthService from "../auth/authService";
+import { store } from "../../index";
 import {
   getAllFeedbacks,
   getFeedbackById,
@@ -7,7 +7,7 @@ import {
   addMessage,
   addFeedback,
   getAllFeedbacksLoading
-} from "./Actions/feedbacksActions";
+} from "./feedbacksActions";
 
 export default class FeedbacksService {
   static getAllFeedbacks() {

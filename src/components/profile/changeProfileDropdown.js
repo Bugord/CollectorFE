@@ -1,9 +1,9 @@
 import React from "react";
-import Popup from "./popup";
+import Popup from "../common/popup";
 import { connect } from "react-redux";
-import AuthService from "./authService";
+import AuthService from "../auth/authService";
 import Axios from "axios";
-import Conf from "./configuration";
+import Conf from "../../configuration";
 import { Input, Button, Row, Card } from "react-materialize";
 
 class ChangeProfileDropdown extends Popup {
@@ -155,17 +155,6 @@ class ChangeProfileDropdown extends Popup {
     return (
       <Card>
         <h4>Change info</h4>
-        {/* <Input
-          s={12}
-          type="text"
-          name="username"
-          value={this.state.username}
-          valid={(!this.state.usernameError).toString()}
-          label="Username"
-          validate
-          error={this.state.usernameError}
-          onChange={e => this.onInputChange(e, "username")}
-        /> */}
         <Input
           s={12}
           type="text"

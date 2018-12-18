@@ -1,8 +1,8 @@
 import axios from "axios";
 import decode from "jwt-decode";
-import Conf from "./configuration";
-import { store } from ".";
-import { userLogin, userLogout } from "./Actions/userActions";
+import Conf from "../../configuration";
+import { store } from "../../index";
+import { userLogin, userLogout } from "../profile/userActions";
 
 export default class AuthService {
   static register(email, username, password, firstName, lastName, callback) {

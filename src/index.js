@@ -1,26 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import RegistrationForm from "./pages/registrationForm";
-import Header from "./header";
-import LoginForm from "./pages/loginForm";
-import MainPage from "./pages/mainPage";
+import RegistrationForm from "./components/auth/registrationForm";
+import Header from "./components/common/header";
+import LoginForm from "./components/auth/loginForm";
+import MainPage from "./components/common/mainPage";
 import registerServiceWorker from "./registerServiceWorker";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
-import App from "./Reducers/mainReducer";
-import friendListPage from "./friendListPage";
-import profilePage from "./pages/profilePage";
+import App from "./components/common/mainReducer";
+import friendListPage from "./components/friends/friendListPage";
+import profilePage from "./components/profile/profilePage";
 import "./components/styles/styles.css";
 import "./components/styles/materializeOverride.css";
 import "./components/styles/authorizationForm.css";
 import Conf from "./configuration";
-import FriendsService from "./friendsService";
-import ResetPasswordPage from "./resetPasswordPage";
-import ConfirmEmailPage from "./confirmEmailPage";
-import DebtService from "./debtService";
+import FriendsService from "./components/friends/friendsService";
+import ResetPasswordPage from "./components/auth/resetPasswordPage";
+import ConfirmEmailPage from "./components/auth/confirmEmailPage";
+import DebtService from "./components/debt/debtService";
 import FeedbacksListPage from "./components/feedbacks/feedbacksListPage";
-import FeedbackPage from "./pages/feedbackPage";
+import FeedbackPage from "./components/feedbacks/feedbackPage";
 
 const signalR = require("@aspnet/signalr");
 

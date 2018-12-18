@@ -1,7 +1,7 @@
 import React from "react";
-import Popup from "../../popup";
+import Popup from "../common/popup";
 import { connect } from "react-redux";
-import { FriendsList } from "../friendsList";
+import { FriendsList } from "../friends/friendsList";
 import { Input, Row, Col } from "react-materialize";
 
 class AcceptFriendBlock extends Popup {

@@ -1,8 +1,8 @@
 import React from "react";
-import Popup from "../../popup";
+import Popup from "../common/popup";
 import { NotificationList } from "./notificationList";
 import { connect } from "react-redux";
-import FriendsService from "../../friendsService";
+import FriendsService from "../friends/friendsService";
 import AcceptFriendBlock from "./acceptFriendBlock";
 
 class InvitesDropdown extends Popup {

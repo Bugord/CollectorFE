@@ -458,15 +458,7 @@ ul {
   justify-content: center;
   margin-top: 50px;
 }
-/* FOOTER */
-.Footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
-  margin-bottom: 20px;
-}
+
 .friendListBlock {
   padding: 0px;
   background-color: rgba(248, 249, 249, 0.85);

@@ -1,5 +1,5 @@
-import AuthService from "./authService";
-import { store } from ".";
+import AuthService from "../auth/authService";
+import { store } from "../../index";
 import {
   errorFriend,
   updateFriends,
@@ -9,9 +9,9 @@ import {
   addFriend,
   friendInviteSent,
   friendUpdated
-} from "./Actions/friendsActions";
-import { hubConnection } from "./index";
-import DebtService from "./debtService";
+} from "./friendsActions";
+import { hubConnection } from "../../index";
+import DebtService from "../debt/debtService";
 
 export default class FriendsService {
   static addFriend(name, callback) {
