@@ -53,7 +53,6 @@ class ProfilePage extends Component {
     };
     DebtService.getAllDebts();
     FriendsService.getAllFriends();
-    this.authorizedRender = this.authorizedRender.bind(this);
   }
 
   calculateSummary() {

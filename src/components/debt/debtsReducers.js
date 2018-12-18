@@ -17,9 +17,6 @@ import {
 } from "./debtsActions";
 
 const initialState = {
-  // debts: JSON.parse(localStorage.getItem("storage"))
-  //   ? JSON.parse(localStorage.getItem("storage")).debtsApp.debts
-  //   : [],
   debts: [],
   addLoading: false,
   updateLoading: false,

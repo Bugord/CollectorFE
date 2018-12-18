@@ -19,7 +19,7 @@ export default class FeedbackMessage extends Component {
         </div>
         <div>
           <p>
-            {user.username}{" "}
+            {user.username}
             {user.userRole !== "User" ? `(${user.userRole})` : null}
           </p>
           <p>{user.email}</p>
