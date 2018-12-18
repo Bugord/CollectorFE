@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import AuthService from "./authService";
-import TextField from "./textField";
 import { Redirect } from "react-router-dom";
-import { Button, Input } from "react-materialize";
+import { Button, Input, Row, Col, Icon } from "react-materialize";
 
 class ResetPasswordPage extends Component {
   constructor(props) {
@@ -82,14 +81,18 @@ class ResetPasswordPage extends Component {
 
   render() {
     return (
-      <div className="authForm">
-        {this.state.mailSent
-          ? this.renderEmailSent()
-          : this.withToken
-            ? this.renderWithToken()
-            : this.renderWithoutToken()}
-        <br />
-        {this.renderError()}
+      <div className="container">
+        <div className="row">
+          <div className="col z-depth-1 grey lighten-4 s12 m8 offset-m2">
+            {this.state.mailSent
+              ? this.renderEmailSent()
+              : this.withToken
+              ? this.renderWithToken()
+              : this.renderWithoutToken()}
+            <br />
+            {this.renderError()}
+          </div>
+        </div>
       </div>
     );
   }
@@ -106,40 +109,50 @@ class ResetPasswordPage extends Component {
   renderWithoutToken() {
     return (
       <div>
-        <h4>Reset password</h4>
-        <h5>Enter email to send reset password link</h5>
+        <h4 className="center-align">Reset password</h4>
+        <h5 className="center-align">
+          Enter email to send reset password link
+        </h5>
         <br />
-        <Input
-          label="Email"
-          type="email"
-          name="email"
-          placeholder="Enter your email"
-          value={this.state.email}
-          valid={(!this.state.emailError).toString()}
-          error={this.state.emailError}
-          onChange={e => this.onInputChange(e, "email")}
-          required
-          minLength={3}
-          className="input-field"
-          validate={true}
-        />
-        <Button
-          type="button"
-          className="green lighten-2"
-          disabled={!this.state.valid}
-          onClick={() => {
-            if (!AuthService.loggedIn())
-              AuthService.put("api/resetPassword", this.state.email)
-                .then(() => this.setState({ mailSent: true }))
-                .catch(res => {
-                  this.setState({
-                    errorMessage: AuthService.handleException(res)
+        <br />
+        <Row>
+          <Input
+            s={11}
+            label="Email"
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            value={this.state.email}
+            valid={(!this.state.emailError).toString()}
+            error={this.state.emailError}
+            onChange={e => this.onInputChange(e, "email")}
+            required
+            minLength={3}
+            className="input-field"
+            validate={true}
+          >
+            <Icon>drafts</Icon>
+          </Input>
+        </Row>
+        <Row>
+          <Button
+            type="button"
+            className="green lighten-2 col s6 offset-s3"
+            disabled={!this.state.valid}
+            onClick={() => {
+              if (!AuthService.loggedIn())
+                AuthService.put("api/resetPassword", this.state.email)
+                  .then(() => this.setState({ mailSent: true }))
+                  .catch(res => {
+                    this.setState({
+                      errorMessage: AuthService.handleException(res)
+                    });
                   });
-                });
-          }}
-        >
-          Send email
-        </Button>
+            }}
+          >
+            Send email
+          </Button>
+        </Row>
       </div>
     );
   }
@@ -148,46 +161,62 @@ class ResetPasswordPage extends Component {
     if (AuthService.loggedIn()) return <Redirect to="/" />;
     return (
       <div>
-        <h1>Reset password</h1>
-        <h4>Enter new password</h4>
-        <TextField
-          type="password"
-          name="newPassword"
-          value={this.state.newPassword}
-          valid={!this.state.newPasswordError}
-          inputName="New password"
-          errorText={this.state.newPasswordError}
-          onChange={e => this.onInputChange(e, "newPassword")}
-        />{" "}
-        <TextField
-          type="password"
-          name="newPasswordRepeat"
-          value={this.state.newPasswordRepeat}
-          valid={!this.state.newPasswordRepeatError}
-          inputName="Confirm new password"
-          errorText={this.state.newPasswordRepeatError}
-          onChange={e => this.onInputChange(e, "newPasswordRepeat")}
-        />
-        <button
-          type="button"
-          className="button button--green"
-          disabled={!this.state.valid}
-          onClick={() => {
-            if (!AuthService.loggedIn())
-              AuthService.put("api/resetPassword", "", {
-                token: this.props.match.params.token,
-                password: this.state.newPassword
-              })
-                .then(res => this.props.history.push("/login"))
-                .catch(res => {
-                  this.setState({
-                    errorMessage: AuthService.handleException(res)
-                  });
-                });
-          }}
-        >
-          Change password
-        </button>
+        <h4 className="center-align">Reset password</h4>
+        <h5 className="center-align">Enter new password</h5>
+        <br />
+        <Row>
+          <Input
+            s={11}
+            type="password"
+            name="newPassword"
+            value={this.state.newPassword}
+            valid={(!this.state.newPasswordError).toString()}
+            validate
+            label="New password"
+            error={this.state.newPasswordError}
+            onChange={e => this.onInputChange(e, "newPassword")}
+          >
+            <Icon>lock_outline</Icon>
+          </Input>
+          <Input
+            s={11}
+            type="password"
+            name="newPasswordRepeat"
+            value={this.state.newPasswordRepeat}
+            valid={(!this.state.newPasswordRepeatError).toString()}
+            validate
+            label="Confirm new password"
+            error={this.state.newPasswordRepeatError}
+            onChange={e => this.onInputChange(e, "newPasswordRepeat")}
+          >
+            <Icon>lock_outline</Icon>
+          </Input>
+        </Row>      
+        <Col s={8} offset="s3">
+          <Row>
+            <Button
+              type="button"
+              s={12}
+              className="green lighten-2"
+              disabled={!this.state.valid}
+              onClick={() => {
+                if (!AuthService.loggedIn())
+                  AuthService.put("api/resetPassword", "", {
+                    token: this.props.match.params.token,
+                    password: this.state.newPassword
+                  })
+                    .then(res => this.props.history.push("/login"))
+                    .catch(res => {
+                      this.setState({
+                        errorMessage: AuthService.handleException(res)
+                      });
+                    });
+              }}
+            >
+              Change password
+            </Button>
+          </Row>
+        </Col>
       </div>
     );
   }
