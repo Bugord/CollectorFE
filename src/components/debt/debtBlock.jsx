@@ -715,6 +715,10 @@ class DebtBlock extends Component {
     document.addEventListener("mousedown", this.handleClickOutside);
   }
 
+  componentWillUnmount() {
+    document.removeEventListener("mousedown", this.handleClickOutside);
+  }
+
   handlePaste(e) {
     e.preventDefault();
     var text = (e.originalEvent || e).clipboardData.getData("text/plain");

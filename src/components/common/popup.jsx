@@ -17,6 +17,10 @@ class Popup extends Component {
     document.addEventListener("mousedown", this.handleClickOutside);
   }
 
+  componentWillUnmount(){
+    document.removeEventListener("mousedown", this.handleClickOutside);
+  }
+
   handleClickOutside(event) {
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
       this.props.togglePopup();
