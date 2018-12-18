@@ -109,14 +109,6 @@ class FriendListPage extends Component {
             <h5 className="center-align row">Edit your friend list</h5>
             <br />
             <br />
-            {/* <TextField
-          type="text"
-          name="friendName"
-          value={this.state.friendName}
-          valid={true}
-          inputName="Friend name"
-          onChange={e => this.onInputChange(e, "friendName")}
-        /> */}
             <div className="col s11">
               <Input
                 label="Friend name"

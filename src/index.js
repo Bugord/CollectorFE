@@ -16,7 +16,6 @@ import "./components/styles/materializeOverride.css";
 import "./components/styles/authorizationForm.css";
 import Conf from "./configuration";
 import FriendsService from "./friendsService";
-import settingsPage from "./pages/settingsPage";
 import ResetPasswordPage from "./resetPasswordPage";
 import ConfirmEmailPage from "./confirmEmailPage";
 import DebtService from "./debtService";
@@ -59,7 +58,6 @@ var routes = (
             <Route path="/resetPassword/:token" component={ResetPasswordPage} />
             <Route path="/confirmEmail/:token" component={ConfirmEmailPage} />
             <Route path="/resetPassword" component={ResetPasswordPage} />
-            <Route path="/settings" component={settingsPage} />
             <Route path="/profile" component={profilePage} />
             <Route exact path="/feedbacks" component={FeedbacksListPage} />
             <Route path="/feedbacks/:id" component={FeedbackPage} />
