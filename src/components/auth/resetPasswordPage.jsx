@@ -81,7 +81,7 @@ class ResetPasswordPage extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div className="container layout">
         <div className="row">
           <div className="col z-depth-1 grey lighten-4 s12 m8 offset-m2">
             {this.state.mailSent

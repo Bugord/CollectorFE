@@ -1,5 +1,5 @@
 import AuthService from "../auth/authService";
-import { store } from "../../index";
+import { store } from "../../store";
 import {
   debtsUpdate,
   debtsAdd,
@@ -11,7 +11,7 @@ import {
   debtUpdateEnd,
   debtChangesLoaded
 } from "./debtsActions";
-import { hubConnection } from "../../index";
+import { hubConnection } from "../../hubConnection";
 
 export default class DebtService {
   static addDebt(debt) {

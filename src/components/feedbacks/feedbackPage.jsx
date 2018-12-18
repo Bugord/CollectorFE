@@ -11,7 +11,6 @@ import Row from "react-materialize/lib/Row";
 import Button from "react-materialize/lib/Button";
 import AuthService from "../auth/authService";
 
-
 class FeedbackPage extends Component {
   constructor(props) {
     super(props);
@@ -43,7 +42,7 @@ class FeedbackPage extends Component {
     let { feedback } = this.state;
     if (!feedback) return null;
     return (
-      <div>
+      <div className="layout">
         {/* <div className="collection">
           <div className="avatar collection-item">
             <Icon

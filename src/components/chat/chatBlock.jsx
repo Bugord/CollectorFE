@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { ChatMessageList } from "./chatMessageList";
-import { hubConnection } from "../../index";
+import { hubConnection } from "../../hubConnection";
 import { connect } from "react-redux";
 import {
   chatMessageSent,

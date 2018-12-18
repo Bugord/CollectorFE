@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Collection } from "react-materialize";
 import CollectionItem from "react-materialize/lib/CollectionItem";
 import { convertUTCDateToLocalDate } from "../common/helperFunctions";

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Row, Button, Tabs, Tab, Input } from "react-materialize";
+import { Card, Input } from "react-materialize";
 
 export default class SettingsTab extends Component {
   constructor(props) {

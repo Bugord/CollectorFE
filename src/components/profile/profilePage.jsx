@@ -74,7 +74,7 @@ class ProfilePage extends Component {
     var summary = this.calculateSummary();
     let { user } = this.props;
     return (
-      <div className="row z-depth-1 grey lighten-4 center-align">
+      <div className="row z-depth-1 grey lighten-4 center-align layout">
         <h3 className="col s12">Profile Page</h3>
         <div className="col l4 m5 s12">
           <Row>

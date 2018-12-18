@@ -26,7 +26,7 @@ class FeedbacksListPage extends Component {
     if (!AuthService.loggedIn()) this.props.history.push("/login");
 
     return (
-      <div>
+      <div className="layout">
         <Row>
           <FeedbacksList feedbacks={this.props.feedbacks} />
         </Row>

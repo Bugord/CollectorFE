@@ -1,9 +1,9 @@
 import { USER_LOGIN, USER_LOGOUT } from "./userActions";
 
 const initialState = {
-  user: JSON.parse(localStorage.getItem("storage"))
-    ? JSON.parse(localStorage.getItem("storage")).userApp.user
-    : null
+  user: JSON.parse(localStorage.getItem("user"))
+    ? JSON.parse(localStorage.getItem("user"))
+    : {}
 };
 
 export function userApp(state = initialState, action) {

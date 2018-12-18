@@ -39,7 +39,7 @@ class FriendListPage extends Component {
 
   render() {
     return (
-      <div className="MainPage">
+      <div className="MainPage layout">
         {AuthService.loggedIn() ? (
           this.authorizedRender()
         ) : (

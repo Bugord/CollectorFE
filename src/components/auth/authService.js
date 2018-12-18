@@ -1,7 +1,7 @@
 import axios from "axios";
 import decode from "jwt-decode";
 import Conf from "../../configuration";
-import { store } from "../../index";
+import { store } from "../../store";
 import { userLogin, userLogout } from "../profile/userActions";
 
 export default class AuthService {
@@ -49,6 +49,12 @@ export default class AuthService {
         var message = AuthService.handleException(res);
         callback(message);
       });
+  }
+
+  static getUserInfo() {
+    axios.get(Conf.domain + "api/user").then(res => {
+      AuthService.setUser(res.data);
+    });
   }
 
   static handleException(res) {
@@ -100,6 +106,8 @@ export default class AuthService {
 
   static setUser(user) {
     store.dispatch(userLogin(user));
+    console.log(JSON.stringify(user));
+    localStorage.setItem("user", JSON.stringify(user));
   }
 
   static setToken(token) {

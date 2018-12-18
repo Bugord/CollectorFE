@@ -71,7 +71,7 @@ ul {
   padding: 0;
 }
 
-.Layout {
+.layout {
   width: 100%;
   max-width: 900px;
   padding: 5px;
@@ -1046,7 +1046,7 @@ ul {
     width: 100%;
     margin: 0px;
   }
-  .Layout {
+  .layout {
     margin-top: 10px;
   }
   .chatBlock__messageBlock {

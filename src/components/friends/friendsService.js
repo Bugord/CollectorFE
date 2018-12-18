@@ -1,5 +1,5 @@
 import AuthService from "../auth/authService";
-import { store } from "../../index";
+import { store } from "../../store";
 import {
   errorFriend,
   updateFriends,
@@ -10,7 +10,7 @@ import {
   friendInviteSent,
   friendUpdated
 } from "./friendsActions";
-import { hubConnection } from "../../index";
+import { hubConnection } from "../../hubConnection";
 import DebtService from "../debt/debtService";
 
 export default class FriendsService {

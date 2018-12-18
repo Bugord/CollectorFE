@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AuthService from "../auth/authService";
+import AuthService from "./authService";
 import { Link } from "react-router-dom";
 import { Button, Input } from "react-materialize";
 import Icon from "react-materialize/lib/Icon";
@@ -77,7 +77,7 @@ class LoginForm extends Component {
   render() {
     if (AuthService.loggedIn()) return <div>Please, log out</div>;
     return (
-      <div className="container">
+      <div className="container layout">
         <div className="row">
           <div className="col z-depth-1 grey lighten-4 s12 m8 offset-m2">
             <h4 className="center-align">Welcome back in Collector!</h4>

@@ -27,8 +27,10 @@ class MainPage extends Component {
     super(props);
     FriendsService.getAllFriends();
     DebtService.getAllDebts();
+    AuthService.getUserInfo();
 
     this.searchBlock = React.createRef();
+
 
     this.state = {
       debts: this.props.debts,
@@ -56,7 +58,7 @@ class MainPage extends Component {
           AnimationDuration={500}
           ContainerClassName="ScrollUpButton__Container"
           TransitionClassName="ScrollUpButton__Toggled"
-          style={{ "zIndex": "25", right: "inherit", left: "20px" }}
+          style={{ zIndex: "25", right: "inherit", left: "20px" }}
         />
         {AuthService.loggedIn() ? null : <Redirect to="/login" />}
         <div className="row">
