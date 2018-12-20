@@ -4,6 +4,7 @@ import { NotificationList } from "./notificationList";
 import { connect } from "react-redux";
 import { acceptFriendAPI } from "../friends/friendsService";
 import AcceptFriendBlock from "./acceptFriendBlock";
+import { compose } from "redux";
 
 class InvitesDropdown extends Popup {
   constructor(props) {
@@ -74,4 +75,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default (InvitesDropdown = connect(mapStateToProps)(InvitesDropdown));
+export default compose(connect(mapStateToProps)(InvitesDropdown));

@@ -24,7 +24,7 @@ export function addDebtAPI(debt) {
     });
 }
 
-export function getAllDebtsAPI(debtCount, rewrite, searchObject) {
+export function getAllDebtsAPI(debtCount, rewrite = true, searchObject) {
   var search = {};
   searchObject = searchObject || {};
   for (var propertyName in searchObject) {
@@ -68,8 +68,7 @@ export function getDebtChangesAPI(id, offset, take) {
     .then(res => {
       store.dispatch(debtChangesLoaded(res.data.changes, res.data.hasMore));
     })
-    .catch(() => {
-    });
+    .catch(() => {});
 }
 
 export function updateDebtAPI(
@@ -82,7 +81,7 @@ export function updateDebtAPI(
   isOwnerDebter,
   dateOfOverdue,
   isClosed,
-  rowVersion,
+  rowVersion
 ) {
   // store.dispatch(debtsLoadingStart());
   store.dispatch(debtUpdateStart(debtId));

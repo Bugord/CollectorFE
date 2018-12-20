@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getFeedbackAPI, getMessagesAPI, sendMessageAPI } from "./feedbacksService";
+import {
+  getFeedbackAPI,
+  getMessagesAPI,
+  sendMessageAPI
+} from "./feedbacksService";
 import { FeedbackMessagesList } from "./feedbackMessagesList";
 import Feedback from "./feedback";
 import Collection from "react-materialize/lib/Collection";
@@ -10,6 +14,7 @@ import Input from "react-materialize/lib/Input";
 import Row from "react-materialize/lib/Row";
 import Button from "react-materialize/lib/Button";
 import AuthService from "../auth/authService";
+import { compose } from "redux";
 
 class FeedbackPage extends Component {
   constructor(props) {
@@ -108,4 +113,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default (FeedbackPage = connect(mapStateToProps)(FeedbackPage));
+export default compose(connect(mapStateToProps))(FeedbackPage);

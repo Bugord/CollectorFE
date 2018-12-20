@@ -19,6 +19,7 @@ import {
 import { connect } from "react-redux";
 import { FriendsList } from "./friendsList";
 import Row from "react-materialize/lib/Row";
+import { compose } from "redux";
 
 class FriendListPage extends Component {
   constructor(props) {
@@ -92,8 +93,7 @@ class FriendListPage extends Component {
   removeFriend(id) {
     removeFriendAPI(id)
       .then(() => {})
-      .catch(() => {
-      });
+      .catch(() => {});
   }
 
   getAllFriends() {
@@ -247,9 +247,9 @@ const mapStateToProps = state => {
   };
 };
 
-export default (FriendListPage = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FriendListPage));
-
-//  export default MainPage;
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(FriendListPage);

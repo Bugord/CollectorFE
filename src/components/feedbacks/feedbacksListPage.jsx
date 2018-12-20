@@ -10,6 +10,7 @@ import Button from "react-materialize/lib/Button";
 import Icon from "react-materialize/lib/Icon";
 import AuthService from "../auth/authService";
 import { Preloader } from "react-materialize";
+import { compose } from "redux";
 
 class FeedbacksListPage extends Component {
   constructor(props) {
@@ -108,6 +109,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default (FeedbacksListPage = connect(mapStateToProps)(
-  FeedbacksListPage
-));
+export default compose(connect(mapStateToProps)(FeedbacksListPage));

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactExport from "react-data-export";
 import { connect } from "react-redux";
+import { compose } from "redux";
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -10,7 +11,9 @@ class Download extends Component {
   render() {
     var debts = Object.assign([], this.props.debts);
     debts.forEach(debt => {
-      debt.friend = this.props.friends.find(friend => friend.id === debt.friendId);
+      debt.friend = this.props.friends.find(
+        friend => friend.id === debt.friendId
+      );
     });
 
     return (
@@ -62,4 +65,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default (Download = connect(mapStateToProps)(Download));
+export default compose(connect(mapStateToProps)(Download));

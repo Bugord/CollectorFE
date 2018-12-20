@@ -14,6 +14,7 @@ import { Row, Col } from "react-materialize";
 import DebtSearch from "../debt/debtSearch";
 import Icon from "react-materialize/lib/Icon";
 import ScrollUpButton from "react-scroll-up-button";
+import { compose } from "redux";
 
 const customStyles = {
   content: {
@@ -30,7 +31,6 @@ class MainPage extends Component {
     AuthService.getUserInfo();
 
     this.searchBlock = React.createRef();
-
 
     this.state = {
       debts: this.props.debts,
@@ -224,4 +224,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default (MainPage = connect(mapStateToProps)(MainPage));
+export default compose(connect(mapStateToProps)(MainPage));

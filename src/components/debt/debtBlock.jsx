@@ -24,6 +24,7 @@ import $ from "jquery";
 import CollectionItem from "react-materialize/lib/CollectionItem";
 import { convertLocalDateToUTCDate } from "../common/helperFunctions";
 import DebtChangesBlock from "./debtChangesBlock";
+import { compose } from "redux";
 
 const customStyles = {
   content: {
@@ -338,11 +339,7 @@ class DebtBlock extends Component {
               onClick={() => {
                 $("#debtChanges" + debt.id)[0].click();
                 this.props.debtChangesNewDebt(debt.id);
-                getDebtChangesAPI(
-                  debt.id,
-                  this.props.changes.count,
-                  10
-                );
+                getDebtChangesAPI(debt.id, this.props.changes.count, 10);
                 // $("#foo").modal("open");
               }}
             >
@@ -779,7 +776,9 @@ const mapDispatchToProps = dispatch => ({
   debtChangesNewDebt: id => dispatch(debtChangesNewDebt(id))
 });
 
-export default (DebtBlock = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DebtBlock));
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(DebtBlock)
+);

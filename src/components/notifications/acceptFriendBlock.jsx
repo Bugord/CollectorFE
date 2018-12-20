@@ -3,6 +3,7 @@ import Popup from "../common/popup";
 import { connect } from "react-redux";
 import { FriendsList } from "../friends/friendsList";
 import { Input, Row, Col } from "react-materialize";
+import { compose } from "redux";
 
 class AcceptFriendBlock extends Popup {
   constructor(props) {
@@ -87,6 +88,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default (AcceptFriendBlock = connect(mapStateToProps)(
-  AcceptFriendBlock
-));
+export default compose(connect(mapStateToProps)(AcceptFriendBlock));
