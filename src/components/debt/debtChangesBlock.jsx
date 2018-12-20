@@ -1,5 +1,5 @@
 import React from "react";
-import DebtService from "./debtService";
+import { getDebtChangesAPI } from "./debtService";
 import { Collection, Button, Preloader, Row } from "react-materialize";
 import DebtChange from "./debtChange";
 
@@ -36,7 +36,7 @@ export default function DebtChangesBlock(props) {
           onClick={() => {
             if (!props.hasMore) return;
             props.debtChangesStartLoad();
-            DebtService.getDebtChanges(
+            getDebtChangesAPI(
               props.debtId,
               props.debtChanges.length,
               20

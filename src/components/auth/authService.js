@@ -1,73 +1,73 @@
-import axios from "axios";
-import decode from "jwt-decode";
-import Conf from "../../configuration";
-import { store } from "../../store";
-import { userLogin, userLogout } from "../profile/userActions";
+import axios from 'axios';
+import decode from 'jwt-decode';
+import Conf from '../../configuration';
+import { store } from '../../store';
+import { userLogin, userLogout } from '../profile/userActions';
 
 export default class AuthService {
   static register(email, username, password, firstName, lastName, callback) {
     axios
-      .post(Conf.domain + "api/register", {
-        email: email,
-        username: username,
-        password: password,
-        firstName: firstName,
-        lastName: lastName
+      .post(`${Conf.domain}api/register`, {
+        email,
+        username,
+        password,
+        firstName,
+        lastName,
       })
-      .then(res => {
+      .then((res) => {
         AuthService.setToken(res.data.token);
         AuthService.setUser(res.data.user);
         callback();
       })
-      .catch(res => {
-        var message = AuthService.handleException(res);
+      .catch((res) => {
+        const message = AuthService.handleException(res);
         callback(message);
       });
   }
+
   static addFriend(name) {
     this.updateAuthHeader();
 
     axios
-      .post(Conf.domain + "api/addFriend", {
-        name: name
+      .post(`${Conf.domain}api/addFriend`, {
+        name,
       })
-      .then(res => {})
-      .catch(res => {});
+      .then(() => { })
+      .catch(() => { });
   }
+
   static login(email, password, callback) {
     axios
-      .post(Conf.domain + "api/login", {
-        email: email,
-        password: password
+      .post(`${Conf.domain}api/login`, {
+        email,
+        password,
       })
-      .then(res => {
+      .then((res) => {
         AuthService.setToken(res.data.token);
         AuthService.setUser(res.data.user);
         callback();
       })
-      .catch(res => {
-        var message = AuthService.handleException(res);
+      .catch((res) => {
+        const message = AuthService.handleException(res);
         callback(message);
       });
   }
 
   static getUserInfo() {
-    axios.get(Conf.domain + "api/user").then(res => {
+    axios.get(`${Conf.domain}api/user`).then((res) => {
       AuthService.setUser(res.data);
     });
   }
 
   static handleException(res) {
-    debugger;
     if (res.response === undefined) return res.message;
-    if (res.response.data.message !== undefined)
-      return res.response.data.message;
-    else return "Network error";
+    if (res.response.data.message !== undefined) { return res.response.data.message; }
+    return 'Network error';
   }
 
   static delete(url, id) {
     this.updateAuthHeader();
-    return axios.delete(Conf.domain + url + "/" + id);
+    return axios.delete(`${Conf.domain + url}/${id}`);
   }
 
   static post(url, data) {
@@ -77,12 +77,12 @@ export default class AuthService {
 
   static get(url, params) {
     this.updateAuthHeader();
-    return axios.get(Conf.domain + url, { params: params });
+    return axios.get(Conf.domain + url, { params });
   }
 
   static put(url, id, data) {
     this.updateAuthHeader();
-    return axios.put(Conf.domain + url + "/" + id, data);
+    return axios.put(`${Conf.domain + url}/${id}`, data);
   }
 
   static loggedIn() {
@@ -94,51 +94,47 @@ export default class AuthService {
     try {
       const decoded = decode(token);
       if (decoded.exp < Date.now / 1000) return true;
-      else return false;
+      return false;
     } catch (err) {
       return false;
     }
   }
+
   static getLogin() {
-    var user = store.getState().userApp.user;
-    return user ? user.username : "";
+    const { user } = store.getState().userApp;
+    return user ? user.username : '';
   }
 
   static setUser(user) {
     store.dispatch(userLogin(user));
-    console.log(JSON.stringify(user));
-    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   static setToken(token) {
-    localStorage.setItem("token", token);
+    localStorage.setItem('token', token);
     AuthService.updateAuthHeader();
   }
 
   static getToken() {
-    return localStorage.getItem("token");
+    return localStorage.getItem('token');
   }
 
   static uploadFile(selectedFile) {
     const formData = new FormData();
-    formData.append("file", selectedFile, selectedFile.name);
+    formData.append('file', selectedFile, selectedFile.name);
 
     AuthService.updateAuthHeader();
-    axios.post("https://localhost:5001/api/UploadFiles", formData, {
-      onUploadProgress: progressEvent => {
-        console.log(progressEvent.loaded / progressEvent.total);
-      }
-    });
+    axios.post('https://localhost:5001/api/UploadFiles', formData);
   }
 
   static updateAuthHeader() {
-    axios.defaults.headers.common["Authorization"] = AuthService.loggedIn()
-      ? "Bearer " + this.getToken()
-      : "";
+    axios.defaults.headers.common.Authorization = AuthService.loggedIn()
+      ? `Bearer ${this.getToken()}`
+      : '';
   }
 
   static logout() {
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
     store.dispatch(userLogout());
     AuthService.updateAuthHeader();
   }

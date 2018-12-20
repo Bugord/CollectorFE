@@ -9,13 +9,12 @@ class ConfirmEmailPage extends Component {
       };
       if(props.match.params.token || false)
         AuthService.put("api/confirmEmail",props.match.params.token)
-        .then(res => this.props.history.push("/login"))
+        .then(() => this.props.history.push("/login"))
         .catch(res => {
           this.setState({
             errorMessage: AuthService.handleException(res)
           });
         });
-       // 
   }
 
   renderError() {

@@ -2,7 +2,7 @@ import React from "react";
 import Popup from "../common/popup";
 import { NotificationList } from "./notificationList";
 import { connect } from "react-redux";
-import FriendsService from "../friends/friendsService";
+import { acceptFriendAPI } from "../friends/friendsService";
 import AcceptFriendBlock from "./acceptFriendBlock";
 
 class InvitesDropdown extends Popup {
@@ -14,7 +14,10 @@ class InvitesDropdown extends Popup {
 
   render() {
     return (
-      <div className="popup popup__notifications z-depth-2" ref={this.setWrapperRef}>
+      <div
+        className="popup popup__notifications z-depth-2"
+        ref={this.setWrapperRef}
+      >
         <div className="popup__name">Notifications</div>
         <div
           type="button"
@@ -23,13 +26,16 @@ class InvitesDropdown extends Popup {
         >
           ✕
         </div>
-        {this.props.invites.length !== 0 ? 
-        <NotificationList
-          notifications={this.props.invites}
-          acceptInvite={this.openAcceptInviteBlock.bind(this)}
-          denyInvite={this.denyInvite.bind(this)}
-        /> : <div> You have not any notifications </div>}
-        
+        {this.props.invites.length !== 0 ? (
+          <NotificationList
+            notifications={this.props.invites}
+            acceptInvite={this.openAcceptInviteBlock.bind(this)}
+            denyInvite={this.denyInvite.bind(this)}
+          />
+        ) : (
+          <div> You have not any notifications </div>
+        )}
+
         {this.state.showAcceptInviteBlock ? (
           <AcceptFriendBlock
             togglePopup={this.togglePopup.bind(this)}
@@ -47,17 +53,12 @@ class InvitesDropdown extends Popup {
   }
 
   acceptInvite(friendName, friendId) {
-    FriendsService.acceptFriend(
-      this.state.selectedInvite,
-      true,
-      friendName,
-      friendId
-    );
+    acceptFriendAPI(this.state.selectedInvite, true, friendName, friendId);
     this.setState({ showAcceptInviteBlock: false });
   }
 
   denyInvite(id) {
-    FriendsService.acceptFriend(id, false);
+    acceptFriendAPI(id, false);
   }
 
   togglePopup() {

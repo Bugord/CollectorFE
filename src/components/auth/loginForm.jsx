@@ -17,49 +17,37 @@ class LoginForm extends Component {
     };
     this.onInputChange = this.onInputChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.validate = this.validate.bind(this);
   }
 
-  onInputChange(event, type) {
+  onInputChange(event) {
     const value = event.target.value;
     const name = event.target.name;
     var newState = {};
-    newState[type] = value;
-    this.setState(newState, () => this.validate(name));
+    newState[name] = value;
+    this.setState(newState);
   }
 
-  validateEmail(email) {
-    var re = /\S+@\S+\.\S+/;
-    return re.test(String(email).toLowerCase());
-  }
+  validate(event) {
+    var classNames = event.target.className;
+    var name = event.target.name;
 
-  validate(name) {
-    var valid = true;
     var emailError = this.state.emailError;
     var passwordError = this.state.passwordError;
-    var emailErrors = [];
-    this.setState({ displayError: false });
 
-    if (!this.validateEmail(this.state.email)) {
-      if (name === "email") emailErrors.push("Your email is not valid");
-      valid = false;
+    switch (name) {
+      case "email":
+        emailError = classNames.includes("invalid") ? "Invalid email" : "";
+        break;
+      case "password":
+        passwordError = classNames.includes("invalid")
+          ? "Invalid password"
+          : "";
+        break;
+      default:
+        break;
     }
-
-    if (this.state.email.length < 3 || this.state.email.length > 100) {
-      if (name === "email") emailErrors.push("Email must be between 3 an 100");
-      valid = false;
-    }
-
-    if (this.state.password.length < 3 || this.state.password.length > 100) {
-      if (name === "password")
-        passwordError = "Password must be between 3 an 100";
-      valid = false;
-    } else passwordError = "";
-
-    if (name === "email") emailError = emailErrors.join(", ");
 
     this.setState({
-      valid: valid,
       emailError: emailError,
       passwordError: passwordError
     });
@@ -75,7 +63,7 @@ class LoginForm extends Component {
   }
 
   render() {
-    if (AuthService.loggedIn()) return <div>Please, log out</div>;
+    if (AuthService.loggedIn()) return (<div> Please, log out </div>);
     return (
       <div className="container layout">
         <div className="row">
@@ -93,9 +81,9 @@ class LoginForm extends Component {
                   name="email"
                   placeholder="Enter your email"
                   value={this.state.email}
-                  valid={(!this.state.emailError).toString()}
                   error={this.state.emailError}
-                  onChange={e => this.onInputChange(e, "email")}
+                  onChange={e => this.onInputChange(e)}
+                  onBlur={e => this.validate(e)}
                   required
                   minLength={3}
                   validate={true}
@@ -111,9 +99,9 @@ class LoginForm extends Component {
                   name="password"
                   placeholder="Enter your password"
                   value={this.state.password}
-                  valid={(!this.state.passwordError).toString()}
                   error={this.state.passwordError}
-                  onChange={e => this.onInputChange(e, "password")}
+                  onChange={e => this.onInputChange(e)}
+                  onBlur={e => this.validate(e)}
                   required
                   minLength={3}
                   s={11}
@@ -128,12 +116,11 @@ class LoginForm extends Component {
                   waves="green"
                   className="green lighten-2 col s10 offset-s1"
                   type="submit"
-                  disabled={!this.state.valid}
                 >
                   Log in
                 </Button>
               </div>
-           
+
               <div className="row center">
                 <div className="input-field col s5 left-align offset-s1">
                   <Link to="/registration">new here?</Link>

@@ -10,6 +10,10 @@ class ChangeProfileDropdown extends Popup {
   constructor(props) {
     super(props);
     let { user } = props;
+
+    this.newPasswordRef = React.createRef();
+    this.newPasswordRepeatRef = React.createRef();
+
     this.state = {
       oldPassword: "",
       newPassword: "",
@@ -20,23 +24,21 @@ class ChangeProfileDropdown extends Popup {
 
       firstName: user.firstName,
       lastName: user.lastName,
-      username: user.username,
       email: user.email,
       firstNameError: "",
       lastNameError: "",
-      usernameError: "",
       emailError: "",
 
       valid: !props.changePassword
     };
   }
 
-  onInputChange(event, type) {
+  onInputChange(event) {
     const value = event.target.value;
     const name = event.target.name;
     var newState = {};
-    newState[type] = value;
-    this.setState(newState, () => this.validate(name));
+    newState[name] = value;
+    this.setState(newState);
   }
 
   validateEmail(email) {
@@ -44,77 +46,58 @@ class ChangeProfileDropdown extends Popup {
     return re.test(String(email).toLowerCase());
   }
 
-  validate(name) {
-    var valid = true;
-    this.setState({ errorMessage: "" });
+  validate(event) {
+    var classNames = event.target.className;
+    var name = event.target.name;
 
-    if (this.props.changePassword) {
-      if (
-        this.state.oldPassword.length < 3 ||
-        this.state.oldPassword.length > 20
-      ) {
-        if (name === "oldPassword")
-          this.setState({
-            oldPasswordError: "oldPassword must be between 3 an 20"
-          });
-        valid = false;
-      } else this.setState({ oldPasswordError: "" });
+    var emailError = this.state.emailError;
+    var newPasswordError = this.state.newPasswordError;
+    var oldPasswordError = this.state.oldPasswordError;
+    var newPasswordRepeatError = this.state.newPasswordRepeatError;
+    var firstNameError = this.state.firstNameError;
+    var lastNameError = this.state.lastNameError;
 
-      if (
-        this.state.newPassword.length < 3 ||
-        this.state.newPassword.length > 20
-      ) {
-        if (name === "newPassword")
-          this.setState({
-            newPasswordError: "New password must be between 3 an 20"
-          });
-        valid = false;
-      } else this.setState({ newPasswordError: "" });
-
-      if (
-        this.state.newPasswordRepeat.length < 3 ||
-        this.state.newPasswordRepeat.length > 20
-      ) {
-        if (name === "newPasswordRepeat")
-          this.setState({
-            newPasswordRepeatError: "Password must be between 3 an 20"
-          });
-        valid = false;
-      }
-
-      if (this.state.newPasswordRepeat !== this.state.newPassword) {
-        if (name === "passwordRepeat" || name === "newPassword")
-          this.setState({ newPasswordRepeatError: "Passwords are not equal" });
-        valid = false;
-      } else this.setState({ newPasswordRepeatError: "" });
-    } else {
-      if (!this.validateEmail(this.state.email)) {
-        if (name === "email")
-          this.setState({ emailError: "Your email is not valid" });
-        valid = false;
-      } else this.setState({ emailError: "" });
-
-      if (this.state.username.length < 3 || this.state.username.length > 16) {
-        if (name === "username")
-          this.setState({ usernameError: "Username must be between 3 an 16" });
-        valid = false;
-      } else this.setState({ usernameError: "" });
-
-      if (this.state.firstName.length < 3 || this.state.firstName.length > 16) {
-        if (name === "firstName")
-          this.setState({
-            firstNameError: "First name must be between 3 an 16"
-          });
-        valid = false;
-      } else this.setState({ firstNameError: "" });
-
-      if (this.state.lastName.length < 3 || this.state.lastName.length > 16) {
-        if (name === "lastName")
-          this.setState({ lastNameError: "Last name must be between 3 an 16" });
-        valid = false;
-      } else this.setState({ lastNameError: "" });
+    switch (name) {
+      case "firstName":
+        firstNameError = classNames.includes("invalid")
+          ? "Invalid first name"
+          : "";
+        break;
+      case "lastName":
+        lastNameError = classNames.includes("invalid")
+          ? "Invalid last name"
+          : "";
+        break;
+      case "email":
+        emailError = classNames.includes("invalid") ? "Invalid email" : "";
+        break;
+      case "oldPassword":
+        oldPasswordError = classNames.includes("invalid")
+          ? "Invalid old password"
+          : "";
+        break;
+      case "newPassword":
+        newPasswordError = classNames.includes("invalid")
+          ? "Invalid new password"
+          : "";
+        break;
+      case "newPasswordRepeat":
+        newPasswordRepeatError = classNames.includes("invalid")
+          ? "Invalid new password repeat"
+          : "";
+        break;
+      default:
+        break;
     }
-    this.setState({ valid: valid });
+
+    this.setState({
+      emailError: emailError,
+      oldPasswordError: oldPasswordError,
+      newPasswordError: newPasswordError,
+      newPasswordRepeatError: newPasswordRepeatError,
+      firstNameError: firstNameError,
+      lastNameError: lastNameError
+    });
   }
 
   render2() {
@@ -151,76 +134,119 @@ class ChangeProfileDropdown extends Popup {
       </div>
     );
   }
+
+  onPasswordChange(event) {
+    AuthService.put("api/changePassword", "", {
+      oldPassword: this.state.oldPassword,
+      newPassword: this.state.newPassword
+    })
+      .then(() => {
+        AuthService.logout();
+      })
+      .catch(res => {
+        if (res.response !== undefined)
+          this.setState({ errorMessage: res.response.data.message });
+        else this.setState({ errorMessage: res.message });
+      });
+
+    event.preventDefault();
+  }
+
+  onChangeUserInfo(event) {
+    const url = Conf.domain + "api/changeProfile";
+
+    const config = {
+      headers: {
+        Authorization: "Bearer " + AuthService.getToken()
+      }
+    };
+    var form = new FormData();
+    form.append("firstName", this.state.firstName);
+    form.append("lastName", this.state.lastName);
+    form.append("email", this.state.email);
+    Axios.put(url, form, config)
+      .then(res => {
+        AuthService.setUser(res.data);
+        // this.props.togglePopup();
+      })
+      .catch(res => {
+        if (res.response !== undefined)
+          this.setState({
+            errorMessage: res.response.data.message
+          });
+        else this.setState({ errorMessage: res.message });
+      });
+
+    event.preventDefault();
+  }
+
+  validatePassword() {
+    var newPassword = this.newPasswordRef.current.input;
+    var newPasswordRepeat = this.newPasswordRepeatRef.current.input;
+    if (newPassword.value !== newPasswordRepeat.value) {
+      newPasswordRepeat.setCustomValidity("Passwords Don't Match");
+    } else {
+      newPasswordRepeat.setCustomValidity("");
+    }
+  }
+
   renderChangeInfo() {
     return (
       <Card>
         <h4>Change info</h4>
-        <Input
-          s={12}
-          type="text"
-          name="firstName"
-          value={this.state.firstName}
-          valid={(!this.state.firstNameError).toString()}
-          label="First name"
-          validate
-          error={this.state.firstNameError}
-          onChange={e => this.onInputChange(e, "firstName")}
-        />
-        <Input
-          s={12}
-          type="text"
-          name="lastName"
-          value={this.state.lastName}
-          valid={(!this.state.lastNameError).toString()}
-          label="Last name"
-          validate
-          error={this.state.lastNameError}
-          onChange={e => this.onInputChange(e, "lastName")}
-        />
-        <Input
-          s={12}
-          type="email"
-          name="email"
-          value={this.state.email}
-          valid={(!this.state.emailError).toString()}
-          label="Email"
-          validate
-          error={this.state.emailError}
-          onChange={e => this.onInputChange(e, "email")}
-        />
-        <Row>
-          <Button
-            type="button"
-            className="button button--green"
-            disabled={!this.state.valid}
-            onClick={() => {
-              const url = Conf.domain + "api/changeProfile";
-
-              const config = {
-                headers: {
-                  Authorization: "Bearer " + AuthService.getToken()
-                }
-              };
-              var form = new FormData();
-              form.append("username", this.state.username);
-              form.append("firstName", this.state.firstName);
-              form.append("lastName", this.state.lastName);
-              form.append("email", this.state.email);
-              Axios.put(url, form, config)
-                .then(res => {
-                  AuthService.setUser(res.data);
-                  // this.props.togglePopup();
-                })
-                .catch(res => {
-                  if (res.response !== undefined)
-                    this.setState({ errorMessage: res.response.data.message });
-                  else this.setState({ errorMessage: res.message });
-                });
-            }}
-          >
-            Save changes
-          </Button>
-        </Row>
+        <form onSubmit={e => this.onChangeUserInfo(e)}>
+          <Input
+            s={12}
+            type="text"
+            name="firstName"
+            value={this.state.firstName}
+            label="First name"
+            validate
+            required
+            minLength={3}
+            maxLength={100}
+            onBlur={e => this.validate(e)}
+            error={this.state.firstNameError}
+            onChange={e => this.onInputChange(e)}
+          />
+          <Input
+            s={12}
+            type="text"
+            name="lastName"
+            value={this.state.lastName}
+            label="Last name"
+            validate
+            required
+            minLength={3}
+            maxLength={100}
+            onBlur={e => this.validate(e)}
+            error={this.state.lastNameError}
+            onChange={e => this.onInputChange(e)}
+          />
+          <Input
+            s={12}
+            type="email"
+            name="email"
+            value={this.state.email}
+            label="Email"
+            validate
+            required
+            minLength={3}
+            maxLength={100}
+            onBlur={e => this.validate(e)}
+            error={this.state.emailError}
+            onChange={e => this.onInputChange(e)}
+          />
+          <Row>
+            <Button
+              type="submit"
+              className="button button--green"
+              disabled={!this.state.valid}
+            >
+              Save changes
+            </Button>
+          </Row>
+        </form>
         {this.renderError()}
       </Card>
     );
@@ -229,60 +255,61 @@ class ChangeProfileDropdown extends Popup {
     return (
       <Card>
         <h4>Change password</h4>
-        <Input
-          s={12}
-          type="password"
-          name="oldPassword"
-          value={this.state.oldPassword}
-          valid={(!this.state.oldPasswordError).toString()}
-          validate
-          label="Old password"
-          error={this.state.oldPasswordError}
-          onChange={e => this.onInputChange(e, "oldPassword")}
-        />
-        <Input
-          s={12}
-          type="password"
-          name="newPassword"
-          value={this.state.newPassword}
-          valid={(!this.state.newPasswordError).toString()}
-          validate
-          label="New password"
-          error={this.state.newPasswordError}
-          onChange={e => this.onInputChange(e, "newPassword")}
-        />
-        <Input
-          s={12}
-          type="password"
-          name="newPasswordRepeat"
-          value={this.state.newPasswordRepeat}
-          valid={(!this.state.newPasswordRepeatError).toString()}
-          validate
-          label="Confirm new password"
-          error={this.state.newPasswordRepeatError}
-          onChange={e => this.onInputChange(e, "newPasswordRepeat")}
-        />
-        <button
-          type="button"
-          className="button button--green"
-          disabled={!this.state.valid}
-          onClick={() =>
-            AuthService.put("api/changePassword", "", {
-              oldPassword: this.state.oldPassword,
-              newPassword: this.state.newPassword
-            })
-              .then(() => {
-                AuthService.logout();
-              })
-              .catch(res => {
-                if (res.response !== undefined)
-                  this.setState({ errorMessage: res.response.data.message });
-                else this.setState({ errorMessage: res.message });
-              })
-          }
-        >
-          Change password
-        </button>
+        <form onSubmit={e => this.onPasswordChange(e)}>
+          <Input
+            s={12}
+            type="password"
+            name="oldPassword"
+            value={this.state.oldPassword}
+            minLength={3}
+            maxLength={100}
+            validate
+            required
+            label="Old password"
+            onBlur={e => this.validate(e)}
+            error={this.state.oldPasswordError}
+            onChange={e => this.onInputChange(e)}
+          />
+          <Input
+            s={12}
+            ref={this.newPasswordRef}
+            type="password"
+            name="newPassword"
+            value={this.state.newPassword}
+            minLength={3}
+            maxLength={100}
+            validate
+            required
+            label="New password"
+            onBlur={e => this.validate(e)}
+            error={this.state.newPasswordError}
+            onChange={e => {
+              this.onInputChange(e);
+              this.validatePassword();
+            }}
+          />
+          <Input
+            s={12}
+            type="password"
+            name="newPasswordRepeat"
+            ref={this.newPasswordRepeatRef}
+            value={this.state.newPasswordRepeat}
+            minLength={3}
+            maxLength={100}
+            validate
+            required
+            label="Confirm new password"
+            onBlur={e => {
+              this.validate(e);
+              this.validatePassword();
+            }}
+            error={this.state.newPasswordRepeatError}
+            onChange={e => this.onInputChange(e)}
+          />
+          <Button type="submit" className="green lighten-2">
+            Change password
+          </Button>
+        </form>
         <br />
         <br />
         {this.renderError()}

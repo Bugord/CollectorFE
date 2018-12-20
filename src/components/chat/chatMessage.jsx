@@ -18,7 +18,6 @@ export default class ChatMessage extends Component {
 
   render() {
     let { message, avatarUrl } = this.props;
-    console.log(avatarUrl)
     return (
       <div
         ref={this.myRef}

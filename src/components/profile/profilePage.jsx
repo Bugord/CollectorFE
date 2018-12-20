@@ -7,8 +7,8 @@ import Conf from "../../configuration";
 import Axios from "axios";
 import { Card, Row, Button } from "react-materialize";
 import Download from "../debt/exportComponent";
-import FriendsService from "../friends/friendsService";
-import DebtService from "../debt/debtService";
+import { getAllFriendsAPI } from "../friends/friendsService";
+import { getAllDebtsAPI } from "../debt/debtService";
 import Collapsible from "react-materialize/lib/Collapsible";
 import CollapsibleItem from "react-materialize/lib/CollapsibleItem";
 
@@ -51,8 +51,8 @@ class ProfilePage extends Component {
           });
       }
     };
-    DebtService.getAllDebts();
-    FriendsService.getAllFriends();
+    getAllDebtsAPI();
+    getAllFriendsAPI();
   }
 
   calculateSummary() {

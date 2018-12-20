@@ -7,6 +7,10 @@ import Icon from "react-materialize/lib/Icon";
 class RegistrationForm extends Component {
   constructor(props) {
     super(props);
+
+    this.passwordRef = React.createRef();
+    this.passwordRepeatRef = React.createRef();
+
     this.state = {
       email: "",
       password: "",
@@ -22,92 +26,78 @@ class RegistrationForm extends Component {
       lastNameError: "",
       displayError: false
     };
-    this.onInputChange = this.onInputChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-    this.onRegister = this.onRegister.bind(this);
-    this.validate = this.validate.bind(this);
-    this.renderError = this.renderError.bind(this);
   }
 
-  onInputChange(event, type) {
+  onInputChange(event) {
     const value = event.target.value;
     const name = event.target.name;
     var newState = {};
-    newState[type] = value;
-    this.setState(newState, () => this.validate(name));
+    newState[name] = value;
+    this.setState(newState);
   }
 
-  validateEmail(email) {
-    var re = /\S+@\S+\.\S+/;
-    return re.test(String(email).toLowerCase());
-  }
+  validate(event) {
+    var classNames = event.target.className;
+    var name = event.target.name;
 
-  validate(name) {
-    var valid = true;
+    var usernameError = this.state.usernameError;
     var emailError = this.state.emailError;
-    var emailErrors = [];
+    var passwordError = this.state.passwordError;
+    var passwordRepeatError = this.state.passwordRepeatError;
+    var firstNameError = this.state.firstNameError;
+    var lastNameError = this.state.lastNameError;
 
-    this.setState({ errorMessage: "", displayError: false });
-
-    if (!this.validateEmail(this.state.email)) {
-      if (name === "email") emailErrors.push("Your email is not valid");
-      valid = false;
+    switch (name) {
+      case "firstName":
+        firstNameError = classNames.includes("invalid")
+          ? "Invalid first name"
+          : "";
+        break;
+      case "lastName":
+        lastNameError = classNames.includes("invalid")
+          ? "Invalid last name"
+          : "";
+        break;
+      case "username":
+        usernameError = classNames.includes("invalid")
+          ? "Invalid username"
+          : "";
+        break;
+      case "email":
+        emailError = classNames.includes("invalid") ? "Invalid email" : "";
+        break;
+      case "password":
+        passwordError = classNames.includes("invalid")
+          ? "Invalid password"
+          : "";
+        break;
+      case "passwordRepeat":
+        passwordRepeatError = classNames.includes("invalid")
+          ? "Invalid password"
+          : "";
+        break;
+      default:
+        break;
     }
-
-    if (this.state.email.length < 3 || this.state.email.length > 100) {
-      if (name === "email") emailErrors.push("Email must be between 3 an 100");
-      valid = false;
-    }
-
-    if (this.state.password.length < 3 || this.state.password.length > 100) {
-      if (name === "password")
-        this.setState({ passwordError: "Password must be between 3 an 100" });
-      valid = false;
-    } else this.setState({ passwordError: "" });
-
-    if (
-      this.state.passwordRepeat.length < 3 ||
-      this.state.passwordRepeat.length > 100
-    ) {
-      if (name === "passwordRepeat")
-        this.setState({
-          passwordRepeatError: "Password must be between 3 an 100"
-        });
-      valid = false;
-    }
-
-    if (this.state.passwordRepeat !== this.state.password) {
-      if (name === "passwordRepeat" || name === "password")
-        this.setState({ passwordRepeatError: "Passwords are not equal" });
-      valid = false;
-    } else this.setState({ passwordRepeatError: "" });
-
-    if (this.state.username.length < 3 || this.state.username.length > 100) {
-      if (name === "username")
-        this.setState({ usernameError: "Username must be between 3 an 100" });
-      valid = false;
-    } else this.setState({ usernameError: "" });
-
-    if (this.state.firstName.length < 3 || this.state.firstName.length > 100) {
-      if (name === "firstName")
-        this.setState({
-          firstNameError: "First name must be between 3 an 100"
-        });
-      valid = false;
-    } else this.setState({ firstNameError: "" });
-
-    if (this.state.lastName.length < 3 || this.state.lastName.length > 100) {
-      if (name === "lastName")
-        this.setState({ lastNameError: "Last name must be between 3 an 100" });
-      valid = false;
-    } else this.setState({ lastNameError: "" });
-
-    if (name === "email") emailError = emailErrors.join(", ");
 
     this.setState({
-      valid: valid,
-      emailError: emailError
+      emailError: emailError,
+      passwordError: passwordError,
+      passwordRepeatError: passwordRepeatError,
+      usernameError: usernameError,
+      firstNameError: firstNameError,
+      lastNameError: lastNameError
     });
+  }
+
+  validatePassword() {
+    var password = this.passwordRef.current.input;
+    var passwordRepeat = this.passwordRepeatRef.current.input;
+    if (password.value !== passwordRepeat.value) {
+      passwordRepeat.setCustomValidity("Passwords Don't Match");
+    } else {
+      passwordRepeat.setCustomValidity("");
+    }
   }
 
   onSubmit(event) {
@@ -136,10 +126,10 @@ class RegistrationForm extends Component {
       <div className="container layout">
         <div className="row">
           <div className="col z-depth-1 grey lighten-4 s12 m10 offset-m1">
-            <h4 className="center-align">I see you're new here?</h4>
-            <h5 className="center-align">Please, register</h5>
+            <h4 className="center-align">{"I see you're new here?"}</h4>
+            <h5 className="center-align">{"Please, register"}</h5>
             <br /> <br />
-            <form onSubmit={this.onSubmit}>
+            <form onSubmit={e => this.onSubmit(e)}>
               <div className="row">
                 <Input
                   label="Username"
@@ -147,9 +137,9 @@ class RegistrationForm extends Component {
                   name="username"
                   placeholder="Enter your username"
                   value={this.state.username}
-                  valid={(!this.state.usernameError).toString()}
                   error={this.state.usernameError}
-                  onChange={e => this.onInputChange(e, "username")}
+                  onChange={e => this.onInputChange(e)}
+                  onBlur={e => this.validate(e)}
                   required
                   minLength={3}
                   validate={true}
@@ -165,9 +155,9 @@ class RegistrationForm extends Component {
                   name="email"
                   placeholder="Enter your email"
                   value={this.state.email}
-                  valid={(!this.state.emailError).toString()}
                   error={this.state.emailError}
-                  onChange={e => this.onInputChange(e, "email")}
+                  onChange={e => this.onInputChange(e)}
+                  onBlur={e => this.validate(e)}
                   required
                   minLength={3}
                   validate={true}
@@ -176,7 +166,7 @@ class RegistrationForm extends Component {
                   <Icon>email</Icon>
                 </Input>
               </div>
-              
+
               <div className="row">
                 <Input
                   label="First name"
@@ -184,9 +174,9 @@ class RegistrationForm extends Component {
                   name="firstName"
                   placeholder="Enter your first name"
                   value={this.state.firstName}
-                  valid={(!this.state.firstNameError).toString()}
                   error={this.state.firstNameError}
-                  onChange={e => this.onInputChange(e, "firstName")}
+                  onChange={e => this.onInputChange(e)}
+                  onBlur={e => this.validate(e)}
                   required
                   minLength={3}
                   validate={true}
@@ -201,9 +191,9 @@ class RegistrationForm extends Component {
                   name="lastName"
                   placeholder="Enter your last name"
                   value={this.state.lastName}
-                  valid={(!this.state.lastNameError).toString()}
                   error={this.state.lastNameError}
-                  onChange={e => this.onInputChange(e, "lastName")}
+                  onChange={e => this.onInputChange(e)}
+                  onBlur={e => this.validate(e)}
                   required
                   minLength={3}
                   validate={true}
@@ -218,11 +208,15 @@ class RegistrationForm extends Component {
                   label="Password"
                   type="password"
                   name="password"
+                  ref={this.passwordRef}
                   placeholder="Enter your password"
                   value={this.state.password}
-                  valid={(!this.state.passwordError).toString()}
                   error={this.state.passwordError}
-                  onChange={e => this.onInputChange(e, "password")}
+                  onChange={e => {
+                    this.onInputChange(e);
+                    this.validatePassword();
+                  }}
+                  onBlur={e => this.validate(e)}
                   required
                   minLength={3}
                   validate={true}
@@ -235,11 +229,15 @@ class RegistrationForm extends Component {
                   label="Repeat password"
                   type="password"
                   name="passwordRepeat"
+                  ref={this.passwordRepeatRef}
                   placeholder="Repeat your password"
                   value={this.state.passwordRepeat}
-                  valid={(!this.state.passwordRepeatError).toString()}
                   error={this.state.passwordRepeatError}
-                  onChange={e => this.onInputChange(e, "passwordRepeat")}
+                  onChange={e => this.onInputChange(e)}
+                  onBlur={e => {
+                    this.validate(e);
+                    this.validatePassword();
+                  }}
                   required
                   minLength={3}
                   validate={true}
@@ -255,9 +253,8 @@ class RegistrationForm extends Component {
                   waves="green"
                   className="green lighten-2 col s10 offset-s1"
                   type="submit"
-                  disabled={!this.state.valid}
                 >
-                  Log in
+                  Register
                 </Button>
               </div>
               <div className="row center">

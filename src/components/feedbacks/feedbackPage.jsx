@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import FeedbacksService from "./feedbacksService";
+import { getFeedbackAPI, getMessagesAPI, sendMessageAPI } from "./feedbacksService";
 import { FeedbackMessagesList } from "./feedbackMessagesList";
 import Feedback from "./feedback";
 import Collection from "react-materialize/lib/Collection";
@@ -18,8 +18,8 @@ class FeedbackPage extends Component {
     let feedback = props.feedbacks.find(
       feedback => feedback.id === this.feedbackId
     );
-    if (!feedback) FeedbacksService.getFeedback(this.feedbackId);
-    FeedbacksService.getMessages(this.feedbackId);
+    if (!feedback) getFeedbackAPI(this.feedbackId);
+    getMessagesAPI(this.feedbackId);
     this.state = {
       feedback: feedback,
       feedbacks: props.feedbacks,
@@ -43,19 +43,6 @@ class FeedbackPage extends Component {
     if (!feedback) return null;
     return (
       <div className="layout">
-        {/* <div className="collection">
-          <div className="avatar collection-item">
-            <Icon
-              className={
-                feedback.isClosed ? "circle green small" : "circle red small"
-              }
-            >
-              {feedback.isClosed ? "done" : "error_outline"}
-            </Icon>
-            <div className="title"><h5>{`${feedback.subject}#${feedback.id}`}</h5></div>
-            <p>{feedback.description}</p>
-          </div>
-        </div> */}
         <Collection header="Feedback">
           <Feedback feedback={feedback} full={true} user={this.props.user} />
         </Collection>
@@ -102,7 +89,7 @@ class FeedbackPage extends Component {
   }
 
   sendMessage() {
-    FeedbacksService.sendMessage(this.state.feedback.id, this.state.message);
+    sendMessageAPI(this.state.feedback.id, this.state.message);
   }
 
   onInputChange(event, type) {

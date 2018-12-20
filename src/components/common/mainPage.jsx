@@ -4,9 +4,9 @@ import AuthService from "../auth/authService";
 import { FriendsList } from "../friends/friendsList";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import FriendsService from "../friends/friendsService";
+import { getAllFriendsAPI } from "../friends/friendsService";
 import DebtBlock from "../debt/debtBlock";
-import DebtService from "../debt/debtService";
+import { getAllDebtsAPI } from "../debt/debtService";
 import ChatBlock from "../chat/chatBlock";
 import Button from "react-materialize/lib/Button";
 import ReactModal from "react-modal";
@@ -25,8 +25,8 @@ const customStyles = {
 class MainPage extends Component {
   constructor(props) {
     super(props);
-    FriendsService.getAllFriends();
-    DebtService.getAllDebts();
+    getAllFriendsAPI();
+    getAllDebtsAPI();
     AuthService.getUserInfo();
 
     this.searchBlock = React.createRef();

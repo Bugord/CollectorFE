@@ -7,7 +7,7 @@ import Icon from "react-materialize/lib/Icon";
 import Link from "react-router-dom/Link";
 import ReactTooltip from "react-tooltip";
 import ReactDOMServer from "react-dom/server";
-import FeedbacksService from "./feedbacksService";
+import {closeFeedbackAPI} from "./feedbacksService";
 
 TimeAgo.addLocale(en);
 const timeAgo = new TimeAgo("en-US");
@@ -48,7 +48,7 @@ export default class Feedback extends Component {
   }
 
   closeFeedback() {
-    FeedbacksService.closeFeedback(this.props.feedback.id);
+    closeFeedbackAPI(this.props.feedback.id);
   }
 
   render() {

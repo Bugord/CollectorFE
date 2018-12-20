@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import AcceptFriendBlock from "../notifications/acceptFriendBlock";
-import DebtService from "./debtService";
+import {
+  addDebtAPI,
+  removeDebtAPI,
+  getDebtChangesAPI,
+  updateDebtAPI
+} from "./debtService";
 import {
   debtsError,
   debtsViewed,
@@ -17,7 +22,7 @@ import Input from "react-materialize/lib/Input";
 import Conf from "../../configuration";
 import $ from "jquery";
 import CollectionItem from "react-materialize/lib/CollectionItem";
-import { convertUTCDateToLocalDate, convertLocalDateToUTCDate } from "../common/helperFunctions";
+import { convertLocalDateToUTCDate } from "../common/helperFunctions";
 import DebtChangesBlock from "./debtChangesBlock";
 
 const customStyles = {
@@ -74,25 +79,7 @@ class DebtBlock extends Component {
             isClosed: false
           },
       edited: false
-
-      // description: debt ? debt.description : "Description",
-      // value: debt ? debt.value : 0,
-      // synchronize: debt ? debt.synchronize : false,
-      // isOwnerDebter: debt ? debt.isOwnerDebter : false,
-      // name: debt ? debt.name : "Name",
-      // friend: friend,
-      // dateOfOverdue:
-      //   debt && debt.dateOfOverdue
-      //     ? new Date(
-      //         new Date(debt.dateOfOverdue).getTime() -
-      //           new Date().getTimezoneOffset() * 60000
-      //       )
-      //     : "",
-      // isClosed: debt ? debt.isClosed : false
     };
-
-    // this.handleClickOutside = this.handleClickOutside.bind(this);
-    // this.setWrapperRef = this.setWrapperRef.bind(this);
   }
 
   edited() {
@@ -351,7 +338,7 @@ class DebtBlock extends Component {
               onClick={() => {
                 $("#debtChanges" + debt.id)[0].click();
                 this.props.debtChangesNewDebt(debt.id);
-                DebtService.getDebtChanges(
+                getDebtChangesAPI(
                   debt.id,
                   this.props.changes.count,
                   10
@@ -374,38 +361,6 @@ class DebtBlock extends Component {
           >
             <div className="card-title">{debt.name}</div>
             <div className="card-text"> {debt.description}</div>
-            {/* <div className="debt__icons">
-            <div className="debt__icon">
-              <span className="debt__icon__day">{date.getDate()}</span>
-              <span className="debt__icon__month">
-                {date.toLocaleString("en-us", { month: "short" })}
-              </span>
-            </div>
-            <div
-              className={
-                debt.dateOfOverdue
-                  ? new Date(debt.dateOfOverdue).getTime() <=
-                    new Date().getTime()
-                    ? "debt__icon overdue"
-                    : "debt__icon"
-                  : "hide"
-              }
-            >
-              <span className="debt__icon__day">{dateOfOverdue.getDate()}</span>
-              <span className="debt__icon__month">
-                {dateOfOverdue.toLocaleString("en-us", { month: "short" })}
-              </span>
-            </div>
-            <div
-              className={
-                debt.synchronize
-                  ? "debt__icon"
-                  : "debt__icon debt__icon--disabled"
-              }
-            >
-              <Icon>import_export</Icon>
-            </div>
-          </div> */}
             {this.props.debt.updating && (
               <div className="card__loading">
                 <div className="loader__container">
@@ -417,8 +372,6 @@ class DebtBlock extends Component {
                 </div>
               </div>
             )}
-
-            {/* </Col> */}
           </div>
         </Card>
         <ReactModal
@@ -451,52 +404,6 @@ class DebtBlock extends Component {
             debtId={debt.id}
             changesLoading={this.props.changesLoading}
           />
-          {/* <Collapsible>
-            {this.props.changes.map((change, index) => {
-              return (
-                <CollapsibleItem
-                  key={index}
-                  header={convertUTCDateToLocalDate(
-                    new Date(change.changeTime)
-                  ).toLocaleString("ru-ru")}
-                  className="no-padding"
-                >
-                  <Collection className="debt-changes">
-                    {change.fieldChanges.map((fieldChange, index) => (
-                      <CollectionItem key={index}>
-                        <h5 className="title">{fieldChange.changedField}</h5>
-                        <p className="value old">{fieldChange.oldValue}</p>
-                        <p className="value new">{fieldChange.newValue}</p>
-                      </CollectionItem>
-                    ))}
-                  </Collection>
-                </CollapsibleItem>
-              );
-            })}
-          </Collapsible>
-          {this.props.changesLoading ? (
-            <div className="center-align">
-              <Preloader size="big" color="green" />
-            </div>
-          ) : null}
-
-          <div className="modal-footer overridden">
-            <Button
-              className="green lighten-2"
-              onClick={() => {
-                console.log(this.props)
-                if (!this.props.hasMore) return;
-                this.props.debtChangesStartLoad();
-                DebtService.getDebtChanges(
-                  debt.id,
-                  this.props.changes.length,
-                  20
-                );
-              }}
-            >
-              Load more
-            </Button>
-          </div> */}
         </Modal>
       </div>
     );
@@ -704,7 +611,7 @@ class DebtBlock extends Component {
       this.setState({
         name: debt.name,
         description: debt.description,
-        isYouDebtor: debt.isOwner === debt.isOwnerDebter,
+        isYouDebter: debt.isOwner === debt.isOwnerDebter,
         value: debt.value,
         friend: debt.friend,
         synchronize: debt.synchronize
@@ -745,16 +652,16 @@ class DebtBlock extends Component {
   }
 
   removeDebt(debtId) {
-    DebtService.removeDebt(debtId, this.props.debt.friend.id);
+    removeDebtAPI(debtId, this.props.debt.friend.id);
   }
 
   addDebt() {
-    DebtService.addDebt(this.state.debt);
+    addDebtAPI(this.state.debt);
   }
 
   updateDebt() {
     let { debt } = this.state;
-    DebtService.updateDebt(
+    updateDebtAPI(
       debt.name,
       debt.friend.id,
       debt.description,

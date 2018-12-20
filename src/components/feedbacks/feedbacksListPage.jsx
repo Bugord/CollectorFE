@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { FeedbacksList } from "./feedbacksList";
 import { connect } from "react-redux";
-import FeedbacksService from "./feedbacksService";
+import { getAllFeedbacksAPI, addFeedbackAPI } from "./feedbacksService";
 import Collection from "react-materialize/lib/Collection";
 import CollectionItem from "react-materialize/lib/CollectionItem";
 import Input from "react-materialize/lib/Input";
@@ -19,7 +19,7 @@ class FeedbacksListPage extends Component {
       subject: "",
       description: ""
     };
-    FeedbacksService.getAllFeedbacks();
+    getAllFeedbacksAPI();
   }
 
   render() {
@@ -90,7 +90,7 @@ class FeedbacksListPage extends Component {
   }
 
   addFeedback() {
-    FeedbacksService.addFeedback(this.state.subject, this.state.description);
+    addFeedbackAPI(this.state.subject, this.state.description);
   }
 
   onInputChange(event, type) {

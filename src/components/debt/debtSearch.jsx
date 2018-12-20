@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import DebtService from "./debtService";
+import { getAllDebtsAPI } from "./debtService";
 import Button from "react-materialize/lib/Button";
 import Input from "react-materialize/lib/Input";
 import {
@@ -259,6 +259,6 @@ export default class DebtSearch extends Component {
 
   updateDebts(rewrite) {
     var searchParameters = { ...this.state.searchParameters };
-    DebtService.getAllDebts(this.props.debtsCount, rewrite, searchParameters);
+    getAllDebtsAPI(this.props.debtsCount, rewrite, searchParameters);
   }
 }

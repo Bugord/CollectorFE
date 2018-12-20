@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import AuthService from "../auth/authService";
-import FriendsService from "./friendsService";
+import {
+  addFriendAPI,
+  removeFriendAPI,
+  getAllFriendsAPI,
+  inviteFriendAPI
+} from "./friendsService";
 import { Input, Button, Icon, Col } from "react-materialize";
 import {
   addFriend,
@@ -29,7 +34,6 @@ class FriendListPage extends Component {
       friendName: ""
     };
 
-    this.addFriend = this.addFriend.bind(this);
     this.removeFriend = this.removeFriend.bind(this);
     this.getAllFriends = this.getAllFriends.bind(this);
     this.props.onErrorFriend("");
@@ -49,56 +53,55 @@ class FriendListPage extends Component {
     );
   }
 
-  onInputChange(event, type) {
+  onInputChange(event) {
     const value = event.target.value;
+    const name = event.target.name;
     var newState = {};
-    newState[type] = value;
-    this.setState(newState, () => this.validate());
+    newState[name] = value;
+    this.setState(newState);
   }
 
-  validate() {
-    var valid = true;
+  validate(event) {
+    var classNames = event.target.className;
+    var name = event.target.name;
+
     var friendError = this.state.friendError;
-    this.setState({ displayError: false });
-    if (
-      this.state.friendName.length < 3 ||
-      this.state.friendName.length > 100
-    ) {
-      friendError = "Name length must be between 3 and 100";
-      valid = false;
-    } else friendError = "";
 
-    this.setState({ valid: valid, friendError: friendError });
+    switch (name) {
+      case "friendName":
+        friendError = classNames.includes("invalid")
+          ? "Invalid friend name"
+          : "";
+        break;
+      default:
+        break;
+    }
+
+    this.setState({
+      friendError: friendError
+    });
   }
-  addFriend() {
+
+  onAddFriend(event) {
     var name = this.state.friendName;
-    FriendsService.addFriend(name);
+    addFriendAPI(name);
+
+    event.preventDefault();
   }
 
   removeFriend(id) {
-    FriendsService.removeFriend(id)
-      .then(res => {})
-      .catch(res => {
-        debugger;
+    removeFriendAPI(id)
+      .then(() => {})
+      .catch(() => {
       });
   }
 
   getAllFriends() {
-    FriendsService.getAllFriends();
+    getAllFriendsAPI();
   }
 
   inviteFriend(friendId, friendEmail) {
-    FriendsService.inviteFriend(friendId, friendEmail);
-  }
-
-  onInviteDeny(id) {
-    debugger;
-    FriendsService.approveFriend(id, false);
-  }
-
-  onInviteApprove(id) {
-    debugger;
-    FriendsService.approveFriend(id, true);
+    inviteFriendAPI(friendId, friendEmail);
   }
 
   authorizedRender() {
@@ -109,44 +112,36 @@ class FriendListPage extends Component {
             <h5 className="center-align row">Edit your friend list</h5>
             <br />
             <br />
-            <div className="col s11">
-              <Input
-                label="Friend name"
-                type="text"
-                name="friendName"
-                placeholder="Enter friend name"
-                value={this.state.friendName}
-                valid={(!this.state.friendError).toString()}
-                error={this.state.friendError}
-                onChange={e => this.onInputChange(e, "friendName")}
-                required
-                minLength={3}
-                validate={true}
-                s={12}
-              >
-                <Icon>person_outline</Icon>
-              </Input>
-            </div>
-            {/* <button
-              type="button"
-              onClick={this.addFriend}
-              disabled={!this.state.valid}
-              className="button button--green"
-            >
-              Add friend
-            </button> */}
-
-            <div className="row">
-              <Button
-                waves="green"
-                className="green lighten-2 col s10 offset-s1"
-                type="button"
-                disabled={!this.state.valid}
-                onClick={this.addFriend}
-              >
-                Add friend
-              </Button>
-            </div>
+            <form onSubmit={e => this.onAddFriend(e)}>
+              <div className="col s11">
+                <Input
+                  label="Friend name"
+                  type="text"
+                  name="friendName"
+                  placeholder="Enter friend name"
+                  value={this.state.friendName}
+                  error={this.state.friendError}
+                  onChange={e => this.onInputChange(e)}
+                  onBlur={e => this.validate(e)}
+                  required
+                  minLength={3}
+                  maxLength={100}
+                  validate={true}
+                  s={12}
+                >
+                  <Icon>person_outline</Icon>
+                </Input>
+              </div>
+              <div className="row">
+                <Button
+                  waves="green"
+                  className="green lighten-2 col s10 offset-s1"
+                  type="submit"
+                >
+                  Add friend
+                </Button>
+              </div>
+            </form>
             <div className="row">
               <div className="s12">{this.renderError()}</div>
             </div>
@@ -242,13 +237,6 @@ const mapDispatchToProps = dispatch => {
     }
   };
 };
-// const mapDispatchToProps2 = dispatch => {
-//     return {
-//         onUpdateFriends: (friends) => {
-//             dispatch(updateFriends(friends))
-//         }
-//     }
-// }
 
 const mapStateToProps = state => {
   return {

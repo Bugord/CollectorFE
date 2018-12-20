@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 
-const Chip = ({ children, close, onClose, className, data, ...props }) => {
+const Chip = ({ close, onClose, className, data, ...props }) => {
   return (
     <div className={cx("chip", className)} {...props}>
       {data.label}
@@ -18,12 +18,8 @@ const Chip = ({ children, close, onClose, className, data, ...props }) => {
 
 Chip.propTypes = {
   className: PropTypes.string,
-  children: PropTypes.node,
   onClose: PropTypes.func,
   data: PropTypes.object.isRequired,
-  /**
-   * Shows a close icon
-   */
   close: PropTypes.bool
 };
 

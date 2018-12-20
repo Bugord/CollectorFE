@@ -1,13 +1,13 @@
 import React, { Component } from "react";
+import { Route, Switch } from "react-router-dom";
 import RegistrationForm from "../auth/registrationForm";
 import LoginForm from "../auth/loginForm";
-import { Route, Switch } from "react-router-dom";
 import friendListPage from "../friends/friendListPage";
 import profilePage from "../profile/profilePage";
-import FriendsService from "../friends/friendsService";
+import { getAllFriendsAPI } from "../friends/friendsService";
 import ResetPasswordPage from "../auth/resetPasswordPage";
 import ConfirmEmailPage from "../auth/confirmEmailPage";
-import DebtService from "../debt/debtService";
+import { getAllDebtsAPI } from "../debt/debtService";
 import FeedbacksListPage from "../feedbacks/feedbacksListPage";
 import FeedbackPage from "../feedbacks/feedbackPage";
 import { hubConnection } from "../../hubConnection";
@@ -18,8 +18,8 @@ export default class Application extends Component {
     hubConnection.start().then(() => (hubConnection.Connected = true));
     hubConnection.onclose(() => (hubConnection.Connected = false));
 
-    hubConnection.on("UpdateInvites", () => FriendsService.getAllFriends());
-    hubConnection.on("UpdateDebts", () => DebtService.getAllDebts());
+    hubConnection.on("UpdateInvites", () => getAllFriendsAPI());
+    hubConnection.on("UpdateDebts", () => getAllDebtsAPI());
   }
 
   render() {

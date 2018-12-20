@@ -272,9 +272,6 @@ ul {
   object-position: 50% 50%;
 }
 
-.header__icon:hover > .icon__img {
-}
-
 .header__buttons--right {
   float: right;
   line-height: 40px;
