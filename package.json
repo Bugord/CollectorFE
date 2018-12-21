@@ -14,6 +14,8 @@
     "jwt-decode": "^2.2.0",
     "material-datetime-picker": "^2.4.0",
     "maxlength-contenteditable": "^1.0.1",
+    "merge": "^1.2.1",
+    "moment": "^2.23.0",
     "prop-types": "^15.6.2",
     "react": "^16.4.2",
     "react-beautiful-dnd": "^9.0.2",
