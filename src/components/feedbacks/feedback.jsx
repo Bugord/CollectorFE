@@ -7,7 +7,7 @@ import Icon from "react-materialize/lib/Icon";
 import Link from "react-router-dom/Link";
 import ReactTooltip from "react-tooltip";
 import ReactDOMServer from "react-dom/server";
-import {closeFeedbackAPI} from "./feedbacksService";
+import { closeFeedbackAPI } from "./feedbacksService";
 import PropTypes from "prop-types";
 
 TimeAgo.addLocale(en);
@@ -73,11 +73,6 @@ export default class Feedback extends Component {
             : "avatar no-min-height "
         }
       >
-        {/* <img
-          src={Conf.domain + feedback.creator.avatarUrl}
-          alt="FeedbackCreatorAvatar"
-          className="circle"
-        /> */}
         <Icon
           className={
             feedback.isClosed ? "circle green small" : "circle red small"
@@ -122,7 +117,7 @@ export default class Feedback extends Component {
         </p>
 
         <div className="secondary-content">
-          {feedback.messagesCount && !this.props.full? (
+          {feedback.messagesCount && !this.props.full ? (
             <Link to={"/feedbacks/" + feedback.id}>
               {feedback.messagesCount}
               <Icon>chat_bubble_outline</Icon>

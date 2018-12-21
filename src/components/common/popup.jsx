@@ -3,7 +3,7 @@ import AuthService from "../auth/authService";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-class Popup extends Component {
+export default class Popup extends Component {
   constructor(props) {
     super(props);
     this.handleClickOutside = this.handleClickOutside.bind(this);
@@ -102,7 +102,6 @@ class Popup extends Component {
   }
 }
 
-export default Popup;
 Popup.propTypes = {
   togglePopup: PropTypes.func,
 };

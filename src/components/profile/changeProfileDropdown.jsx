@@ -168,7 +168,6 @@ class ChangeProfileDropdown extends Popup {
     Axios.put(url, form, config)
       .then(res => {
         AuthService.setUser(res.data);
-        // this.props.togglePopup();
       })
       .catch(res => {
         if (res.response !== undefined)

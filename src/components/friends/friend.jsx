@@ -6,7 +6,7 @@ import swal from "sweetalert";
 import Conf from "../../configuration";
 import PropTypes from "prop-types";
 
-class Friend extends Component {
+export default class Friend extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -186,10 +186,7 @@ class Friend extends Component {
                   name: this.props.friend.name
                 });
               } else {
-                updateFriendAPI(
-                  this.state.name,
-                  this.props.friend.id
-                );
+                updateFriendAPI(this.state.name, this.props.friend.id);
                 this.setState({ showNameField: false });
               }
             }}
@@ -210,7 +207,7 @@ class Friend extends Component {
                 if (willDelete) {
                   this.props.onClickDelete(friend.id);
                 }
-              });            
+              });
             }}
           >
             <Icon>remove_circle</Icon>
@@ -221,7 +218,6 @@ class Friend extends Component {
   }
 }
 
-export default Friend;
 Friend.propTypes = {
   friend: PropTypes.object,
   clickable: PropTypes.bool,

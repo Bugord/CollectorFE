@@ -33,7 +33,11 @@ export default class ChatMessage extends Component {
           <br />
           <img
             className="icon--small chatBlock__message__user__icon"
-            src={avatarUrl ? Conf.domain + avatarUrl : Conf.domain + "images/defaultAvatar.png"}
+            src={
+              avatarUrl
+                ? Conf.domain + avatarUrl
+                : Conf.domain + "images/defaultAvatar.png"
+            }
             alt="profileIcon"
           />
         </div>

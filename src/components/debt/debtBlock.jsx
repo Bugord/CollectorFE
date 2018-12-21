@@ -118,10 +118,6 @@ class DebtBlock extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // if (nextProps.friends) {
-    //   this.setState({ friends: nextProps.friends,
-    // }
-
     if (nextProps.debt) {
       let friend = nextProps.friends.find(
         friend => friend.id === nextProps.debt.friendId
@@ -294,7 +290,6 @@ class DebtBlock extends Component {
               </div>
             </CardTitle>
           }
-          // title={debt.name}
           actions={[
             <a
               key="0"
@@ -341,7 +336,6 @@ class DebtBlock extends Component {
                 $("#debtChanges" + debt.id)[0].click();
                 this.props.debtChangesNewDebt(debt.id);
                 getDebtChangesAPI(debt.id, this.props.changes.count, 10);
-                // $("#foo").modal("open");
               }}
             >
               <div>Change history</div>
@@ -692,7 +686,6 @@ class DebtBlock extends Component {
 
   validate(name) {
     var valid = true;
-    // this.setState({ errorMessage: "" });
     var sel = window.getSelection();
     var caretPos = sel.anchorOffset;
 

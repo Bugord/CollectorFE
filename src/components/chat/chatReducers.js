@@ -16,17 +16,11 @@ export function chatApp(state = initialState, action) {
   switch (action.type) {
     case CHAT_MESSAGE_SENT:
       return Object.assign({}, state, {
-        messages: [
-          ...state.messages,
-          {...action.message, isOwner: true}
-        ]
+        messages: [...state.messages, { ...action.message, isOwner: true }]
       });
     case CHAT_MESSAGE_RECEIVED:
       return Object.assign({}, state, {
-        messages: [
-          ...state.messages,
-          {...action.message, isOwner: false}
-        ],
+        messages: [...state.messages, { ...action.message, isOwner: false }],
         newMessages: true
       });
     case CHAT_START_TYPING:

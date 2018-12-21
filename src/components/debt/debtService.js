@@ -83,7 +83,6 @@ export function updateDebtAPI(
   isClosed,
   rowVersion
 ) {
-  // store.dispatch(debtsLoadingStart());
   store.dispatch(debtUpdateStart(debtId));
   return AuthService.put("api/updateDebt", "", {
     name: name,
@@ -98,9 +97,7 @@ export function updateDebtAPI(
     rowVersion: rowVersion
   })
     .then(res => {
-      // store.dispatch(debtsLoadingEnd());
       store.dispatch(debtUpdateEnd(debtId, res.data.debt));
-      // DebtService.getAllDebts();
     })
     .catch(res => {
       store.dispatch(debtUpdateEnd(debtId));

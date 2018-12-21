@@ -17,10 +17,13 @@ export const FriendsList = ({
     {friends.map(friend => {
       if (debts) {
         var debtValue = 0;
-        debts.filter(debt => debt.friendId === friend.id).forEach(element => {
-          debtValue +=
-            element.value * (element.isOwner === element.isOwnerDebter ? -1 : 1);
-        });
+        debts
+          .filter(debt => debt.friendId === friend.id)
+          .forEach(element => {
+            debtValue +=
+              element.value *
+              (element.isOwner === element.isOwnerDebter ? -1 : 1);
+          });
       }
       if (
         (filter === undefined || friend.name.includes(filter)) &&
