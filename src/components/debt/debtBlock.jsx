@@ -20,7 +20,6 @@ import ReactModal from "react-modal";
 import ContentEditable from "react-contenteditable";
 import Input from "react-materialize/lib/Input";
 import Conf from "../../configuration";
-import $ from "jquery";
 import CollectionItem from "react-materialize/lib/CollectionItem";
 import { convertLocalDateToUTCDate } from "../common/helperFunctions";
 import DebtChangesBlock from "./debtChangesBlock";
@@ -161,7 +160,7 @@ class DebtBlock extends Component {
           <div
             className={debt.isOwner ? "button__icon" : "hide"}
             onClick={() => {
-              $("#debtEdit" + debt.id)[0].click();
+              document.getElementById("debtEdit" + debt.id).click();
             }}
           >
             <Icon>mode_edit</Icon>
@@ -175,7 +174,7 @@ class DebtBlock extends Component {
           <div
             className="button__icon"
             onClick={() => {
-              $("#debtMore" + debt.id)[0].click();
+              document.getElementById("debtMore" + debt.id).click();
             }}
           >
             <Icon>more_horiz</Icon>
@@ -333,7 +332,7 @@ class DebtBlock extends Component {
             <a
               key={"change"}
               onClick={() => {
-                $("#debtChanges" + debt.id)[0].click();
+              document.getElementById("debtChanges" + debt.id).click();
                 this.props.debtChangesNewDebt(debt.id);
                 getDebtChangesAPI(debt.id, this.props.changes.count, 10);
               }}

@@ -10,10 +10,9 @@ import {
   NavItem,
   Autocomplete
 } from "react-materialize";
-import $ from "jquery";
 import Chip from "../common/chip/chip";
 import Conf from "../../configuration";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
 
 export default class DebtSearch extends Component {
   constructor(props) {
@@ -163,7 +162,9 @@ export default class DebtSearch extends Component {
               }}
               onClick={() => {
                 if (!this.state.editedParameter)
-                  $(".dropdown-button")[0].click();
+                  document
+                    .getElementsByClassName("dropdown-button")[0]
+                    .click();
               }}
             >
               <Icon>search</Icon>
