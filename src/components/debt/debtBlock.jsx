@@ -25,6 +25,7 @@ import CollectionItem from "react-materialize/lib/CollectionItem";
 import { convertLocalDateToUTCDate } from "../common/helperFunctions";
 import DebtChangesBlock from "./debtChangesBlock";
 import { compose } from "redux";
+import PropTypes from "prop-types";
 
 const customStyles = {
   content: {
@@ -757,6 +758,12 @@ class DebtBlock extends Component {
     });
   }
 }
+
+DebtBlock.propTypes = {
+  debt: PropTypes.object,
+  friend: PropTypes.array,
+  asCollectionItem: PropTypes.bool
+};
 
 const mapStateToProps = state => {
   return {

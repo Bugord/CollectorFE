@@ -2,6 +2,7 @@ import React from "react";
 import { getDebtChangesAPI } from "./debtService";
 import { Collection, Button, Preloader, Row } from "react-materialize";
 import DebtChange from "./debtChange";
+import PropTypes from "prop-types"
 
 export default function DebtChangesBlock(props) {
   var items = [];
@@ -49,3 +50,10 @@ export default function DebtChangesBlock(props) {
     </div>
   );
 }
+
+DebtChangesBlock.propTypes = {
+  debtChanges: PropTypes.array,
+  changesLoading: PropTypes.bool,
+  hasMore: PropTypes.bool,
+  debtId: PropTypes.number
+};

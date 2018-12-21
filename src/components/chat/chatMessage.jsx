@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Conf from "../../configuration";
+import PropTypes from "prop-types";
 
 export default class ChatMessage extends Component {
   constructor(props) {
@@ -50,3 +51,8 @@ export default class ChatMessage extends Component {
     );
   }
 }
+
+ChatMessage.propTypes = {
+  message: PropTypes.object,
+  avatarUrl: PropTypes.string
+};

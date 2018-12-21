@@ -5,6 +5,7 @@ import AuthService from "../auth/authService";
 import Axios from "axios";
 import Conf from "../../configuration";
 import { Input, Button, Row, Card } from "react-materialize";
+import PropTypes from "prop-types";
 
 class ChangeProfileDropdown extends Popup {
   constructor(props) {
@@ -317,6 +318,12 @@ class ChangeProfileDropdown extends Popup {
     );
   }
 }
+
+ChangeProfileDropdown.propTypes = {
+  user: PropTypes.object,
+  changePassword: PropTypes.bool,
+  togglePopup: PropTypes.func,
+};
 
 const mapStateToProps = state => {
   return {

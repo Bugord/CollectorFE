@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { acceptFriendAPI } from "../friends/friendsService";
 import AcceptFriendBlock from "./acceptFriendBlock";
 import { compose } from "redux";
+import PropTypes from "prop-types";
 
 class InvitesDropdown extends Popup {
   constructor(props) {
@@ -68,6 +69,11 @@ class InvitesDropdown extends Popup {
     });
   }
 }
+
+InvitesDropdown.propTypes = {
+  invites: PropTypes.array,
+  togglePopup: PropTypes.func,
+};
 
 const mapStateToProps = state => {
   return {

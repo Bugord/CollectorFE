@@ -13,6 +13,7 @@ import {
 import $ from "jquery";
 import Chip from "../common/chip/chip";
 import Conf from "../../configuration";
+import PropTypes from "prop-types"
 
 export default class DebtSearch extends Component {
   constructor(props) {
@@ -262,3 +263,8 @@ export default class DebtSearch extends Component {
     getAllDebtsAPI(this.props.debtsCount, rewrite, searchParameters);
   }
 }
+
+DebtSearch.propTypes = {
+  friends: PropTypes.array,
+  debtsCount: PropTypes.number
+};

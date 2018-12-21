@@ -1,5 +1,6 @@
 import React from 'react'
 import {Friend} from './friend'
+import PropTypes from "prop-types";
 
 export const FriendsList = ({ friends, onClickDelete, onClickInvite, editable, value }) => (
   <ul className="friendListBlock">
@@ -16,3 +17,11 @@ export const FriendsList = ({ friends, onClickDelete, onClickInvite, editable, v
     )}
   </ul>
 )
+
+FriendsList.propTypes = {
+  friends: PropTypes.array,
+  onClickDelete: PropTypes.func,
+  onClickInvite: PropTypes.func,
+  editable: PropTypes.bool,
+  value: PropTypes.number,
+};

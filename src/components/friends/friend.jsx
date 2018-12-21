@@ -4,6 +4,7 @@ import Icon from "react-materialize/lib/Icon";
 import Input from "react-materialize/lib/Input";
 import swal from "sweetalert";
 import Conf from "../../configuration";
+import PropTypes from "prop-types";
 
 class Friend extends Component {
   constructor(props) {
@@ -221,3 +222,10 @@ class Friend extends Component {
 }
 
 export default Friend;
+Friend.propTypes = {
+  friend: PropTypes.object,
+  clickable: PropTypes.bool,
+  editable: PropTypes.bool,
+  onClickInvite: PropTypes.func,
+  onClickDelete: PropTypes.func
+};

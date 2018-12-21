@@ -5,6 +5,7 @@ import en from 'javascript-time-ago/locale/en'
 import { CollectionItem } from "react-materialize";
 import ReactTooltip from "react-tooltip";
 import ReactDOMServer from "react-dom/server";
+import PropTypes from "prop-types";
 
 TimeAgo.addLocale(en)
 const timeAgo = new TimeAgo('en-US')
@@ -53,3 +54,8 @@ export default class FeedbackMessage extends Component {
     );
   }
 }
+
+FeedbackMessage.propTypes = {
+  feedbackMessage: PropTypes.object,
+  index: PropTypes.number
+};

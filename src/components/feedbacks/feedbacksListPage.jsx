@@ -11,6 +11,7 @@ import Icon from "react-materialize/lib/Icon";
 import AuthService from "../auth/authService";
 import { Preloader } from "react-materialize";
 import { compose } from "redux";
+import PropTypes from "prop-types";
 
 class FeedbacksListPage extends Component {
   constructor(props) {
@@ -101,6 +102,11 @@ class FeedbacksListPage extends Component {
     this.setState(newState);
   }
 }
+
+FeedbacksListPage.propTypes = {
+  feedbacks: PropTypes.array,
+  feedbacksLoading: PropTypes.bool,
+};
 
 const mapStateToProps = state => {
   return {

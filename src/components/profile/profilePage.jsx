@@ -11,6 +11,7 @@ import { getAllFriendsAPI } from "../friends/friendsService";
 import { getAllDebtsAPI } from "../debt/debtService";
 import Collapsible from "react-materialize/lib/Collapsible";
 import CollapsibleItem from "react-materialize/lib/CollapsibleItem";
+import PropTypes from "prop-types";
 import { compose } from "redux";
 
 class ProfilePage extends Component {
@@ -137,6 +138,11 @@ class ProfilePage extends Component {
     );
   }
 }
+
+ProfilePage.propTypes = {
+  user: PropTypes.object,
+  debts: PropTypes.array,
+};
 
 const mapStateToProps = state => {
   return {

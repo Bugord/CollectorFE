@@ -1,5 +1,6 @@
 import React from "react";
 import { Notification } from "./notification";
+import PropTypes from "prop-types";
 
 export const NotificationList = ({
   notifications,
@@ -17,3 +18,9 @@ export const NotificationList = ({
     ))}
   </ul>
 );
+
+NotificationList.propTypes = {
+  notifications: PropTypes.array,
+  acceptInvite: PropTypes.func,
+  denyInvite: PropTypes.func,
+};

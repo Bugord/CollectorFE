@@ -15,6 +15,7 @@ import Row from "react-materialize/lib/Row";
 import Button from "react-materialize/lib/Button";
 import AuthService from "../auth/authService";
 import { compose } from "redux";
+import PropTypes from "prop-types";
 
 class FeedbackPage extends Component {
   constructor(props) {
@@ -104,6 +105,12 @@ class FeedbackPage extends Component {
     this.setState(newState);
   }
 }
+
+FeedbackPage.propTypes = {
+  feedbacks: PropTypes.array,
+  messages: PropTypes.array,
+  user: PropTypes.object,
+};
 
 const mapStateToProps = state => {
   return {

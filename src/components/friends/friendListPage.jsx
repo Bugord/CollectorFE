@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import { FriendsList } from "./friendsList";
 import Row from "react-materialize/lib/Row";
 import { compose } from "redux";
+import PropTypes from "prop-types"
 
 class FriendListPage extends Component {
   constructor(props) {
@@ -214,6 +215,19 @@ class FriendListPage extends Component {
     );
   }
 }
+
+FriendListPage.propTypes = {
+  friends: PropTypes.array,
+  error: PropTypes.string,
+  invites: PropTypes.array,
+  successMessage: PropTypes.string,
+  onAddFriend: PropTypes.func,
+  onUpdateFriends: PropTypes.func,
+  onRemoveFriend: PropTypes.func,
+  onErrorFriend: PropTypes.func,
+  onInvitesFriend: PropTypes.func,
+  clearSuccessMessage: PropTypes.func,
+};
 
 const mapDispatchToProps = dispatch => {
   return {

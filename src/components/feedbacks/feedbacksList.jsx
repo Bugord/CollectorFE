@@ -1,6 +1,7 @@
 import React from "react";
 import Feedback from "./feedback";
 import Collection from "react-materialize/lib/Collection";
+import PropTypes from "prop-types";
 
 export const FeedbacksList = ({
   feedbacks
@@ -15,3 +16,8 @@ export const FeedbacksList = ({
     ))}
   </Collection>
 );
+
+FeedbacksList.propTypes = {
+  index: PropTypes.number,
+  feedback: PropTypes.object
+};

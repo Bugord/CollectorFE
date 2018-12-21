@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { FriendsList } from "../friends/friendsList";
 import { Input, Row, Col } from "react-materialize";
 import { compose } from "redux";
+import PropTypes from "prop-types";
 
 class AcceptFriendBlock extends Popup {
   constructor(props) {
@@ -81,6 +82,15 @@ class AcceptFriendBlock extends Popup {
     this.setState({ searchValue: value });
   }
 }
+
+AcceptFriendBlock.propTypes = {
+  friends: PropTypes.array,
+  togglePopup: PropTypes.func,
+  acceptInvite: PropTypes.func,
+  onSelect: PropTypes.func,
+  hideSync: PropTypes.bool,
+  canAdd: PropTypes.bool, 
+};
 
 const mapStateToProps = state => {
   return {

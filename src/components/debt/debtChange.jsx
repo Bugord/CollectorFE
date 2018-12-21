@@ -3,6 +3,7 @@ import { Collection } from "react-materialize";
 import CollectionItem from "react-materialize/lib/CollectionItem";
 import { convertUTCDateToLocalDate } from "../common/helperFunctions";
 import Collapsible from "react-collapsible";
+import PropTypes from "prop-types"
 
 export default function DebtChange(props) {
   let { debtChange } = props;
@@ -35,3 +36,7 @@ export default function DebtChange(props) {
     </CollectionItem>
   );
 }
+
+DebtChange.propTypes = {
+  debtChange: PropTypes.object
+};

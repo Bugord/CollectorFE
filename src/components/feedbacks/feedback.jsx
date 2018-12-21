@@ -8,6 +8,7 @@ import Link from "react-router-dom/Link";
 import ReactTooltip from "react-tooltip";
 import ReactDOMServer from "react-dom/server";
 import {closeFeedbackAPI} from "./feedbacksService";
+import PropTypes from "prop-types";
 
 TimeAgo.addLocale(en);
 const timeAgo = new TimeAgo("en-US");
@@ -137,3 +138,8 @@ export default class Feedback extends Component {
     );
   }
 }
+
+Feedback.propTypes = {
+  feedback: PropTypes.object,
+  full: PropTypes.bool
+};

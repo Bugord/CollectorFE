@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ReactExport from "react-data-export";
 import { connect } from "react-redux";
 import { compose } from "redux";
+import PropTypes from "prop-types"
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -57,6 +58,10 @@ class Download extends Component {
     );
   }
 }
+
+Download.propTypes = {
+  button: PropTypes.object
+};
 
 const mapStateToProps = state => {
   return {

@@ -1,5 +1,6 @@
 import React from "react";
 import Friend from "./friend";
+import PropTypes from "prop-types";
 
 export const FriendsList = ({
   friends,
@@ -42,3 +43,16 @@ export const FriendsList = ({
     })}
   </ul>
 );
+
+FriendsList.propTypes = {
+  friends: PropTypes.array,
+  editable: PropTypes.bool,
+  filter: PropTypes.string,
+  clickable: PropTypes.bool,
+  hideSync: PropTypes.bool,
+  debts: PropTypes.array,
+
+  onClickDelete: PropTypes.func,
+  onClickInvite: PropTypes.func,
+  onClick: PropTypes.func
+};
