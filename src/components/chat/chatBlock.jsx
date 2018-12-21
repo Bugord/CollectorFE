@@ -12,6 +12,7 @@ import {
 import Conf from "../../configuration";
 import ReactTooltip from "react-tooltip";
 import Icon from "react-materialize/lib/Icon";
+import { compose } from "redux";
 
 class ChatBlock extends Component {
   constructor(props) {
@@ -266,7 +267,9 @@ const mapStateToProps = state => {
   };
 };
 
-export default (ChatBlock = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ChatBlock));
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ChatBlock)
+);

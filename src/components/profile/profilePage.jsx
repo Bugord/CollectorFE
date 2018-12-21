@@ -11,6 +11,7 @@ import { getAllFriendsAPI } from "../friends/friendsService";
 import { getAllDebtsAPI } from "../debt/debtService";
 import Collapsible from "react-materialize/lib/Collapsible";
 import CollapsibleItem from "react-materialize/lib/CollapsibleItem";
+import { compose } from "redux";
 
 class ProfilePage extends Component {
   constructor(props) {
@@ -144,4 +145,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default (ProfilePage = connect(mapStateToProps)(ProfilePage));
+export default compose(connect(mapStateToProps)(ProfilePage));
