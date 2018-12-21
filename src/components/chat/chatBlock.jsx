@@ -103,6 +103,17 @@ class ChatBlock extends Component {
     );
   }
 
+  filterMessages() {
+    return this.state.chatWith
+      ? this.props.messages.filter(
+          message =>
+            message.isPrivate &&
+            (message.username === this.state.chatWith.friendUser.username ||
+              message.sentTo === this.state.chatWith.friendUser.username)
+        )
+      : this.props.messages.filter(message => !message.isPrivate);
+  }
+
   renderEnabled() {
     return (
       <div className="chatBlock z-depth-2">
@@ -125,20 +136,7 @@ class ChatBlock extends Component {
           </div>
 
           <div className="chatBlock__messageBlock">
-            <ChatMessageList
-              messages={
-                this.state.chatWith
-                  ? this.props.messages.filter(
-                      message =>
-                        message.isPrivate &&
-                        (message.username ===
-                          this.state.chatWith.friendUser.username ||
-                          message.sentTo ===
-                            this.state.chatWith.friendUser.username)
-                    )
-                  : this.props.messages.filter(message => !message.isPrivate)
-              }
-            />
+            <ChatMessageList messages={this.filterMessages()} />
           </div>
           <div className="chatBlock__typingMessage">{this.getTypingText()}</div>
           <div className="chatBlock__inputs">
