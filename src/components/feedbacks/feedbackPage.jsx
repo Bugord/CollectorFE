@@ -16,6 +16,7 @@ import Button from "react-materialize/lib/Button";
 import AuthService from "../auth/authService";
 import { compose } from "redux";
 import PropTypes from "prop-types";
+import { showError, showMessage } from "../common/helperFunctions";
 
 class FeedbackPage extends Component {
   constructor(props) {
@@ -95,7 +96,9 @@ class FeedbackPage extends Component {
   }
 
   sendMessage() {
-    sendMessageAPI(this.state.feedback.id, this.state.message);
+    sendMessageAPI(this.state.feedback.id, this.state.message)
+      .then(() => showMessage("Message added successfully"))
+      .catch(res => res.forEach(error => showError(error)));
   }
 
   onInputChange(event, type) {
@@ -109,7 +112,7 @@ class FeedbackPage extends Component {
 FeedbackPage.propTypes = {
   feedbacks: PropTypes.array,
   messages: PropTypes.array,
-  user: PropTypes.object,
+  user: PropTypes.object
 };
 
 const mapStateToProps = state => {

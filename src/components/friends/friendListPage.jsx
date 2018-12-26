@@ -12,15 +12,14 @@ import {
   addFriend,
   removeFriend,
   updateFriends,
-  errorFriend,
-  invitesFriend,
-  friendSuccessMessageClear
+  invitesFriend
 } from "./friendsActions";
 import { connect } from "react-redux";
 import { FriendsList } from "./friendsList";
 import Row from "react-materialize/lib/Row";
 import { compose } from "redux";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
+import { showError, showMessage } from "../common/helperFunctions";
 
 class FriendListPage extends Component {
   constructor(props) {
@@ -38,7 +37,6 @@ class FriendListPage extends Component {
 
     this.removeFriend = this.removeFriend.bind(this);
     this.getAllFriends = this.getAllFriends.bind(this);
-    this.props.onErrorFriend("");
     this.errorMessage = "";
     this.getAllFriends();
   }
@@ -86,23 +84,26 @@ class FriendListPage extends Component {
 
   onAddFriend(event) {
     var name = this.state.friendName;
-    addFriendAPI(name);
+    addFriendAPI(name)
+      .then(() => showMessage("Friend added successfully"))
+      .catch(res => res.forEach(error => showError(error)));
 
     event.preventDefault();
   }
 
   removeFriend(id) {
     removeFriendAPI(id)
-      .then(() => {})
-      .catch(() => {});
+      .then(() => showMessage("Friend removed successfully"))
+      .catch(res => res.forEach(error => showError(error)));
   }
 
   getAllFriends() {
-    getAllFriendsAPI();
+    getAllFriendsAPI().catch(res => res.forEach(error => showError(error)));
   }
 
   inviteFriend(friendId, friendEmail) {
-    inviteFriendAPI(friendId, friendEmail);
+    return inviteFriendAPI(friendId, friendEmail)
+     
   }
 
   authorizedRender() {
@@ -165,14 +166,6 @@ class FriendListPage extends Component {
     );
   }
 
-  showSuccess() {
-    this.setState({ displaySuccess: true });
-    setTimeout(() => {
-      this.setState({ displaySuccess: false });
-      setTimeout(() => this.props.clearSuccessMessage(), 50);
-    }, 1500);
-  }
-
   renderError() {
     return (
       <div
@@ -224,9 +217,7 @@ FriendListPage.propTypes = {
   onAddFriend: PropTypes.func,
   onUpdateFriends: PropTypes.func,
   onRemoveFriend: PropTypes.func,
-  onErrorFriend: PropTypes.func,
-  onInvitesFriend: PropTypes.func,
-  clearSuccessMessage: PropTypes.func,
+  onInvitesFriend: PropTypes.func
 };
 
 const mapDispatchToProps = dispatch => {
@@ -240,14 +231,8 @@ const mapDispatchToProps = dispatch => {
     onRemoveFriend: id => {
       dispatch(removeFriend(id));
     },
-    onErrorFriend: error => {
-      dispatch(errorFriend(error));
-    },
     onInvitesFriend: invites => {
       dispatch(invitesFriend(invites));
-    },
-    clearSuccessMessage: () => {
-      dispatch(friendSuccessMessageClear());
     }
   };
 };

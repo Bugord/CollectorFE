@@ -9,6 +9,7 @@ import ReactTooltip from "react-tooltip";
 import ReactDOMServer from "react-dom/server";
 import { closeFeedbackAPI } from "./feedbacksService";
 import PropTypes from "prop-types";
+import { showError, showMessage } from "../common/helperFunctions";
 
 TimeAgo.addLocale(en);
 const timeAgo = new TimeAgo("en-US");
@@ -49,7 +50,9 @@ export default class Feedback extends Component {
   }
 
   closeFeedback() {
-    closeFeedbackAPI(this.props.feedback.id);
+    closeFeedbackAPI(this.props.feedback.id)
+      .then(() => showMessage("Feedback closed successfully"))
+      .catch(res => res.forEach(error => showError(error)));
   }
 
   render() {

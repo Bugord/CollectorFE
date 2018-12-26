@@ -5,6 +5,7 @@ import Input from "react-materialize/lib/Input";
 import swal from "sweetalert";
 import Conf from "../../configuration";
 import PropTypes from "prop-types";
+import { showError, showMessage } from "../common/helperFunctions";
 
 export default class Friend extends Component {
   constructor(props) {
@@ -82,6 +83,37 @@ export default class Friend extends Component {
       emailError: emailError,
       nameError: nameError
     });
+  }
+
+  updateFriend() {
+    if (!this.state.showNameField) {
+      this.setState({
+        showNameField: true,
+        showEmailField: false,
+        name: this.props.friend.name
+      });
+    } else {
+      updateFriendAPI(this.state.name, this.props.friend.id)
+        .then(() => {
+          showMessage("Friend name was changed successfully");
+          this.setState({ showNameField: false });
+        })
+        .catch(res => res.forEach(error => showError(error)));
+    }
+  }
+
+  inviteFriend(friend) {
+    if (this.state.email && this.state.showEmailField) {
+      this.props
+        .onClickInvite(friend.id, this.state.email)
+        .then(() => {
+          showMessage("Friend invite was sent successfully");
+          this.setState({ showEmailField: false });
+        })
+        .catch(res => res.forEach(error => showError(error)));
+    } else {
+      this.setState({ showEmailField: true, showNameField: false });
+    }
   }
 
   render() {
@@ -165,31 +197,13 @@ export default class Friend extends Component {
             className={
               friend.isSynchronized ? "hide" : "button__icon hide-on-small-only"
             }
-            onClick={() => {
-              if (this.state.email && this.state.showEmailField) {
-                this.props.onClickInvite(friend.id, this.state.email);
-                this.setState({ showEmailField: false });
-              } else {
-                this.setState({ showEmailField: true, showNameField: false });
-              }
-            }}
+            onClick={() => this.inviteFriend(friend)}
           >
             <Icon>swap_calls</Icon>
           </div>
           <div
             className="button__icon hide-on-small-only"
-            onClick={() => {
-              if (!this.state.showNameField) {
-                this.setState({
-                  showNameField: true,
-                  showEmailField: false,
-                  name: this.props.friend.name
-                });
-              } else {
-                updateFriendAPI(this.state.name, this.props.friend.id);
-                this.setState({ showNameField: false });
-              }
-            }}
+            onClick={() => this.updateFriend()}
           >
             <Icon>edit</Icon>
           </div>

@@ -49,7 +49,7 @@ export function sendMessageAPI(feedbackId, text) {
       store.dispatch(addMessage(feedbackId, res.data));
     })
     .catch(res => {
-      console.log(AuthService.handleException(res));
+      throw AuthService.handleException(res);
     });
 }
 
@@ -62,7 +62,7 @@ export function addFeedbackAPI(subject, description) {
       store.dispatch(addFeedback(res.data));
     })
     .catch(res => {
-      console.log(AuthService.handleException(res));
+      throw AuthService.handleException(res);
     });
 }
 
@@ -71,5 +71,7 @@ export function closeFeedbackAPI(id) {
     .then(res => {
       store.dispatch(getFeedbackById(id, res.data));
     })
-    .catch(res => console.log(AuthService.handleException(res)));
+    .catch(res => {
+      throw AuthService.handleException(res);
+    });
 }

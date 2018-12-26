@@ -1,14 +1,11 @@
 import AuthService from "../auth/authService";
 import { store } from "../../store";
 import {
-  errorFriend,
   updateFriends,
   invitesFriend,
   removeFriend,
   updateFriendsSend,
-  addFriend,
-  friendInviteSent,
-  friendUpdated
+  addFriend
 } from "./friendsActions";
 import { hubConnection } from "../../hubConnection";
 import { getAllDebtsAPI } from "../debt/debtService";
@@ -20,17 +17,17 @@ export function addFriendAPI(name) {
     .then(res => {
       store.dispatch(addFriend(res.data));
     })
-    .catch(res =>
-      store.dispatch(errorFriend(AuthService.handleException(res)))
-    );
+    .catch(res => {
+      throw AuthService.handleException(res);
+    });
 }
 
 export function removeFriendAPI(friendId) {
   return AuthService.delete("api/removeFriend", friendId)
     .then(() => store.dispatch(removeFriend(friendId)))
-    .catch(res =>
-      store.dispatch(errorFriend(AuthService.handleException(res)))
-    );
+    .catch(res => {
+      throw AuthService.handleException(res);
+    });
 }
 
 export function updateFriendAPI(name, id) {
@@ -40,11 +37,10 @@ export function updateFriendAPI(name, id) {
   })
     .then(() => {
       getAllFriendsAPI();
-      store.dispatch(friendUpdated());
     })
-    .catch(res =>
-      store.dispatch(errorFriend(AuthService.handleException(res)))
-    );
+    .catch(res => {
+      throw AuthService.handleException(res);
+    });
 }
 
 export function getAllFriendsAPI() {
@@ -54,9 +50,9 @@ export function getAllFriendsAPI() {
       store.dispatch(updateFriends(res.data.friends));
       store.dispatch(invitesFriend(res.data.invites));
     })
-    .catch(res =>
-      store.dispatch(errorFriend(AuthService.handleException(res)))
-    );
+    .catch(res => {
+      throw AuthService.handleException(res);
+    });
 }
 
 export function inviteFriendAPI(friendId, friendEmail) {
@@ -65,13 +61,12 @@ export function inviteFriendAPI(friendId, friendEmail) {
     friendEmail: friendEmail
   })
     .then(() => {
-      store.dispatch(friendInviteSent());
       if (hubConnection.Connected)
         hubConnection.invoke("UpdateInvites", friendEmail);
     })
-    .catch(res =>
-      store.dispatch(errorFriend(AuthService.handleException(res)))
-    );
+    .catch(res => {
+      throw AuthService.handleException(res);
+    });
 }
 
 export function acceptFriendAPI(inviteId, accepted, usersName, friendId) {
@@ -85,7 +80,7 @@ export function acceptFriendAPI(inviteId, accepted, usersName, friendId) {
       getAllFriendsAPI();
       getAllDebtsAPI();
     })
-    .catch(res =>
-      store.dispatch(errorFriend(AuthService.handleException(res)))
-    );
+    .catch(res => {
+      throw AuthService.handleException(res);
+    });
 }

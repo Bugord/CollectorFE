@@ -12,6 +12,7 @@ import AuthService from "../auth/authService";
 import { Preloader } from "react-materialize";
 import { compose } from "redux";
 import PropTypes from "prop-types";
+import { showError, showMessage } from "../common/helperFunctions";
 
 class FeedbacksListPage extends Component {
   constructor(props) {
@@ -67,11 +68,6 @@ class FeedbacksListPage extends Component {
                   className="col l3 green lighten-2 offset-l9 m5 offset-m7 s12"
                   onClick={() => {
                     this.addFeedback();
-                    this.setState({
-                      showAddFeedback: false,
-                      subject: "",
-                      description: ""
-                    });
                   }}
                 >
                   Add feedback
@@ -92,7 +88,16 @@ class FeedbacksListPage extends Component {
   }
 
   addFeedback() {
-    addFeedbackAPI(this.state.subject, this.state.description);
+    addFeedbackAPI(this.state.subject, this.state.description)
+      .then(() => {
+        showMessage("Feedback added successfully");
+        this.setState({
+          showAddFeedback: false,
+          subject: "",
+          description: ""
+        });
+      })
+      .catch(res => res.forEach(error => showError(error)));
   }
 
   onInputChange(event, type) {
@@ -105,7 +110,7 @@ class FeedbacksListPage extends Component {
 
 FeedbacksListPage.propTypes = {
   feedbacks: PropTypes.array,
-  feedbacksLoading: PropTypes.bool,
+  feedbacksLoading: PropTypes.bool
 };
 
 const mapStateToProps = state => {

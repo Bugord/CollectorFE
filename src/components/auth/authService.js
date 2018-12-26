@@ -38,6 +38,14 @@ export default class AuthService {
       });
   }
 
+  static uploadFile(selectedFile) {
+    const formData = new FormData();
+    formData.append("file", selectedFile, selectedFile.name);
+
+    AuthService.updateAuthHeader();
+    axios.post("https://localhost:5001/api/UploadFiles", formData);
+  }
+
   static addFriend(name) {
     this.updateAuthHeader();
 
@@ -56,15 +64,22 @@ export default class AuthService {
   }
 
   static handleException(res) {
-    if (res.response === undefined) return res.message;
-    if (res.response.status === 401) {
-      AuthService.logout();
-      return;
+    var errors = [];
+    if (res.response != undefined) {
+      if (res.response.status === 401) {
+        AuthService.logout();
+        return;
+      }
+      if (res.response.data.message !== undefined) {
+        errors.push(res.response.data.message);
+      } else
+        for (var key in { ...res.response.data }) {
+          errors = errors.concat(res.response.data[key]);
+        }
     }
-    if (res.response.data.message !== undefined) {
-      return res.response.data.message;
-    }
-    return "Network error";
+    if (errors.length === 0) errors.push("Network error");
+
+    return errors;
   }
 
   static delete(url, id) {
@@ -119,16 +134,6 @@ export default class AuthService {
 
   static getToken() {
     return localStorage.getItem("token");
-  }
-
-  static resetPassword() {}
-
-  static uploadFile(selectedFile) {
-    const formData = new FormData();
-    formData.append("file", selectedFile, selectedFile.name);
-
-    AuthService.updateAuthHeader();
-    axios.post("https://localhost:5001/api/UploadFiles", formData);
   }
 
   static updateAuthHeader() {
