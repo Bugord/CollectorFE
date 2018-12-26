@@ -5,13 +5,12 @@ import Popup from "./popup";
 import { connect } from "react-redux";
 import NotificationsDropdown from "../notifications/notificationsDropdown";
 import Conf from "../../configuration";
+import { compose } from "redux";
 
 class Header extends Component {
   constructor(props) {
     super(props);
     this.state = { showPopup: false, showNotificationsDropdown: false };
-    this.logout = this.logout.bind(this);
-
     this.state = { login: AuthService.getLogin() };
   }
 
@@ -96,10 +95,6 @@ class Header extends Component {
       showNotificationsDropdown: !this.state.showNotificationsDropdown
     });
   }
-
-  logout() {
-    AuthService.logout();
-  }
 }
 
 const mapStateToProps = state => {
@@ -109,4 +104,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default (Header = connect(mapStateToProps)(Header));
+export default compose(connect(mapStateToProps)(Header));

@@ -5,10 +5,10 @@ class ConfirmEmailPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        errorMessage: "",
-      };
-      if(props.match.params.token || false)
-        AuthService.put("api/confirmEmail",props.match.params.token)
+      errorMessage: ""
+    };
+    if (props.match.params.token || false)
+      AuthService.put("api/confirmEmail", props.match.params.token)
         .then(() => this.props.history.push("/login"))
         .catch(res => {
           this.setState({
@@ -20,18 +20,14 @@ class ConfirmEmailPage extends Component {
   renderError() {
     var display = this.state.errorMessage || false;
     return (
-      <div className="errorMessage" style={{ display: display ? "" : "none" }}>
+      <div className="errorMessage" className={display ? "" : "hide"}>
         <p>{this.state.errorMessage}</p>
       </div>
     );
   }
 
   render() {
-    return (
-      <div >
-        {this.renderError()}
-      </div>
-    );
+    return <div>{this.renderError()}</div>;
   }
 }
 

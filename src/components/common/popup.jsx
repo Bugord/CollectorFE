@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 export default class Popup extends Component {
   constructor(props) {
     super(props);
-    this.handleClickOutside = this.handleClickOutside.bind(this);
     this.setWrapperRef = this.setWrapperRef.bind(this);
   }
 
@@ -15,11 +14,11 @@ export default class Popup extends Component {
   }
 
   componentDidMount() {
-    document.addEventListener("mousedown", this.handleClickOutside);
+    document.addEventListener("mousedown", e => this.handleClickOutside(e));
   }
 
-  componentWillUnmount(){
-    document.removeEventListener("mousedown", this.handleClickOutside);
+  componentWillUnmount() {
+    document.removeEventListener("mousedown", e => this.handleClickOutside(e));
   }
 
   handleClickOutside(event) {
@@ -30,7 +29,10 @@ export default class Popup extends Component {
 
   render() {
     return (
-      <div className="popup popup__navigation z-depth-2" ref={this.setWrapperRef}>
+      <div
+        className="popup popup__navigation z-depth-2"
+        ref={this.setWrapperRef}
+      >
         <div className="popup__name">{AuthService.getLogin()}</div>
         <div
           type="button"
@@ -103,6 +105,5 @@ export default class Popup extends Component {
 }
 
 Popup.propTypes = {
-  togglePopup: PropTypes.func,
+  togglePopup: PropTypes.func
 };
- 
