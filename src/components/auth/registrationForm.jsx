@@ -106,12 +106,11 @@ class RegistrationForm extends Component {
       this.state.username,
       this.state.password,
       this.state.firstName,
-      this.state.lastName,
-      errorMessage =>
-        errorMessage
-          ? this.setState({ errorMessage: errorMessage, displayError: true })
-          : this.props.history.push("/")
-    );
+      this.state.lastName
+    )
+      .then(() => this.props.history.push("/"))
+      .catch(res => this.setState({ errorMessage: res, displayError: true }));
+      
     event.preventDefault();
   }
 

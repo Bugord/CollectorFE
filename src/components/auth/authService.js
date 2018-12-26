@@ -5,8 +5,8 @@ import { store } from "../../store";
 import { userLogin, userLogout } from "../profile/userActions";
 
 export default class AuthService {
-  static register(email, username, password, firstName, lastName, callback) {
-    axios
+  static register(email, username, password, firstName, lastName) {
+    return axios
       .post(`${Conf.domain}api/register`, {
         email,
         username,
@@ -17,11 +17,24 @@ export default class AuthService {
       .then(res => {
         AuthService.setToken(res.data.token);
         AuthService.setUser(res.data.user);
-        callback();
       })
       .catch(res => {
-        const message = AuthService.handleException(res);
-        callback(message);
+        throw AuthService.handleException(res);
+      });
+  }
+
+  static login(email, password) {
+    return axios
+      .post(`${Conf.domain}api/login`, {
+        email,
+        password
+      })
+      .then(res => {
+        AuthService.setToken(res.data.token);
+        AuthService.setUser(res.data.user);
+      })
+      .catch(res => {
+        throw AuthService.handleException(res);
       });
   }
 
@@ -36,23 +49,6 @@ export default class AuthService {
       .catch(() => {});
   }
 
-  static login(email, password, callback) {
-    axios
-      .post(`${Conf.domain}api/login`, {
-        email,
-        password,
-      })
-      .then((res) => {
-        AuthService.setToken(res.data.token);
-        AuthService.setUser(res.data.user);
-        callback();
-      })
-      .catch((res) => {
-        const message = AuthService.handleException(res);
-        callback(message);
-      });
-  }
-
   static getUserInfo() {
     axios.get(`${Conf.domain}api/user`).then(res => {
       AuthService.setUser(res.data);
@@ -61,6 +57,10 @@ export default class AuthService {
 
   static handleException(res) {
     if (res.response === undefined) return res.message;
+    if (res.response.status === 401) {
+      AuthService.logout();
+      return;
+    }
     if (res.response.data.message !== undefined) {
       return res.response.data.message;
     }

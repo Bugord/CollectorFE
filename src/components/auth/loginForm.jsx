@@ -15,8 +15,6 @@ class LoginForm extends Component {
       valid: false,
       displayError: false
     };
-    this.onInputChange = this.onInputChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
   }
 
   onInputChange(event) {
@@ -54,16 +52,19 @@ class LoginForm extends Component {
   }
 
   onSubmit(event) {
-    AuthService.login(this.state.email, this.state.password, errorMessage => {
-      errorMessage
-        ? this.setState({ errorMessage: errorMessage, displayError: true })
-        : this.props.history.push("/");
-    });
+    AuthService.login(this.state.email, this.state.password)
+      .then(() => {
+        this.props.history.push("/");
+      })
+      .catch(res => {
+        this.setState({ errorMessage: res, displayError: true });
+      });
+
     event.preventDefault();
   }
 
   render() {
-    if (AuthService.loggedIn()) return (<div> Please, log out </div>);
+    if (AuthService.loggedIn()) return <div> Please, log out </div>;
     return (
       <div className="container layout">
         <div className="row">
@@ -73,7 +74,7 @@ class LoginForm extends Component {
             <br />
             <br />
 
-            <form onSubmit={this.onSubmit}>
+            <form onSubmit={event => this.onSubmit(event)}>
               <div className="row">
                 <Input
                   label="Email"
