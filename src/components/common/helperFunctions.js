@@ -11,10 +11,15 @@ export function validateEmail(email) {
   return re.test(String(email).toLowerCase());
 }
 
-export function showError(error) {
-  window.Materialize.toast(error, 3000, "red lighten-2");
+export function showError(error, time = 3000) {
+  window.Materialize.toast(error, time, "red lighten-2");
 }
 
-export function showMessage(message) {
+export function showMessage(message, time = 3000) {
   window.Materialize.toast(message, 3000, "green lighten-2");
 }
+
+export function showWarning(message, time = 3000) {
+  window.Materialize.toast(message, 3000, "orange lighten-2");
+}
+
