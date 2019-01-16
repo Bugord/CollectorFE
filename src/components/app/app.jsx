@@ -13,6 +13,7 @@ import FeedbackPage from "../feedbacks/feedbackPage";
 import { hubConnection } from "../../hubConnection";
 import mainPage from "../common/mainPage";
 import Header from "../common/header";
+import { PageNotFound } from "../errorPages/pageNotFound";
 
 export default class Application extends Component {
   componentDidMount() {
@@ -39,6 +40,7 @@ export default class Application extends Component {
             <Route path="/profile" component={profilePage} />
             <Route exact path="/feedbacks" component={FeedbacksListPage} />
             <Route path="/feedbacks/:id" component={FeedbackPage} />
+            <Route path="*" component={PageNotFound} />
           </Switch>
         </main>
       </BrowserRouter>
