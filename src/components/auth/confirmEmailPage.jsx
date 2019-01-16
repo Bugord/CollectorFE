@@ -20,7 +20,7 @@ class ConfirmEmailPage extends Component {
   renderError() {
     var display = this.state.errorMessage || false;
     return (
-      <div className="errorMessage" className={display ? "" : "hide"}>
+      <div className={display ? "errorMessage" : "hide"}>
         <p>{this.state.errorMessage}</p>
       </div>
     );
