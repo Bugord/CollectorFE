@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import AuthService from "./authService";
 import { Redirect } from "react-router-dom";
 import { Button, Input, Row, Col, Icon } from "react-materialize";
+import Axios from "axios";
+import Conf from "../../configuration";
+import { showMessage, showError } from "../common/helperFunctions";
 
 class ResetPasswordPage extends Component {
   constructor(props) {
@@ -112,28 +115,27 @@ class ResetPasswordPage extends Component {
 
   onPasswordEmailSend(event) {
     if (!AuthService.loggedIn())
-      AuthService.put("api/resetPassword", this.state.email)
-        .then(() => this.setState({ mailSent: true }))
+      Axios.put(Conf.domain + "api/resetPassword/" + this.state.email)
+        .then(() => {
+          showMessage("Message was sent, check your email");
+        })
         .catch(res => {
-          this.setState({
-            errorMessage: AuthService.handleException(res)
-          });
+          showError(AuthService.handleException(res));
         });
     event.preventDefault();
   }
 
-  onPasswordChange(event) {
-    if (!AuthService.loggedIn())
-      AuthService.put("api/resetPassword", "", {
-        token: this.props.match.params.token,
-        password: this.state.password
-      })
-        .then(() => this.props.history.push("/login"))
-        .catch(res => {
-          this.setState({
-            errorMessage: AuthService.handleException(res)
-          });
+  onPasswordChange(event) {  
+    Axios.put(Conf.domain + "api/resetPassword", {
+      token: this.props.match.params.token,
+      password: this.state.password
+    })
+      .then(() => this.props.history.push("/login"))
+      .catch(res => {
+        this.setState({
+          errorMessage: AuthService.handleException(res)
         });
+      });
     event.preventDefault();
   }
 
