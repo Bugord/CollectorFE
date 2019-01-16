@@ -21,6 +21,7 @@ export function addDebtAPI(debt) {
     })
     .catch(res => {
       store.dispatch(debtsError(AuthService.handleException(res)));
+      throw AuthService.handleException(res);
     });
 }
 
@@ -100,12 +101,6 @@ export function updateDebtAPI(
       store.dispatch(debtUpdateEnd(debtId, res.data.debt));
     })
     .catch(res => {
-      store.dispatch(debtUpdateEnd(debtId));
-      if (res.response) {
-        if (res.response.data.Name)
-          store.dispatch(debtsError(res.response.data.Name[0]));
-        if (res.response.data.Value)
-          store.dispatch(debtsError(res.response.data.Value[0]));
-      } else store.dispatch(debtsError(res.message));
+      throw AuthService.handleException(res);
     });
 }
