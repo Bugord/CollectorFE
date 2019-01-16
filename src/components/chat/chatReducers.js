@@ -1,6 +1,7 @@
 import {
   CHAT_MESSAGE_SENT,
   CHAT_MESSAGE_RECEIVED,
+  CHAT_MESSAGES_RECEIVED,
   CHAT_START_TYPING,
   CHAT_STOP_TYPING,
   CHAT_VIEWED
@@ -22,6 +23,10 @@ export function chatApp(state = initialState, action) {
       return Object.assign({}, state, {
         messages: [...state.messages, { ...action.message, isOwner: false }],
         newMessages: true
+      });
+    case CHAT_MESSAGES_RECEIVED:
+      return Object.assign({}, state, {
+        messages: [...action.messages],
       });
     case CHAT_START_TYPING:
       return Object.assign({}, state, {

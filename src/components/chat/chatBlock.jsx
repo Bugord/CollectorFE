@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import {
   chatMessageSent,
   chatMessageReceived,
+  chatMessagesReceived,
   chatStartTyping,
   chatStopTyping,
   chatViewed
@@ -13,6 +14,7 @@ import Conf from "../../configuration";
 import ReactTooltip from "react-tooltip";
 import Icon from "react-materialize/lib/Icon";
 import { compose } from "redux";
+import AuthService from "../auth/authService";
 
 class ChatBlock extends Component {
   constructor(props) {
@@ -33,6 +35,8 @@ class ChatBlock extends Component {
     hubConnection.on("StopTyping", username => {
       this.props.stopTyping(username);
     });
+
+    this.getChatMessages()
   }
 
   onInputChange(event, type) {
@@ -41,6 +45,16 @@ class ChatBlock extends Component {
     newState[type] = value;
     this.startTyping();
     this.setState(newState);
+  }
+
+  getChatMessages(ChatWithUsername) {
+    AuthService.get("chat/getMessages", {
+      ChatWithUsername: ChatWithUsername,
+      SkipMessages: 0,
+      TakeMessages: 0
+    })
+      .then(res => this.props.receiveMessages(res.data))
+      .catch(err => console.log(err));
   }
 
   stopTyping(forced) {
@@ -181,6 +195,7 @@ class ChatBlock extends Component {
               this.setState({
                 chatWith: ""
               });
+              this.getChatMessages();
             }}
             alt="Global chat"
           />
@@ -200,6 +215,7 @@ class ChatBlock extends Component {
                       this.setState({
                         chatWith: friend
                       });
+                      this.getChatMessages(friend.friendUser.username);
                     }}
                     src={Conf.domain + friend.friendUser.avatarUrl}
                     alt={friend.friendUser.username}
@@ -244,6 +260,9 @@ const mapDispatchToProps = dispatch => {
     },
     receiveMessage: message => {
       dispatch(chatMessageReceived(message));
+    },
+    receiveMessages: messages => {
+      dispatch(chatMessagesReceived(messages));
     },
     startTyping: user => {
       dispatch(chatStartTyping(user));
