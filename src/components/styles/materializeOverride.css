@@ -161,7 +161,7 @@
   padding-left: 8px;
 }
 
-.swal-button:focus{
+.swal-button:focus {
   background-color: #e64942;
 }
 
@@ -181,6 +181,10 @@
   max-height: 220px;
 }
 
+.card .card-image img {
+  pointer-events: none;
+}
+
 .card .card-image .card-title {
   width: 100%;
   height: 100%;
@@ -189,6 +193,7 @@
 }
 
 .card-title-inner {
+  cursor: pointer;
   transition: background 0.5s ease;
   width: 100%;
   height: 100%;
@@ -206,17 +211,24 @@
   word-break: break-word; /*ie, edge*/
 }
 
-.modal-footer{
+.modal-footer {
   display: none;
 }
 
-.modal-footer.overridden{
+.modal-footer.overridden {
   display: inherit;
 }
 
+div[contenteditable="false"] {
+  border: #ffffff00 1px solid;
+}
+
 div[contenteditable="true"] {
-  border: #00000000 1px solid;
-  transition: 0.4s all ease;
+  padding: 0px;
+  border: #00000030 1px solid;
+  background: #00000010;
+  transition: 0.4s border-color ease;
+  cursor: text;
 }
 
 div[contenteditable="true"]:focus {
@@ -234,23 +246,22 @@ div[contenteditable="true"]:hover {
   outline: none;
 }
 
-.card .card-content.no-padding{
+.card .card-content.no-padding {
   /* height: 110px;
   overflow: auto; */
   padding: 0;
 }
 
-.card .card-content .card-content-inner{
+.card .card-content .card-content-inner {
   height: 110px;
   min-height: 110px;
   overflow: auto;
-  padding: 24px;
+  /* padding: 24px; */
 }
 
-.card .card-content .card-content-inner.active{
+.card .card-content .card-content-inner.active {
   height: auto;
 }
-
 
 .card .card-content .card-title {
   word-break: break-all;
@@ -303,6 +314,10 @@ i {
   border-radius: 50% !important;
   z-index: 1;
   margin-right: 5px;
+}
+
+.debt__icon__edit {
+  pointer-events: all;
 }
 
 .debt__icon__day {
@@ -369,7 +384,7 @@ _:-ms-lang(x),
     column-count: 5;
   }
 }
-.card .card-action{
+.card .card-action {
   max-height: 75px;
 }
 
@@ -380,6 +395,24 @@ _:-ms-lang(x),
 .ReactModal__Overlay {
   z-index: 5;
   overflow: auto;
+}
+
+.ReactModal__Overlay.ReactModal__Overlay--after-open {
+  animation-name: example;
+  animation-duration: 0.35s;
+}
+
+.ReactModal__Content.ReactModal__Content--after-open row{
+  
+}
+
+@keyframes example {
+  from {
+    opacity: 0.1;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .ReactModal__Content {
@@ -403,16 +436,20 @@ i.small {
   font-size: 2rem !important;
 }
 
-.no-padding > .collapsible-body{
+.no-padding > .collapsible-body {
   padding: 0;
 }
 
-.collapsible-header.active{
+.collapsible-header.active {
   background-color: #f3f3f3;
 }
 
-.collection-item{
+.collection-item {
   word-break: break-all;
+}
+
+.pointer__disabled {
+  pointer-events: none;
 }
 
 @media (max-width: 600px) {

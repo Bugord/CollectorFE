@@ -3,6 +3,7 @@ body {
   padding: 0;
   /* background-color: #f3f3f3; */
   min-height: 100vh;
+  /* background-color: #fdfdfd */
   background: linear-gradient(to top left, #cad5ef, #feffdb);
 }
 
@@ -233,7 +234,8 @@ ul {
 /* HEADER */
 
 .header {
-  background-color: rgba(248, 249, 249, 0.9);
+  /* background-color: rgba(248, 249, 249, 0.9); */
+  background-color: #ffffff;
   height: 65px;
   left: 0;
   padding: 1em 0.15em;
@@ -455,7 +457,6 @@ ul {
   justify-content: center;
   margin-top: 50px;
 }
-
 .friendListBlock {
   padding: 0px;
   background-color: rgba(248, 249, 249, 0.85);
@@ -539,6 +540,16 @@ ul {
 }
 .debtBlock--new {
   box-shadow: 0px 0px 14px 0px hsla(134, 91%, 54%, 0.76);
+}
+.debtBlock__closeButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  color: white;
+}
+.debtBlock__closeButton:hover {
+  color: rgb(223, 223, 223);
 }
 .addDebtBlock {
   text-align: center;
@@ -632,6 +643,11 @@ ul {
   filter: brightness(50%);
   cursor: pointer;
 }
+.debtBlock__friend {
+}
+.debtBlock__friend.editable {
+  cursor: pointer;
+}
 .debtBlockDebt__value {
   position: absolute;
   height: 20px;
@@ -662,9 +678,9 @@ ul {
 .debt__searchBox .btn {
   overflow: hidden;
 }
-.search__tag-Buttons {
+/* .search__tag-Buttons {
   float: right;
-}
+} */
 .debt__icons {
   z-index: 1;
   position: absolute;
@@ -691,6 +707,9 @@ ul {
   cursor: pointer;
   margin: 0px 2px;
   /* pointer-events: none; */
+}
+.debt__icon input {
+  cursor: pointer;
 }
 .debt__icon.overdue {
   color: #ffa5a5;
@@ -770,11 +789,9 @@ ul {
   height: 45px;
   width: calc(100% - 50px);
 }
-
-.chatBlock__inputs input{
+.chatBlock__inputs input {
   border: none;
 }
-
 .chatBlock__send {
   float: right;
   color: #8c8b8b;
@@ -842,7 +859,8 @@ ul {
   overflow: auto;
   height: 370px;
   position: relative;
-  box-shadow: inset 0 5px 5px -5px #333, inset 0 -5px 5px -5px #333; /* margin-bottom: 45px; */
+  box-shadow: inset 0 5px 5px -5px #333, inset 0 -5px 5px -5px #333;
+  /* margin-bottom: 45px; */
 }
 .chatBlock__message {
   display: flex;
@@ -972,9 +990,11 @@ ul {
   break-inside: avoid-column;
   page-break-inside: avoid;
   padding: 20px 10px;
+  transition: filter 0.5s ease;
 }
 .card {
   margin: 0px;
+  cursor: inherit;
 }
 .card__loading {
   background: rgba(255, 255, 255, 0.72);
