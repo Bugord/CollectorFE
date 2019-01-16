@@ -129,11 +129,12 @@ export default class DebtSearch extends Component {
   render() {
     var friendsObject = this.arrayToObject(this.props.friends);
     return (
-      <div>
-        <Row>
+      <Row>
+        <Col s={12}>
           {this.state.editedParameter.type === "autocomplete" ? (
             <Autocomplete
-              s={10}
+              s={9}
+              l={8}
               title="Friend"
               data={friendsObject}
               onAutocomplete={value => this.setState({ searchValue: value })}
@@ -142,7 +143,8 @@ export default class DebtSearch extends Component {
             </Autocomplete>
           ) : (
             <Input
-              s={10}
+              s={9}
+              l={8}
               ref={this.InputRef}
               placeholder=""
               label={
@@ -162,16 +164,15 @@ export default class DebtSearch extends Component {
               }}
               onClick={() => {
                 if (!this.state.editedParameter)
-                  document
-                    .getElementsByClassName("dropdown-button")[0]
-                    .click();
+                  document.getElementsByClassName("dropdown-button")[0].click();
               }}
             >
               <Icon>search</Icon>
             </Input>
           )}
-
-          <div
+          <Col
+            s={2}
+            l={1}
             className={
               this.state.editedParameter ? "search__tag-Buttons" : "hide"
             }
@@ -210,52 +211,188 @@ export default class DebtSearch extends Component {
               }}
               className="red lighten-2"
             />
-          </div>
-        </Row>
-        <Col s={12}>
-          {this.state.searchParameters.map(param =>
-            param.value ? (
-              <Chip
-                close
-                key={param.label}
-                data={param}
-                onClose={() => {
-                  this.setState(
-                    {
-                      searchParameters: this.state.searchParameters.map(
-                        parameter =>
-                          parameter.label === param.label
-                            ? { ...parameter, value: "" }
-                            : parameter
-                      )
-                    },
-                    () => this.updateDebts(true)
-                  );
-                }}
-              />
-            ) : null
-          )}
-        </Col>
-        <Col s={12}>
-          <Dropdown trigger={<div ref={el => (this.el = el)} />}>
+          </Col>
+          <Col s={12} m={3}>
+            <Dropdown
+              trigger={
+                <Button className="col s12 green lighten-2">
+                  {this.state.editedParameter
+                    ? this.state.editedParameter.label
+                    : "Filters"}
+                </Button>
+              }
+            >
+              {this.state.searchParameters.map(param =>
+                !param.value ? (
+                  <NavItem
+                    key={param.label}
+                    onClick={() => {
+                      this.setState({
+                        editedParameter: param,
+                        searchValue: param.default
+                      });
+                    }}
+                  >
+                    {param.label}
+                  </NavItem>
+                ) : null
+              )}
+            </Dropdown>
+          </Col>
+
+          <Col s={12}>
             {this.state.searchParameters.map(param =>
-              !param.value ? (
-                <NavItem
+              param.value ? (
+                <Chip
+                  close
                   key={param.label}
-                  onClick={() => {
-                    this.setState({
-                      editedParameter: param,
-                      searchValue: param.default
-                    });
+                  data={param}
+                  onClose={() => {
+                    this.setState(
+                      {
+                        searchParameters: this.state.searchParameters.map(
+                          parameter =>
+                            parameter.label === param.label
+                              ? { ...parameter, value: "" }
+                              : parameter
+                        )
+                      },
+                      () => this.updateDebts(true)
+                    );
                   }}
-                >
-                  {param.label}
-                </NavItem>
+                />
               ) : null
             )}
-          </Dropdown>
+          </Col>
         </Col>
-      </div>
+      </Row>
+      //   <div>
+      //     <Row>
+      //       {this.state.editedParameter.type === "autocomplete" ? (
+      //         <Autocomplete
+      //           s={10}
+      //           title="Friend"
+      //           data={friendsObject}
+      //           onAutocomplete={value => this.setState({ searchValue: value })}
+      //         >
+      //           <Icon>search</Icon>
+      //         </Autocomplete>
+      //       ) : (
+      //         <Input
+      //           s={10}
+      //           ref={this.InputRef}
+      //           placeholder=""
+      //           label={
+      //             this.state.editedParameter
+      //               ? this.state.editedParameter.label
+      //               : "Search"
+      //           }
+      //           type={
+      //             this.state.editedParameter
+      //               ? this.state.editedParameter.type
+      //               : "text"
+      //           }
+      //           value={this.state.searchValue}
+      //           onChange={e => {
+      //             if (this.state.editedParameter)
+      //               this.onInputChange(e, "searchValue");
+      //           }}
+      //           onClick={() => {
+      //             if (!this.state.editedParameter)
+      //               document
+      //                 .getElementsByClassName("dropdown-button")[0]
+      //                 .click();
+      //           }}
+      //         >
+      //           <Icon>search</Icon>
+      //         </Input>
+      //       )}
+
+      //       <div
+      //         className={
+      //           this.state.editedParameter ? "search__tag-Buttons" : "hide"
+      //         }
+      //       >
+      //         <Button
+      //           floating
+      //           icon="add"
+      //           disabled={!this.state.searchValue.trim()}
+      //           className="green lighten-2"
+      //           onClick={() => {
+      //             this.setState(
+      //               {
+      //                 searchParameters: this.state.searchParameters.map(param =>
+      //                   param.label === this.state.editedParameter.label
+      //                     ? {
+      //                         ...this.state.editedParameter,
+      //                         value: this.state.searchValue
+      //                       }
+      //                     : param
+      //                 ),
+      //                 editedParameter: "",
+      //                 searchValue: ""
+      //               },
+      //               () => this.updateDebts(true)
+      //             );
+      //           }}
+      //         />
+      //         <Button
+      //           floating
+      //           icon="close"
+      //           onClick={() => {
+      //             this.setState({
+      //               editedParameter: "",
+      //               searchValue: ""
+      //             });
+      //           }}
+      //           className="red lighten-2"
+      //         />
+      //       </div>
+      //     </Row>
+      //     <Col s={12}>
+      //       {this.state.searchParameters.map(param =>
+      //         param.value ? (
+      //           <Chip
+      //             close
+      //             key={param.label}
+      //             data={param}
+      //             onClose={() => {
+      //               this.setState(
+      //                 {
+      //                   searchParameters: this.state.searchParameters.map(
+      //                     parameter =>
+      //                       parameter.label === param.label
+      //                         ? { ...parameter, value: "" }
+      //                         : parameter
+      //                   )
+      //                 },
+      //                 () => this.updateDebts(true)
+      //               );
+      //             }}
+      //           />
+      //         ) : null
+      //       )}
+      //     </Col>
+      //     <Col s={12}>
+      //       <Dropdown trigger={<div ref={el => (this.el = el)} />}>
+      //         {this.state.searchParameters.map(param =>
+      //           !param.value ? (
+      //             <NavItem
+      //               key={param.label}
+      //               onClick={() => {
+      //                 this.setState({
+      //                   editedParameter: param,
+      //                   searchValue: param.default
+      //                 });
+      //               }}
+      //             >
+      //               {param.label}
+      //             </NavItem>
+      //           ) : null
+      //         )}
+      //       </Dropdown>
+      //     </Col>
+      //   </div>
     );
   }
 

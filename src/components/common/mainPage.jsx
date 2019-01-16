@@ -92,10 +92,10 @@ class MainPage extends Component {
                           onClick={() => this.openModal()}
                           className="col s12 waves-effect waves-green green lighten-2"
                         >
-                          Add new
+                          Add new debt
                         </Button>
                       </Row>
-                      <Row>
+                      {/* <Row>
                         <Button
                           floating
                           large
@@ -111,7 +111,7 @@ class MainPage extends Component {
                               : "apps"}
                           </Icon>
                         </Button>
-                      </Row>
+                      </Row> */}
                     </Col>
                   </div>
                 </Col>
