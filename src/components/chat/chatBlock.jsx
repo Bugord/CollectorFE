@@ -246,7 +246,8 @@ class ChatBlock extends Component {
         isPrivate: this.state.chatWith !== "",
         sentTo: this.state.chatWith
           ? this.state.chatWith.friendUser.username
-          : ""
+          : "",
+          created: new Date()
       });
       this.setState({ text: "" });
     }

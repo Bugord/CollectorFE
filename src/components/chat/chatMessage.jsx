@@ -6,7 +6,7 @@ export default class ChatMessage extends Component {
   constructor(props) {
     super(props);
     this.myRef = React.createRef();
-    this.dateOfCreation = new Date().toLocaleTimeString("ru-RU", {
+    this.dateOfCreation = new Date(props.message.created).toLocaleTimeString("ru-RU", {
       hour12: false,
       hour: "numeric",
       minute: "numeric"
