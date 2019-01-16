@@ -1,35 +1,34 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import AcceptFriendBlock from "../notifications/acceptFriendBlock";
-import {
-  addDebtAPI,
-  removeDebtAPI,
-  getDebtChangesAPI,
-  updateDebtAPI
-} from "./debtService";
-import {
-  debtsError,
-  debtsViewed,
-  debtChangesStartLoad,
-  debtChangesNewDebt
-} from "./debtsActions";
-import { Card, CardTitle, Modal } from "react-materialize";
+import { addDebtAPI, removeDebtAPI, updateDebtAPI } from "./debtService";
+import { debtsError, debtsViewed, debtChangesNewDebt } from "./debtsActions";
+import { Card, CardTitle } from "react-materialize";
 import Icon from "react-materialize/lib/Icon";
 import swal from "sweetalert";
 import ReactModal from "react-modal";
 import ContentEditable from "react-contenteditable";
 import Input from "react-materialize/lib/Input";
 import Conf from "../../configuration";
-import CollectionItem from "react-materialize/lib/CollectionItem";
 import { convertLocalDateToUTCDate } from "../common/helperFunctions";
-import DebtChangesBlock from "./debtChangesBlock";
 import { compose } from "redux";
 import PropTypes from "prop-types";
+import { showError, showMessage } from "../common/helperFunctions";
 
 const customStyles = {
   content: {
     top: "12%",
     position: "relative"
+  },
+  overlay: {
+    position: "fixed",
+    top: "0px",
+    left: "0px",
+    right: "0px",
+    bottom: "0px",
+    backgroundColor: "rgba(255, 255, 255, 0.75)",
+    marginBottom: "0px",
+    zIndex: "40"
   }
 };
 
@@ -46,6 +45,7 @@ class DebtBlock extends Component {
       ? this.props.friends.find(friend => friend.id === debt.friendId)
       : {};
     this.state = {
+      editable: this.props.editable || false,
       active: false,
       changes: [],
       test: this.props.debt,
@@ -77,7 +77,8 @@ class DebtBlock extends Component {
             friend: { name: "Select friend" },
             dateOfOverdue: "",
             created: new Date(),
-            isClosed: false
+            isClosed: false,
+            isOwner: true
           },
       edited: false
     };
@@ -93,203 +94,165 @@ class DebtBlock extends Component {
       oldDebt.isOwnerDebter === debt.isOwnerDebter &&
       oldDebt.name === debt.name &&
       oldDebt.friend.id === debt.friend.id &&
-      oldDebt.dateOfOverdue === debt.dateOfOverdue &&
+      oldDebt.dateOfOverdue.getTime() === debt.dateOfOverdue.getTime() &&
       oldDebt.isClosed === debt.isClosed
     );
     return edited;
   }
 
-  render() {
-    if (!this.props.friends.length) return null;
-
-    if (!this.props.editable) {
-      if (this.props.asCollectionItem) return this.renderCollectionItem();
-      else return this.renderRegular();
-    } else return this.renderEditable();
-  }
-
-  openModal() {
-    if (!this.props.editable) this.setState({ modalIsOpen: true });
-  }
-
-  closeModal() {
-    this.setState({ modalIsOpen: false });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.debt) {
-      let friend = nextProps.friends.find(
-        friend => friend.id === nextProps.debt.friendId
-      );
-      this.setState({
-        debt: {
-          ...nextProps.debt,
-          friend: friend ? friend : {},
-          dateOfOverdue: nextProps.debt.dateOfOverdue
-            ? new Date(nextProps.debt.dateOfOverdue)
-            : ""
-        }
-      });
+  validateLate() {
+    var valid = true;
+    var { name, value, friend, description } = this.state.debt;
+    if (name.length > 100 || name.length <= 0) {
+      valid = false;
+      showError("Name length must be between 1 and 100");
     }
+    if (isNaN(value)) {
+      valid = false;
+      showError("Value is not a number");
+    } else if (value < 0) {
+      valid = false;
+      showError("Value must be more than 0");
+    }
+    if (friend.id === undefined) {
+      valid = false;
+      showError("You have not selected friend");
+    }
+    if (description.length > 256) {
+      valid = false;
+      showError("Description length must be less than 256");
+    }
+
+    return valid;
   }
 
-  renderCollectionItem() {
-    let { debt } = this.state;
-    if (!debt) return null;
+  render() {
+    return this.renderTest();
+
+    // if (!this.props.friends.length) return null;
+
+    // if (!this.props.editable) {
+    //   if (this.props.asCollectionItem) return this.renderCollectionItem();
+    //   else return this.renderRegular();
+    // } else return this.renderEditable();
+  }
+
+  renderDebtIcons(debt, editable) {
+    let date = new Date(debt.created);
+
     return (
-      <CollectionItem
-        className={
-          debt.isOwner === debt.isOwnerDebter
-            ? "avatar with-padding-right debt debter"
-            : "avatar with-padding-right debt not-debter"
-        }
+      <div
+        className={editable ? "debt__icons" : "debt__icons pointer__disabled"}
       >
-        <img
-          className="circle friend__icon"
-          src={
-            debt.friend.friendUser
-              ? Conf.domain + debt.friend.friendUser.avatarUrl
-              : Conf.domain + "images/defaultAvatar.png"
-          }
-          alt="friendIcon"
-        />
-        <span className="title">{debt.name}</span>
-        <p>{debt.value + " BYN"}</p>
-        <p>{debt.description}</p>
-        <div className="secondary-content">
-          <div
-            className={debt.isOwner ? "button__icon" : "hide"}
-            onClick={() => {
-              document.getElementById("debtEdit" + debt.id).click();
-            }}
-          >
-            <Icon>mode_edit</Icon>
-          </div>
-          <div className="button__icon">
-            <Icon>delete</Icon>
-          </div>
-          <div className="button__icon">
-            <Icon>check</Icon>
-          </div>
-          <div
-            className="button__icon"
-            onClick={() => {
-              document.getElementById("debtMore" + debt.id).click();
-            }}
-          >
-            <Icon>more_horiz</Icon>
-          </div>
+        <div className="debt__icon">
+          <span className="debt__icon__day">{date.getDate()}</span>
+          <span className="debt__icon__month">
+            {date.toLocaleString("en-us", { month: "short" })}
+          </span>
         </div>
-        <Modal trigger={<div id={"debtMore" + debt.id} />}>
-          <DebtBlock
-            key={this.props.debt.id}
-            debt={this.props.debt}
-            friends={this.props.friends}
-            changes={this.props.changes}
-            debtChangesNewDebt={this.props.debtChangesNewDebt}
-            debtChangesStartLoad={this.props.debtChangesStartLoad}
+        <div className={debt.dateOfOverdue || editable ? "debt__icon" : "hide"}>
+          {debt.dateOfOverdue ? (
+            <div>
+              <span className="debt__icon__day">
+                {debt.dateOfOverdue.getDate()}
+              </span>
+              <span className="debt__icon__month">
+                {debt.dateOfOverdue.toLocaleString("en-us", {
+                  month: "short"
+                })}
+              </span>
+            </div>
+          ) : (
+            <Icon>event</Icon>
+          )}
+          <Input
+            type="date"
+            className="browser-default"
+            onChange={(e, value) => {
+              if (value)
+                this.setState({
+                  debt: {
+                    ...debt,
+                    dateOfOverdue: new Date(
+                      new Date(value).getTime() -
+                        new Date().getTimezoneOffset() * 60000
+                    )
+                  }
+                });
+              else this.setState({ debt: { ...debt, dateOfOverdue: "" } });
+            }}
           />
-        </Modal>
-        <Modal trigger={<div id={"debtEdit" + debt.id} />}>
-          <DebtBlock
-            debt={Object.assign({}, debt)}
-            friends={this.props.friends}
-            hasMore={this.props.hasMore}
-            editable
-            handleCloseModal={() => this.closeModal()}
-          />
-        </Modal>
-      </CollectionItem>
+        </div>
+        <div
+          className={
+            debt.isOwner
+              ? debt.synchronize
+                ? "debt__icon"
+                : "debt__icon debt__icon--disabled"
+              : "hide"
+          }
+          onClick={() =>
+            this.setState({
+              debt: { ...debt, synchronize: !debt.synchronize }
+            })
+          }
+        >
+          <Icon>import_export</Icon>
+        </div>
+        <div
+          onClick={() => this.setState({ editable: true })}
+          className={debt.isOwner && this.props.zoomed && !this.props.editable? "debt__icon debt__icon__edit" : "hide"}
+        >
+          <Icon>edit</Icon>
+        </div>
+      </div>
     );
   }
 
-  renderRegular() {
-    let { debt } = this.state;
-    if (!debt) return null;
-    var date = new Date(debt.created);
-    var dateOfOverdue = debt.dateOfOverdue
-      ? new Date(debt.dateOfOverdue)
-      : new Date();
-    return (
-      <div className={debt.isClosed ? "card__item closed" : "card__item"}>
-        <Card
-          className="hoverable"
-          header={
-            <CardTitle
+  renderActions(debt, editable) {
+    return this.props.zoomed
+      ? editable
+        ? [
+            <a
+              key={0}
               onClick={() => {
-                if (debt.isOwner) this.openModal();
-              }}
-              image={require("../../images/TitleImage.png")}
-              waves="light"
-            >
-              <div className="debt__icons">
-                <div className="debt__icon">
-                  <span className="debt__icon__day">{date.getDate()}</span>
-                  <span className="debt__icon__month">
-                    {date.toLocaleString("en-us", { month: "short" })}
-                  </span>
-                </div>
-                <div
-                  className={
-                    debt.dateOfOverdue
-                      ? new Date(debt.dateOfOverdue).getTime() <=
-                        new Date().getTime()
-                        ? "debt__icon overdue"
-                        : "debt__icon"
-                      : "hide"
-                  }
-                >
-                  <span className="debt__icon__day">
-                    {dateOfOverdue.getDate()}
-                  </span>
-                  <span className="debt__icon__month">
-                    {dateOfOverdue.toLocaleString("en-us", { month: "short" })}
-                  </span>
-                </div>
-                <div
-                  className={
-                    debt.synchronize
-                      ? "debt__icon"
-                      : "debt__icon debt__icon--disabled"
-                  }
-                >
-                  <Icon>import_export</Icon>
-                </div>
-              </div>
-              <div
-                className={
-                  debt.isOwnerDebter === debt.isOwner
-                    ? "card-title-inner red lighten-1"
-                    : "card-title-inner green lighten-1"
-                }
-              >
-                <div
-                  className={
-                    debt.isOwnerDebter === debt.isOwner
-                      ? "card__arrow card__arrow--up"
-                      : "card__arrow card__arrow--down"
-                  }
-                >
-                  <Icon large>arrow_back</Icon>
-                </div>
-                <div className="truncate card-title-info">
-                  {debt.value + " BYN"}
-                  <br />
-                  <img
-                    className="friend__icon"
-                    src={
-                      debt.friend.friendUser
-                        ? Conf.domain + debt.friend.friendUser.avatarUrl
-                        : Conf.domain + "images/defaultAvatar.png"
+                if (this.edited())
+                  swal({
+                    title: "Save all changes?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true
+                  }).then(willDelete => {
+                    if (willDelete) {
+                      this.updateDebt();
                     }
-                    alt="friendIcon"
-                  />
-                  {debt.friend.name}
-                </div>
-              </div>
-            </CardTitle>
-          }
-          actions={[
+                  });
+                else this.props.handleCloseModal();
+              }}
+            >
+              Save
+            </a>,
+            <a
+              key={1}
+              onClick={() => {
+                if (this.edited())
+                  swal({
+                    title: "Cancel all changes?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true
+                  }).then(willDelete => {
+                    if (willDelete) {
+                      this.setState({ editable: false, debt: this.state.oldDebt });
+                    }
+                  });
+                else this.setState({ editable: false });
+              }}
+            >
+              Cancel
+            </a>
+          ]
+        : [
             <a
               key="0"
               onClick={() => {
@@ -304,7 +267,7 @@ class DebtBlock extends Component {
             </a>,
             <a
               key="1"
-              onClick={() => this.openModal()}
+              onClick={() => this.setState({ editable: true })}
               className={debt.isOwner ? "" : "hide"}
             >
               Edit
@@ -332,112 +295,108 @@ class DebtBlock extends Component {
             <a
               key={"change"}
               onClick={() => {
-              document.getElementById("debtChanges" + debt.id).click();
-                this.props.debtChangesNewDebt(debt.id);
-                getDebtChangesAPI(debt.id, this.props.changes.count, 10);
+                this.props.openModalDebtChanges(debt.id);
               }}
             >
               <div>Change history</div>
             </a>
-          ]}
-          textClassName="no-padding"
-        >
-          <div
-            className={
-              this.state.active
-                ? "card-content-inner active"
-                : "card-content-inner"
-            }
-            onClick={() => this.setState({ active: !this.state.active })}
+          ]
+      : this.props.new
+      ? [
+          <a
+            key={0}
+            onClick={() => {
+              this.addDebt();
+            }}
           >
-            <div className="card-title">{debt.name}</div>
-            <div className="card-text"> {debt.description}</div>
-            {this.props.debt.updating && (
-              <div className="card__loading">
-                <div className="loader__container">
-                  <img
-                    className="debtContent__loading"
-                    src={require("../../images/loadingIcon.svg")}
-                    alt="Notifications"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        </Card>
-        <ReactModal
-          isOpen={this.state.modalIsOpen}
-          onRequestClose={() => this.closeModal()}
-          style={customStyles}
-          ariaHideApp={false}
-          className="row"
-          portalClassName=""
-          shouldCloseOnOverlayClick={false}
-          shouldCloseOnEsc={false}
-        >
-          <div className="col s12 m10 l6 xl4 offset-m1 offset-l3 offset-xl4">
-            <DebtBlock
-              debt={Object.assign({}, debt)}
-              friends={this.props.friends}
-              editable
-              handleCloseModal={() => this.closeModal()}
-            />
-          </div>
-        </ReactModal>
-        <Modal
-          header="Debt changes"
-          trigger={<div id={"debtChanges" + debt.id} />}
-        >
-          <DebtChangesBlock
-            debtChanges={this.props.changes}
-            hasMore={this.props.hasMore}
-            debtChangesStartLoad={this.props.debtChangesStartLoad}
-            debtId={debt.id}
-            changesLoading={this.props.changesLoading}
-          />
-        </Modal>
-      </div>
-    );
+            Save
+          </a>,
+          <a
+            key={1}
+            onClick={() => {
+              if (this.edited())
+                swal({
+                  title: "Cancel all changes?",
+                  icon: "warning",
+                  buttons: true,
+                  dangerMode: true
+                }).then(willDelete => {
+                  if (willDelete) {
+                    this.props.handleCloseModal();
+                  }
+                });
+              else this.props.handleCloseModal();
+            }}
+          >
+            Cancel
+          </a>
+        ]
+      : null;
   }
 
-  renderEditable() {
+  renderTest() {
     let { debt } = this.state;
-    var date = debt ? new Date(debt.created) : new Date();
+    let { editable } = this.state;
+
     return (
-      <div className="card__item">
+      <div className={debt.isClosed ? "card__item closed" : "card__item"}>
         <Card
+          className="hoverable"
           header={
-            <CardTitle image={require("../../images/TitleImage.png")}>
+            <CardTitle
+              image={require("../../images/TitleImage.png")}
+              title="Card Title"
+              onClick={() => {
+                if (this.props.zoomed) return;
+                this.openModal();
+              }}
+            >
               <div
                 className={
-                  debt.isOwnerDebter
+                  debt.isOwnerDebter === debt.isOwner
                     ? "card-title-inner red lighten-1"
                     : "card-title-inner green lighten-1"
                 }
               >
                 <div
-                  onClick={() =>
-                    this.setState({
-                      debt: { ...debt, isOwnerDebter: !debt.isOwnerDebter }
-                    })
-                  }
                   className={
-                    debt.isOwnerDebter
+                    debt.isOwnerDebter === debt.isOwner
                       ? "card__arrow card__arrow--up"
                       : "card__arrow card__arrow--down"
                   }
+                  onClick={() => {
+                    if (!editable) return;
+                    this.setState({
+                      debt: {
+                        ...debt,
+                        isOwnerDebter: !debt.isOwnerDebter
+                      }
+                    });
+                  }}
                 >
                   <Icon large>arrow_back</Icon>
                 </div>
                 <div className="truncate card-title-info">
-                  <div className="debtBlock__value">
+                  <div
+                    className={
+                      editable
+                        ? "debtBlock__value editable"
+                        : "debtBlock__value"
+                    }
+                  >
                     <ContentEditable
+                      disabled={!editable}
                       html={debt.value.toString()}
                       onChange={e => this.onInputChange(e, "value")}
                     />
                     <div> BYN</div>
                   </div>
-                  <div onClick={() => this.setState({ friendPopupOpen: true })}>
+                  <div
+                    className="debtBlock__friend"
+                    onClick={() => {
+                      if (editable) this.setState({ friendPopupOpen: true });
+                    }}
+                  >
                     <img
                       className="friend__icon"
                       src={
@@ -453,50 +412,17 @@ class DebtBlock extends Component {
               </div>
             </CardTitle>
           }
-          actions={[
-            <a
-              key={0}
-              onClick={() => {
-                if (this.edited())
-                  swal({
-                    title: "Save all changes?",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true
-                  }).then(willDelete => {
-                    if (willDelete) {
-                      if (this.props.new) this.addDebt();
-                      else this.updateDebt();
-                      this.props.handleCloseModal();
-                    }
-                  });
-                else this.props.handleCloseModal();
-              }}
-            >
-              Save
-            </a>,
-            <a
-              key={1}
-              onClick={() => {
-                if (this.edited())
-                  swal({
-                    title: "Cancel all changes?",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true
-                  }).then(willDelete => {
-                    if (willDelete) {
-                      this.props.handleCloseModal();
-                    }
-                  });
-                else this.props.handleCloseModal();
-              }}
-            >
-              Cancel
-            </a>
-          ]}
-          textClassName="no-padding"
+          actions={this.renderActions(debt, editable)}
         >
+          {this.renderDebtIcons(debt, editable)}
+          {this.props.zoomed ? (
+            <div
+              className="debtBlock__closeButton"
+              onClick={() => this.props.handleCloseModal()}
+            >
+              <Icon>close</Icon>
+            </div>
+          ) : null}
           {this.state.friendPopupOpen ? (
             <AcceptFriendBlock
               togglePopup={() => this.togglePopup()}
@@ -509,17 +435,24 @@ class DebtBlock extends Component {
             />
           ) : null}
 
-          <div className="card-content-inner">
-            <div className="card-title grey-text text-darken-4">
-              <ContentEditable
-                html={debt.name}
-                onChange={e => this.onInputChange(e, "name")}
-                spellCheck="false"
-                onPaste={e => this.handlePaste(e)}
-                ref={this.nameRef}
-              />
-            </div>
+          <div
+            className={
+              this.props.zoomed
+                ? "card-content-inner.active"
+                : "card-content-inner"
+            }
+          >
             <ContentEditable
+              className="card-title grey-text text-darken-4"
+              disabled={!editable}
+              html={debt.name}
+              onChange={e => this.onInputChange(e, "name")}
+              spellCheck="false"
+              onPaste={e => this.handlePaste(e)}
+              ref={this.nameRef}
+            />
+            <ContentEditable
+              disabled={!editable}
               html={debt.description}
               onChange={e => this.onInputChange(e, "description")}
               className="card-text"
@@ -528,68 +461,55 @@ class DebtBlock extends Component {
               onPaste={e => this.handlePaste(e)}
             />
           </div>
-          <div className="debt__icons">
-            <div className="debt__icon">
-              <span className="debt__icon__day">{date.getDate()}</span>
-              <span className="debt__icon__month">
-                {date.toLocaleString("en-us", { month: "short" })}
-              </span>
-            </div>
-
-            <div className="debt__icon">
-              {debt.dateOfOverdue ? (
-                <div>
-                  <span className="debt__icon__day">
-                    {debt.dateOfOverdue.getDate()}
-                  </span>
-                  <span className="debt__icon__month">
-                    {debt.dateOfOverdue.toLocaleString("en-us", {
-                      month: "short"
-                    })}
-                  </span>
-                </div>
-              ) : (
-                <Icon>event</Icon>
-              )}
-              <Input
-                type="date"
-                className="browser-default"
-                onChange={(e, value) => {
-                  if (value)
-                    this.setState({
-                      debt: {
-                        ...debt,
-                        dateOfOverdue: new Date(
-                          new Date(value).getTime() -
-                            new Date().getTimezoneOffset() * 60000
-                        )
-                      }
-                    });
-                  else this.setState({ debt: { ...debt, dateOfOverdue: "" } });
-                }}
-              />
-            </div>
-
-            <div
-              className={
-                debt.synchronize
-                  ? "debt__icon"
-                  : "debt__icon debt__icon--disabled"
-              }
-              onClick={() => {
-                this.setState({
-                  debt: { ...debt, synchronize: !debt.synchronize }
-                });
-              }}
-            >
-              <Icon>import_export</Icon>
-            </div>
-          </div>
-
-          {/* </Col> */}
         </Card>
+
+        <ReactModal
+          isOpen={this.state.modalIsOpen}
+          onRequestClose={() => this.closeModal()}
+          style={customStyles}
+          ariaHideApp={false}
+          className="col s12 m10 l6 xl4 offset-m1 offset-l3 offset-xl4"
+          portalClassName=""
+          overlayClassName="row"
+        >
+          {/* <div className="col s12 m10 l6 xl4 offset-m1 offset-l3 offset-xl4"> */}
+          <DebtBlock
+            debt={Object.assign({}, debt)}
+            openModalDebtChanges={this.props.openModalDebtChanges}
+            friends={this.props.friends}
+            // editable={debt.isOwner && !debt.isClosed}
+            zoomed
+            handleCloseModal={() => this.closeModal()}
+          />
+          {/* </div> */}
+        </ReactModal>
       </div>
     );
+  }
+
+  openModal() {
+    if (!this.props.editable) this.setState({ modalIsOpen: true });
+  }
+
+  closeModal() {
+    this.setState({ modalIsOpen: false });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.debt) {
+      let friend = nextProps.friends.find(
+        friend => friend.id === nextProps.debt.friendId
+      );
+      this.setState({
+        debt: {
+          ...nextProps.debt,
+          friend: friend ? friend : {},
+          dateOfOverdue: nextProps.debt.dateOfOverdue
+            ? new Date(nextProps.debt.dateOfOverdue)
+            : ""
+        }
+      });
+    }
   }
 
   setWrapperRef(node) {
@@ -643,28 +563,57 @@ class DebtBlock extends Component {
   }
 
   removeDebt(debtId) {
-    removeDebtAPI(debtId, this.props.debt.friend.id);
+    removeDebtAPI(debtId, this.props.debt.friend.id)
+      .then(() => showMessage("Debt removed successfully"))
+      .catch(res => res.forEach(error => showError(error)));
   }
 
   addDebt() {
-    addDebtAPI(this.state.debt);
+    if (this.validateLate())
+      if (this.edited())
+        swal({
+          title: "Save all changes?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true
+        }).then(willDelete => {
+          if (willDelete) {
+            if (this.props.new)
+              addDebtAPI(this.state.debt)
+                .then(() => {
+                  showMessage("Debt added successfully");
+                  this.props.handleCloseModal();
+                })
+                .catch(res => res.forEach(error => showError(error)));
+            else this.updateDebt();
+          }
+        });
+      else this.props.handleCloseModal();
   }
 
   updateDebt() {
     let { debt } = this.state;
-    updateDebtAPI(
-      debt.name,
-      debt.friend.id,
-      debt.description,
-      debt.synchronize,
-      debt.value,
-      debt.id,
-      debt.isOwnerDebter,
-      convertLocalDateToUTCDate(debt.dateOfOverdue),
-      debt.isClosed,
-      debt.rowVersion,
-      debt.friend.friendUser ? debt.friend.friendUser.username : ""
-    );
+    if (this.validateLate())
+      updateDebtAPI(
+        debt.name,
+        debt.friend.id,
+        debt.description,
+        debt.synchronize,
+        debt.value,
+        debt.id,
+        debt.isOwnerDebter,
+        debt.dateOfOverdue
+          ? convertLocalDateToUTCDate(debt.dateOfOverdue)
+          : debt.dateOfOverdue,
+        debt.isClosed,
+        debt.rowVersion,
+        debt.friend.friendUser ? debt.friend.friendUser.username : ""
+      )
+        .then(() => {
+          showMessage("Debt updated successfully");
+          this.props.handleCloseModal();
+        })
+        .catch(res => res.forEach(error => showError(error)));
   }
 
   onInputChange(event, type) {
@@ -760,10 +709,7 @@ DebtBlock.propTypes = {
 const mapStateToProps = state => {
   return {
     requestError: state.debtsApp.error,
-    changes: state.debtsApp.changes,
-    changesLoading: state.debtsApp.changesLoading,
     debtLoadingId: state.debtsApp.debtLoadingId,
-    hasMore: state.debtsApp.hasMore,
     stateDebts: state.debtsApp.debts
   };
 };
@@ -771,7 +717,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   clearError: () => dispatch(debtsError("")),
   viewed: id => dispatch(debtsViewed(id)),
-  debtChangesStartLoad: () => dispatch(debtChangesStartLoad()),
   debtChangesNewDebt: id => dispatch(debtChangesNewDebt(id))
 });
 

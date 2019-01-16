@@ -6,15 +6,17 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { getAllFriendsAPI } from "../friends/friendsService";
 import DebtBlock from "../debt/debtBlock";
-import { getAllDebtsAPI } from "../debt/debtService";
+import { getAllDebtsAPI, getDebtChangesAPI } from "../debt/debtService";
 import ChatBlock from "../chat/chatBlock";
 import Button from "react-materialize/lib/Button";
 import ReactModal from "react-modal";
-import { Row, Col } from "react-materialize";
+import { Row, Col, Modal } from "react-materialize";
 import DebtSearch from "../debt/debtSearch";
 import Icon from "react-materialize/lib/Icon";
 import ScrollUpButton from "react-scroll-up-button";
 import { compose } from "redux";
+import DebtChangesBlock from "../debt/debtChangesBlock";
+import { debtChangesStartLoad, debtChangesNewDebt } from "../debt/debtsActions";
 
 const customStyles = {
   content: {
@@ -35,7 +37,8 @@ class MainPage extends Component {
     this.state = {
       debts: this.props.debts,
       modalIsOpen: false,
-      gridView: true
+      gridView: true,
+      changesDebtId: 0
     };
   }
 
@@ -45,6 +48,14 @@ class MainPage extends Component {
 
   openModal() {
     this.setState({ modalIsOpen: true });
+  }
+
+  openModalDebtChanges(debtId) {
+    this.setState({ changesDebtId: debtId }, () => {
+      this.props.debtChangesNewDebt(debtId);
+      getDebtChangesAPI(debtId, 0, 10);
+      document.getElementById("debtChangesTrigger").click();
+    });
   }
 
   render() {
@@ -141,6 +152,9 @@ class MainPage extends Component {
                           debt={debt}
                           friends={friends}
                           asCollectionItem={!this.state.gridView}
+                          openModalDebtChanges={debtId =>
+                            this.openModalDebtChanges(debtId)
+                          }
                         />
                       );
                     })}
@@ -166,8 +180,6 @@ class MainPage extends Component {
                 ariaHideApp={false}
                 className="col s12 m10 l6 xl4 offset-m1 offset-l3 offset-xl4"
                 portalClassName="row"
-                shouldCloseOnOverlayClick={false}
-                shouldCloseOnEsc={false}
               >
                 <DebtBlock
                   new
@@ -176,6 +188,18 @@ class MainPage extends Component {
                   handleCloseModal={() => this.closeModal()}
                 />
               </ReactModal>
+              <Modal
+                header="Debt changes"
+                trigger={<div id={"debtChangesTrigger"}/>}
+              >
+                <DebtChangesBlock
+                  debtChanges={this.props.changes}
+                  hasMore={this.props.hasMore}
+                  debtChangesStartLoad={this.props.debtChangesStartLoad}
+                  debtId={this.state.changesDebtId}
+                  changesLoading={this.props.changesLoading}
+                />
+              </Modal>
             </div>
           ) : (
             <div className="debtContent debtContent__loading">
@@ -220,8 +244,19 @@ const mapStateToProps = state => {
     debtsLoading: state.debtsApp.updateLoading,
     friendsLoading: state.friendsApp.loading,
     updated: state.debtsApp.updated,
-    hasMoreDebts: state.debtsApp.hasMoreDebts
+    hasMoreDebts: state.debtsApp.hasMoreDebts,
+    changes: state.debtsApp.changes,
+    hasMore: state.debtsApp.hasMore,
+    changesLoading: state.debtsApp.changesLoading
   };
 };
-
-export default compose(connect(mapStateToProps)(MainPage));
+const mapDispatchToProps = dispatch => ({
+  debtChangesStartLoad: () => dispatch(debtChangesStartLoad()),
+  debtChangesNewDebt: debtId => dispatch(debtChangesNewDebt(debtId))
+});
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(MainPage)
+);
