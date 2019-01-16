@@ -128,7 +128,7 @@ class ProfilePage extends Component {
               >
                 <ChangeProfileDropdown />
               </CollapsibleItem>
-              <CollapsibleItem header="Change password" icon="lock_outline">
+              <CollapsibleItem header="Change password" icon="lock_outline" className="no-padding-on-small">
                 <ChangeProfileDropdown changePassword={true} />
               </CollapsibleItem>
             </Collapsible>
