@@ -2,10 +2,10 @@ import React from "react";
 import Popup from "../common/popup";
 import { connect } from "react-redux";
 import AuthService from "../auth/authService";
-import Axios from "axios";
-import Conf from "../../configuration";
 import { Input, Button, Row, Card } from "react-materialize";
 import PropTypes from "prop-types";
+import { UpdateUserInfo, UpdatePassword } from "./userService";
+import { showMessage, showError } from "../common/helperFunctions";
 
 class ChangeProfileDropdown extends Popup {
   constructor(props) {
@@ -101,80 +101,33 @@ class ChangeProfileDropdown extends Popup {
     });
   }
 
-  render2() {
-    return (
-      <div
-        className="popup popup__changeProfileInfo z-depth-2"
-        ref={this.setWrapperRef}
-      >
-        <div
-          type="button"
-          className="popup__closeButton"
-          onClick={this.props.togglePopup}
-        >
-          ✕
-        </div>
-        {this.props.changePassword
-          ? this.renderChangePassword()
-          : this.renderChangeInfo()}
-      </div>
-    );
-  }
-
   render() {
     return this.props.changePassword
       ? this.renderChangePassword()
       : this.renderChangeInfo();
   }
 
-  renderError() {
-    var display = this.state.errorMessage || false;
-    return (
-      <div className="errorMessage" style={{ display: display ? "" : "none" }}>
-        <p>{this.state.errorMessage}</p>
-      </div>
-    );
-  }
-
   onPasswordChange(event) {
-    AuthService.put("api/changePassword", "", {
-      oldPassword: this.state.oldPassword,
-      newPassword: this.state.newPassword
-    })
+    UpdatePassword(this.state.oldPassword, this.state.newPassword)
       .then(() => {
         AuthService.logout();
+        showMessage("Your password was changed, please re-login");
       })
       .catch(res => {
-        if (res.response !== undefined)
-          this.setState({ errorMessage: res.response.data.message });
-        else this.setState({ errorMessage: res.message });
+        showError(AuthService.handleException(res));
       });
 
     event.preventDefault();
   }
 
   onChangeUserInfo(event) {
-    const url = Conf.domain + "api/changeProfile";
-
-    const config = {
-      headers: {
-        Authorization: "Bearer " + AuthService.getToken()
-      }
-    };
-    var form = new FormData();
-    form.append("firstName", this.state.firstName);
-    form.append("lastName", this.state.lastName);
-    form.append("email", this.state.email);
-    Axios.put(url, form, config)
+    UpdateUserInfo(this.state.firstName, this.state.lastName, this.state.email)
       .then(res => {
         AuthService.setUser(res.data);
+        showMessage("Your user info was updated");
       })
       .catch(res => {
-        if (res.response !== undefined)
-          this.setState({
-            errorMessage: res.response.data.message
-          });
-        else this.setState({ errorMessage: res.message });
+        showError(AuthService.handleException(res));
       });
 
     event.preventDefault();
@@ -247,7 +200,6 @@ class ChangeProfileDropdown extends Popup {
             </Button>
           </Row>
         </form>
-        {this.renderError()}
       </Card>
     );
   }
@@ -312,7 +264,6 @@ class ChangeProfileDropdown extends Popup {
         </form>
         <br />
         <br />
-        {this.renderError()}
       </Card>
     );
   }
@@ -321,7 +272,7 @@ class ChangeProfileDropdown extends Popup {
 ChangeProfileDropdown.propTypes = {
   user: PropTypes.object,
   changePassword: PropTypes.bool,
-  togglePopup: PropTypes.func,
+  togglePopup: PropTypes.func
 };
 
 const mapStateToProps = state => {

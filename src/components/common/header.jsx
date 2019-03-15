@@ -3,7 +3,7 @@ import AuthService from "../auth/authService";
 import { Link } from "react-router-dom";
 import Popup from "./popup";
 import { connect } from "react-redux";
-import NotificationsDropdown from "../notifications/notificationsDropdown";
+import NotificationsDropdown from "../notifications/friendNotification/friendNotificationsDropdown";
 import Conf from "../../configuration";
 import { compose } from "redux";
 
@@ -46,7 +46,11 @@ class Header extends Component {
                   alt="Notifications"
                 />
               </div>
-              {this.renderNotificationCount(this.props.invites.length)}
+              {this.renderNotificationCount(
+                this.props.invites.length +
+                  this.props.payNotifications.length +
+                  this.props.notifications.length
+              )}
             </div>
             <div
               className="header__icon"
@@ -100,7 +104,9 @@ class Header extends Component {
 const mapStateToProps = state => {
   return {
     user: state.userApp.user,
-    invites: state.friendsApp.invites
+    invites: state.friendsApp.invites,
+    payNotifications: state.debtsApp.payNotifications,
+    notifications: state.notificationsApp.notifications
   };
 };
 

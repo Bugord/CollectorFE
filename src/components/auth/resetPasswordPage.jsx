@@ -125,16 +125,17 @@ class ResetPasswordPage extends Component {
     event.preventDefault();
   }
 
-  onPasswordChange(event) {  
-    Axios.put(Conf.domain + "api/resetPassword", {
+  onPasswordChange(event) {
+    AuthService.put("api/resetPassword", "", {
       token: this.props.match.params.token,
       password: this.state.password
     })
-      .then(() => this.props.history.push("/login"))
+      .then(() => {
+        showMessage("Password was changed, please re-login");
+        this.props.history.push("/login");
+      })
       .catch(res => {
-        this.setState({
-          errorMessage: AuthService.handleException(res)
-        });
+        showError(AuthService.handleException(res));
       });
     event.preventDefault();
   }

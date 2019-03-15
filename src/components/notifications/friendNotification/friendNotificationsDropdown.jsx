@@ -1,11 +1,13 @@
-import React from "react";
-import Popup from "../common/popup";
-import { NotificationList } from "./notificationList";
+import React, { Fragment } from "react";
+import Popup from "../../common/popup";
+import { FriendNotificationList } from "./friendNotificationList";
 import { connect } from "react-redux";
-import { acceptFriendAPI } from "../friends/friendsService";
-import AcceptFriendBlock from "./acceptFriendBlock";
+import { acceptFriendAPI } from "../../friends/friendsService";
+import AcceptFriendBlock from "../acceptFriendBlock";
 import { compose } from "redux";
 import PropTypes from "prop-types";
+import { PayNotificationList } from "../payNotification/payNotificationList";
+import { NotificationList } from "../regularNotification/notificationList";
 
 class InvitesDropdown extends Popup {
   constructor(props) {
@@ -28,14 +30,22 @@ class InvitesDropdown extends Popup {
         >
           ✕
         </div>
-        {this.props.invites.length !== 0 ? (
-          <NotificationList
-            notifications={this.props.invites}
-            acceptInvite={this.openAcceptInviteBlock.bind(this)}
-            denyInvite={this.denyInvite.bind(this)}
-          />
-        ) : (
+        {!this.props.invites.length &&
+        !this.props.payNotifications.length &&
+        !this.props.notifications.length ? (
           <div> You have not any notifications </div>
+        ) : (
+          <Fragment>
+            <FriendNotificationList
+              notifications={this.props.invites}
+              acceptInvite={this.openAcceptInviteBlock.bind(this)}
+              denyInvite={this.denyInvite.bind(this)}
+            />
+            <PayNotificationList
+              payNotifications={this.props.payNotifications}
+            />
+            <NotificationList notifications={this.props.notifications} />
+          </Fragment>
         )}
 
         {this.state.showAcceptInviteBlock ? (
@@ -72,12 +82,14 @@ class InvitesDropdown extends Popup {
 
 InvitesDropdown.propTypes = {
   invites: PropTypes.array,
-  togglePopup: PropTypes.func,
+  togglePopup: PropTypes.func
 };
 
 const mapStateToProps = state => {
   return {
-    invites: state.friendsApp.invites
+    invites: state.friendsApp.invites,
+    payNotifications: state.debtsApp.payNotifications,
+    notifications: state.notificationsApp.notifications
   };
 };
 

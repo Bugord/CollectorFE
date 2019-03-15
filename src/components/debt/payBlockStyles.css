@@ -1,0 +1,192 @@
+.debtPay__modal .modal-content {
+  padding: 0px;
+}
+
+.collection .collection-item.debt-inline.closed {
+  border-bottom: 1px solid #bdbdbd;
+}
+
+.debtPay__modal .modal-content > h4 {
+  display: none;
+}
+
+.payBlock {
+  margin: auto;
+  padding-bottom: 1px;
+  height: 500px;
+  overflow: hidden;
+  position: relative;
+  background-color: #fafafa;
+}
+
+.payBlock .input-field .prefix {
+  top: 10px;
+}
+
+.payBlock__value {
+  height: 500px;
+  padding-top: 160px;
+  overflow: auto;
+}
+
+.payTypeCards {
+  padding-top: 60px;
+}
+
+.payBlock__title {
+  position: absolute;
+  padding: 20px;
+  width: 100%;
+  color: #575757;
+  font-weight: 300;
+  background-color: #fafafa;
+  z-index: 1;
+  box-shadow: 0px -6px 14px black;
+}
+
+.payBlock__title .title__name {
+  font-size: 30px;
+}
+
+.payBlock__title .title__maxValue {
+  font-size: 20px;
+}
+
+.payBlock__payType {
+  z-index: 2;
+  padding-bottom: 0;
+  height: 500px;
+  width: 100%;
+  position: absolute;
+  top: 500px;
+  overflow: auto;
+  color: #fafafa;
+}
+
+.payTypeCards {
+  margin-top: 55px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.payBlock__payType.open {
+  background-color: #fafafa;
+  top: 0px;
+  animation: open 0.8s ease;
+}
+
+.payBlock__payType.close {
+  top: 500px;
+  animation: close 0.8s ease;
+}
+
+.payBlock__payType {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.payBlock__backArrow {
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: gray;
+  z-index: 2;
+}
+.payBlock__backArrow:active {
+  transform: translateY(1px);
+}
+
+.payTypeCard {
+  min-width: 230px;
+  width: 29%;
+  margin: 10px;
+  height: 100px;
+  padding: 20px;
+  display: flex;
+  background-color: white;
+  flex-direction: column;
+}
+
+.payBlock__total {
+  margin: 20px 40px;
+  width: 100%;
+  text-align: right;
+  color: gray;
+  text-align: right;
+  font-size: 22px;
+  font-stretch: ultra-condensed;
+}
+
+.payBlock__total span {
+  text-transform: capitalize;
+  font-weight: bold;
+  font-size: 30px;
+  font-weight: 300;
+  border-bottom: 1px dotted gray;
+}
+
+.payTypeCard.active {
+  background-image: linear-gradient(45deg, #f26400 0%, #ffbc00 100%);
+}
+
+.payBlock__payButton {
+  width: 100%;
+}
+
+.payTypeCard span {
+  margin-top: 10px;
+  text-align: center;
+  color: gray;
+}
+
+.payTypeCard.active span {
+  color: white;
+}
+
+.payTypeCard.active img {
+  filter: grayscale(100%) invert(1) brightness(200%);
+}
+
+.payTypeCard img {
+  height: 40px;
+  max-width: 180px;
+  margin: auto;
+}
+
+@keyframes open {
+  from {
+    top: 500px;
+    background-color: #e9e9e9;
+  }
+  to {
+    top: 0px;
+    background-color: #fafafa;
+  }
+}
+
+@keyframes close {
+  from {
+    top: 0px;
+    background-color: #fafafa;
+  }
+  to {
+    top: 500px;
+    background-color: #e9e9e9;
+  }
+}
+
+@media (max-width: 992px) {
+  .payTypeCard {
+    width: 45%;
+  }
+}
+
+@media (max-width: 600px) {
+  .payTypeCard {
+    width: 90%;
+  }
+}

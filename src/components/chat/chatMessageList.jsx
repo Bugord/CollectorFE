@@ -2,9 +2,9 @@ import ChatMessage from "./chatMessage";
 import React from "react";
 
 export const ChatMessageList = ({ messages }) => (
-  <ul>
+  <div>
     {messages.map((message, id) => (
-      <ChatMessage key={id} message={message} />
+      <ChatMessage key={message.created} message={message} />
     ))}
-  </ul>
+  </div>
 );

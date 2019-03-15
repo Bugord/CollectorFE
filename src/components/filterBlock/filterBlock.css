@@ -1,0 +1,66 @@
+.filterBlock {
+  width: 100%;
+  padding: 20px;
+  /* border: 1px solid gray; */
+  border-radius: 8px;
+}
+
+.newFilter {
+  position: relative;
+  border: 1px solid gray;
+  border-radius: 5px;
+  display: flex;
+  height: 50px;
+  background-color: #fafafa;
+}
+
+.newFilter .btn{
+  height: 100%;
+}
+
+.newFilterBlock {
+  transition: all 0.5s ease;
+  margin-bottom: 10px;
+}
+
+.newFilter__value input {
+  margin: 0 !important;
+}
+
+.newFilter__value > input {
+  margin: 0 !important;
+  border: none;
+  /* padding: 0px 10px !important; */
+  margin: 0;
+}
+
+.newFilter__value .col {
+  margin: 0;
+  padding: 0;
+}
+
+.newFilter__value > .named-switch {
+  /* background-color: rgba(0, 0, 0, 0.15); */
+  /* box-shadow: inset 0px 0px 12px -5px black; */
+  border-radius: 20px;
+  padding-left: 5px;
+  color: rgba(0, 0, 0, 0.87);
+  margin-top: 4px;
+  max-width: 200px;
+}
+
+.newFilter__addButton {
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  height: 24px;
+  width: 24px;
+  color: white;
+  background-color: #22a8008a;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.newFilter__addButton:active {
+  transform: translateY(1px);
+}

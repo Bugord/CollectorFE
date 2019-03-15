@@ -40,7 +40,7 @@ export default class Feedback extends Component {
         </div>
         <div>
           <p>
-            {user.username}{" "}
+            {user.username}
             {user.userRole !== "User" ? `(${user.userRole})` : null}
           </p>
           <p>{user.email}</p>
@@ -102,16 +102,16 @@ export default class Feedback extends Component {
               {`#${feedback.id} by `}
               <span data-tip={this.tooltip(feedback.creator)}>
                 {feedback.creator.username}
-              </span>{" "}
+              </span>
               {`
-              closed ${timeAgo.format(closedLocalTime)} by `}{" "}
+              closed ${timeAgo.format(closedLocalTime)} by `}
               <span data-tip={this.tooltip(feedback.closedBy)}>
                 {feedback.creator.username}
               </span>
             </span>
           ) : (
             <span className="date">
-              {`#${feedback.id} opened ${timeAgo.format(createdLocalTime)} by `}{" "}
+              {`#${feedback.id} opened ${timeAgo.format(createdLocalTime)} by `}
               <span data-tip={this.tooltip(feedback.creator)}>{`${
                 feedback.creator.username
               }`}</span>

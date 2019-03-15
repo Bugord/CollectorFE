@@ -4,9 +4,8 @@
 
 export const CHAT_MESSAGE_SENT = "CHAT_MESSAGE_SENT";
 export const CHAT_MESSAGE_RECEIVED = "CHAT_MESSAGE_RECEIVED";
+export const CHAT_MESSAGE_APPROVED = "CHAT_MESSAGE_APPROVED";
 export const CHAT_MESSAGES_RECEIVED = "CHAT_MESSAGES_RECEIVED";
-export const CHAT_START_TYPING = "CHAT_START_TYPING";
-export const CHAT_STOP_TYPING = "CHAT_STOP_TYPING";
 export const CHAT_VIEWED = "CHAT_VIEWED";
 
 /*
@@ -20,14 +19,11 @@ export function chatMessageSent(message) {
 export function chatMessageReceived(message) {
     return { type: CHAT_MESSAGE_RECEIVED, message}
 }
-export function chatMessagesReceived(messages) {
-    return { type: CHAT_MESSAGES_RECEIVED, messages}
+export function chatMessageApproved(message, tempId) {
+    return { type: CHAT_MESSAGE_APPROVED, message, tempId}
 }
-export function chatStartTyping(user) {
-    return { type: CHAT_START_TYPING, user}
-}
-export function chatStopTyping(user) {
-    return { type: CHAT_STOP_TYPING, user}
+export function chatMessagesReceived(messages, add) {
+    return { type: CHAT_MESSAGES_RECEIVED, messages, add}
 }
 export function chatViewed() {
     return { type: CHAT_VIEWED}

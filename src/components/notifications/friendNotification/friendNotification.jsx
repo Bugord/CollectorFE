@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-export const Notification = ({ invite, acceptInvite, denyInvite }) => (
+export const FriendNotification = ({ invite, acceptInvite, denyInvite }) => (
   <li className="popupList popup__notification">
     <div className="invite__text">
       {invite.username}({invite.email}) invited you to synchronize your debts
@@ -29,7 +29,7 @@ export const Notification = ({ invite, acceptInvite, denyInvite }) => (
   </li>
 );
 
-Notification.propTypes = {
+FriendNotification.propTypes = {
   invite: PropTypes.object,
   acceptInvite: PropTypes.func,
   denyInvite: PropTypes.func,

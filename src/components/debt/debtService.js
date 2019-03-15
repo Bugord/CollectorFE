@@ -9,9 +9,24 @@ import {
   debtsError,
   debtUpdateStart,
   debtUpdateEnd,
-  debtChangesLoaded
+  debtChangesLoaded,
+  payNotificationsReceived,
+  payNotificationConfirmed,
+  currenciesLoaded
 } from "./debtsActions";
 import { hubConnection } from "../../hubConnection";
+import { showError } from "../common/helperFunctions";
+
+export function getCurrenciesAPI() {
+  store.dispatch(debtsAddSend());
+  return AuthService.get("api/getCurrencies")
+    .then(res => {
+      store.dispatch(currenciesLoaded(res.data));
+    })
+    .catch(res => {
+      showError(AuthService.handleException(res));
+    });
+}
 
 export function addDebtAPI(debt) {
   store.dispatch(debtsAddSend());
@@ -22,6 +37,37 @@ export function addDebtAPI(debt) {
     .catch(res => {
       store.dispatch(debtsError(AuthService.handleException(res)));
       throw AuthService.handleException(res);
+    });
+}
+
+export function acceptPayNotificationAPI(payNotification) {
+  return AuthService.put("api/payNotifications/accept/" + payNotification.id)
+    .then(res => {
+      store.dispatch(payNotificationConfirmed(payNotification.id));
+    })
+    .catch(res => {
+      showError(AuthService.handleException(res));
+    });
+}
+
+export function denyPayNotificationAPI(payNotification) {
+  return AuthService.put("api/payNotifications/deny/" + payNotification.id)
+    .then(res => {
+      store.dispatch(payNotificationConfirmed(payNotification.id));
+      store.dispatch(debtUpdateEnd(res.data.id, res.data));
+    })
+    .catch(res => {
+      showError(AuthService.handleException(res));
+    });
+}
+
+export function getPayNotificationsAPI() {
+  return AuthService.get("api/payNotifications")
+    .then(res => {
+      store.dispatch(payNotificationsReceived(res.data));
+    })
+    .catch(res => {
+      showError(AuthService.handleException(res));
     });
 }
 
@@ -60,6 +106,14 @@ export function removeDebtAPI(debtId, friendId) {
     });
 }
 
+export function getDebtByIdAPI(id) {
+  return AuthService.get("api/debt/" + id)
+    .then(res => {
+      store.dispatch(debtUpdateEnd(id, res.data));
+    })
+    .catch(res => showError(AuthService.handleException(res)));
+}
+
 export function getDebtChangesAPI(id, offset, take) {
   return AuthService.get("api/debt/0/changes", {
     id: id,
@@ -72,17 +126,35 @@ export function getDebtChangesAPI(id, offset, take) {
     .catch(() => {});
 }
 
+export function payDebtAPI(debtId, value, message) {
+  return AuthService.put("api/debt/pay", "", {
+    debtId: debtId,
+    value: value,
+    message: message
+  })
+    .then(res => {
+      store.dispatch(debtUpdateEnd(debtId, { ...res.data, isClosed: false }));
+    })
+    .catch(res => {
+      throw AuthService.handleException(res);
+    });
+}
+
 export function updateDebtAPI(
   name,
   friendId,
   description,
   synchronize,
   value,
+  currentValue,
   debtId,
   isOwnerDebter,
+  isMoney,
   dateOfOverdue,
   isClosed,
-  rowVersion
+  rowVersion,
+  friendName,
+  currencyId
 ) {
   store.dispatch(debtUpdateStart(debtId));
   return AuthService.put("api/updateDebt", "", {
@@ -91,11 +163,14 @@ export function updateDebtAPI(
     description: description,
     synchronize: synchronize,
     Value: value,
+    currentValue: currentValue,
     debtId: debtId,
     isOwnerDebter: isOwnerDebter,
+    isMoney: isMoney,
     dateOfOverdue: dateOfOverdue,
     isClosed: isClosed,
-    rowVersion: rowVersion
+    rowVersion: rowVersion,
+    currencyId: currencyId
   })
     .then(res => {
       store.dispatch(debtUpdateEnd(debtId, res.data.debt));

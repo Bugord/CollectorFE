@@ -17,6 +17,10 @@ export const DEBTS_UPDATED = "DEBTS_UPDATED";
 export const DEBTS_CHANGES_LOADED = "DEBTS_CHANGES_LOADED";
 export const DEBTS_CHANGES_NEW_DEBT = "DEBTS_CHANGES_NEW_DEBT";
 export const DEBTS_CHANGES_START_LOAD = "DEBTS_CHANGES_START_LOAD";
+export const PAY_NOTIFICATIONS_RECEIVED = "PAY_NOTIFICATIONS_RECEIVED";
+export const PAY_NOTIFICATION_RECEIVED = "PAY_NOTIFICATION_RECEIVED";
+export const PAY_NOTIFICATION_CONFIRMED = "PAY_NOTIFICATION_CONFIRMED";
+export const CURRENCIES_LOADED = "CURRENCIES_LOADED";
 
 /*
  * action creators
@@ -73,9 +77,27 @@ export function debtUpdateEnd(id, debt) {
 export function debtChangesLoaded(changes, hasMore) {
    return { type: DEBTS_CHANGES_LOADED, changes, hasMore };
 }
+
 export function debtChangesStartLoad() {
    return { type: DEBTS_CHANGES_START_LOAD};
 }
+
 export function debtChangesNewDebt(id) {
    return { type: DEBTS_CHANGES_NEW_DEBT, id};
+}
+
+export function payNotificationsReceived(payNotifications) {
+   return { type: PAY_NOTIFICATIONS_RECEIVED, payNotifications};
+}
+
+export function payNotificationReceived(payNotification) {
+   return { type: PAY_NOTIFICATION_RECEIVED, payNotification};
+}
+
+export function payNotificationConfirmed(payNotificationId) {
+   return { type: PAY_NOTIFICATION_CONFIRMED, payNotificationId};
+}
+
+export function currenciesLoaded(currencies) {
+   return { type: CURRENCIES_LOADED, currencies};
 }

@@ -14,7 +14,7 @@ export default function DebtChange(props) {
           <div>
             {convertUTCDateToLocalDate(
               new Date(debtChange.changeTime)
-            ).toLocaleString("ru-ru")}{" "}
+            ).toLocaleString("ru-ru")}
             (
             {`${debtChange.fieldChanges.length} ${
               debtChange.fieldChanges.length > 1 ? "changes" : "change"

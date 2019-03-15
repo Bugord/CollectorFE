@@ -1,0 +1,59 @@
+.payment {
+  position: relative;
+  padding-left: 160px !important;
+  min-height: 80px;
+}
+
+.payment.selected {
+  background-color: #f4fff3;
+}
+
+.payment.selected:hover {
+  background-color: #dbffd7;
+}
+
+.payment__avatars {
+  display: flex;
+  position: absolute;
+  top: 10px;
+  left: 20px;
+}
+
+.payment__avatars i {
+  padding-top: 17px;
+}
+
+.payment__avatars > div > i {
+  color: #8eca88;
+}
+.payment__avatars > .debter > i {
+  color: #d15959;
+}
+
+.statistics .payments.closed {
+  overflow: auto;
+  max-height: 400px;
+}
+
+.statistics .payments {
+  border: 1px solid #c5c5c5;
+}
+
+.clickable > i {
+  cursor: pointer;
+}
+
+.clickable :active {
+  transform: translateY(1px);
+}
+
+.chart {
+  margin: auto;
+  background-color: white;
+  max-height: 500px;
+}
+
+.statistics .button-more {
+  background-color: white;
+  border: 1px solid #c5c5c5;
+}

@@ -3,6 +3,7 @@ import AuthService from "./authService";
 import { Link } from "react-router-dom";
 import { Button, Input } from "react-materialize";
 import Icon from "react-materialize/lib/Icon";
+import { showError } from "../common/helperFunctions";
 
 class LoginForm extends Component {
   constructor(props) {
@@ -12,8 +13,7 @@ class LoginForm extends Component {
       password: "",
       emailError: "",
       passwordError: "",
-      valid: false,
-      displayError: false
+      valid: false
     };
   }
 
@@ -56,9 +56,11 @@ class LoginForm extends Component {
       .then(() => {
         this.props.history.push("/");
       })
-      .catch(res => {
-        this.setState({ errorMessage: res, displayError: true });
-      });
+      .catch(res =>
+        res.forEach(error => {
+          showError(error);
+        })
+      );
 
     event.preventDefault();
   }
@@ -130,26 +132,9 @@ class LoginForm extends Component {
                   <Link to="/resetPassword">forgot password?</Link>
                 </div>
               </div>
-              <div className="row">
-                <div className="s12">{this.renderError()}</div>
-              </div>
             </form>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  renderError() {
-    return (
-      <div
-        className={
-          this.state.displayError
-            ? "errorMessage"
-            : "errorMessage hide-errorMessage"
-        }
-      >
-        {this.state.errorMessage}
       </div>
     );
   }

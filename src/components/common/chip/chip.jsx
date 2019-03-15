@@ -5,8 +5,14 @@ import cx from "classnames";
 const Chip = ({ close, onClose, className, data, ...props }) => {
   return (
     <div className={cx("chip", className)} {...props}>
-      {data.label}
-      {data.value ? ": " + data.value : null}
+      {data.type === "bool"
+        ? data.value
+          ? data.nameOn
+          : data.nameOff
+        : `${data.label}: ${data.value}`}
+
+      {/* {data.label}
+      {data.value ? ": " + data.value : null} */}
       {close ? (
         <i className="close-icon material-icons" onClick={() => onClose()}>
           close

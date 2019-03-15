@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import ChangeProfileDropdown from "./changeProfileDropdown";
 import DropzoneComponent from "react-dropzone-component";
 import Conf from "../../configuration";
-import Axios from "axios";
 import { Card, Row, Button } from "react-materialize";
 import Download from "../debt/exportComponent";
 import { getAllFriendsAPI } from "../friends/friendsService";
@@ -13,6 +12,8 @@ import Collapsible from "react-materialize/lib/Collapsible";
 import CollapsibleItem from "react-materialize/lib/CollapsibleItem";
 import PropTypes from "prop-types";
 import { compose } from "redux";
+import { UpdateAvatar } from "./userService";
+import { showWarning, showMessage } from "../common/helperFunctions";
 
 class ProfilePage extends Component {
   constructor(props) {
@@ -25,31 +26,25 @@ class ProfilePage extends Component {
       selectedFile: null
     };
 
-    this.componentConfig = { postUrl: "no-url" };
+    this.componentConfig = { postUrl: "no-url", maxFileSize: 2 };
     this.djsConfig = {
       autoProcessQueue: false,
+      maxFileSize: 2,
       previewTemplate: "<div></div>"
     };
 
     this.eventHandlers = {
+      maxfilesexceeded: () => {
+        console.log("MAMAMAMAX");
+      },
       addedfile: file => {
-        const url = Conf.domain + "api/changeProfile";
-        const formData = new FormData();
-        formData.append("AvatarFile", file);
-        const config = {
-          headers: {
-            Authorization: "Bearer " + AuthService.getToken(),
-            "content-type": "multipart/form-data"
-          }
-        };
-        Axios.put(url, formData, config)
+        UpdateAvatar(file, percent => console.log(percent))
           .then(res => {
             AuthService.setUser(res.data);
+            showMessage("Your avatar was updated");
           })
           .catch(res => {
-            if (res.response !== undefined)
-              this.setState({ errorMessage: res.response.data.message });
-            else this.setState({ errorMessage: res.message });
+            showWarning(AuthService.handleException(res), 8000);
           });
       }
     };
@@ -86,11 +81,13 @@ class ProfilePage extends Component {
                 config={this.componentConfig}
                 eventHandlers={this.eventHandlers}
                 djsConfig={this.djsConfig}
+                dropzoneSelector="#imgId"
               >
                 <img
                   className="profile__icon"
                   src={Conf.domain + user.avatarUrl}
                   alt="Profile"
+                  id="imgId"
                 />
               </DropzoneComponent>
               <h5>
@@ -120,15 +117,19 @@ class ProfilePage extends Component {
             <Row>
               <h4>Settings</h4>
             </Row>
-            <Collapsible popout accordion>
+            <Collapsible popout accordion defaultActiveKey={0}>
               <CollapsibleItem
-              className="no-padding-on-small"
+                className="no-padding-on-small"
                 header="Change first name, last name, email"
                 icon="person"
               >
                 <ChangeProfileDropdown />
               </CollapsibleItem>
-              <CollapsibleItem header="Change password" icon="lock_outline" className="no-padding-on-small">
+              <CollapsibleItem
+                header="Change password"
+                icon="lock_outline"
+                className="no-padding-on-small"
+              >
                 <ChangeProfileDropdown changePassword={true} />
               </CollapsibleItem>
             </Collapsible>
@@ -141,7 +142,7 @@ class ProfilePage extends Component {
 
 ProfilePage.propTypes = {
   user: PropTypes.object,
-  debts: PropTypes.array,
+  debts: PropTypes.array
 };
 
 const mapStateToProps = state => {

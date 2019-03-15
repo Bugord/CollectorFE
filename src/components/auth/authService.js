@@ -3,6 +3,7 @@ import decode from "jwt-decode";
 import Conf from "../../configuration";
 import { store } from "../../store";
 import { userLogin, userLogout } from "../profile/userActions";
+import { showError } from "../common/helperFunctions";
 
 export default class AuthService {
   static register(email, username, password, firstName, lastName) {
@@ -38,36 +39,23 @@ export default class AuthService {
       });
   }
 
-  static uploadFile(selectedFile) {
-    const formData = new FormData();
-    formData.append("file", selectedFile, selectedFile.name);
-
+  static uploadFile(url, formData, config) {
     AuthService.updateAuthHeader();
-    axios.post("https://localhost:5001/api/UploadFiles", formData);
-  }
-
-  static addFriend(name) {
-    this.updateAuthHeader();
-
-    axios
-      .post(`${Conf.domain}api/addFriend`, {
-        name
-      })
-      .then(() => {})
-      .catch(() => {});
+    axios.post(Conf.domain + url, formData, config);
   }
 
   static getUserInfo() {
-    axios.get(`${Conf.domain}api/user`).then(res => {
-      AuthService.setUser(res.data);
-    });
+    const url = "api/user";
+
+    AuthService.get(url)
+      .then(res => AuthService.setUser(res.data))
+      .catch(res => showError(AuthService.handleException(res)));
   }
 
   static handleException(res) {
     var errors = [];
-    if (res.response != undefined) {
+    if (res.response !== undefined) {
       if (res.response.status === 401) {
-        AuthService.logout();
         return;
       }
       if (res.response.data.message !== undefined) {
@@ -87,9 +75,9 @@ export default class AuthService {
     return axios.delete(`${Conf.domain + url}/${id}`);
   }
 
-  static post(url, data) {
+  static post(url, data, config) {
     this.updateAuthHeader();
-    return axios.post(Conf.domain + url, data);
+    return axios.post(Conf.domain + url, data, config);
   }
 
   static get(url, params) {
@@ -97,9 +85,11 @@ export default class AuthService {
     return axios.get(Conf.domain + url, { params });
   }
 
-  static put(url, id, data) {
+  static put(url, id, data, config) {
     this.updateAuthHeader();
-    return axios.put(`${Conf.domain + url}/${id}`, data);
+    return id
+      ? axios.put(`${Conf.domain + url}/${id}`, data, config)
+      : axios.put(Conf.domain + url, data, config);
   }
 
   static loggedIn() {

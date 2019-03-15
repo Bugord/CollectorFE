@@ -6,8 +6,7 @@ import {
   chatMessageSent,
   chatMessageReceived,
   chatMessagesReceived,
-  chatStartTyping,
-  chatStopTyping,
+  chatMessageApproved,
   chatViewed
 } from "./chatActions";
 import Conf from "../../configuration";
@@ -15,6 +14,10 @@ import ReactTooltip from "react-tooltip";
 import Icon from "react-materialize/lib/Icon";
 import { compose } from "redux";
 import AuthService from "../auth/authService";
+import { showError, showMessage, showWarning } from "../common/helperFunctions";
+import ProgressBar from "react-materialize/lib/ProgressBar";
+import md5 from "js-md5";
+import { uploadFileChatAPI, getChatMessagesAPI } from "./chatService";
 
 class ChatBlock extends Component {
   constructor(props) {
@@ -24,58 +27,54 @@ class ChatBlock extends Component {
       enabled: false,
       typing: false,
       lastTypeTime: "",
-      chatWith: ""
+      chatWith: "",
+      uploadProgress: 0,
+      showProgressBar: false,
+      messagesLoaded: false
     };
+
     hubConnection.on("MessageReceived", message => {
+      if (message.isPrivate) new Audio(Conf.domain + "notification.mp3").play();
       this.props.receiveMessage(message);
     });
-    hubConnection.on("StartTyping", username => {
-      this.props.startTyping(username);
-    });
-    hubConnection.on("StopTyping", username => {
-      this.props.stopTyping(username);
+
+    hubConnection.on("MessageApproved", (approved, tempId, message) => {
+      if (approved) this.props.chatMessageApproved(message, tempId);
     });
 
-    this.getChatMessages()
+    this.getChatMessages();
+  }
+
+  sendFileFromClipboard(e) {
+    this.uploadFile(e.clipboardData.files[0]);
+  }
+
+  componentDidMount() {
+    window.addEventListener("paste", e =>
+      this.uploadFile(e.clipboardData.files[0])
+    );
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("paste", e =>
+      this.uploadFile(e.clipboardData.files[0])
+    );
   }
 
   onInputChange(event, type) {
     const value = event.target.value;
     var newState = {};
     newState[type] = value;
-    this.startTyping();
     this.setState(newState);
   }
 
-  getChatMessages(ChatWithUsername) {
-    AuthService.get("chat/getMessages", {
-      ChatWithUsername: ChatWithUsername,
-      SkipMessages: 0,
-      TakeMessages: 0
-    })
-      .then(res => this.props.receiveMessages(res.data))
-      .catch(err => console.log(err));
-  }
-
-  stopTyping(forced) {
-    if (!this.state.typing) return;
-    let elapsedTime = Date.now() - this.state.lastTypeTime;
-    if (elapsedTime >= 1000 || forced) {
-      this.setState({ typing: false });
-      hubConnection.invoke("StopTyping");
-    } else {
-      setTimeout(() => this.stopTyping(), 1000);
-    }
-  }
-
-  startTyping() {
-    if (this.state.chatWith !== "") return;
-    this.setState({ lastTypeTime: Date.now() });
-    if (!this.state.typing) {
-      this.setState({ typing: true });
-      hubConnection.invoke("StartTyping");
-      setTimeout(() => this.stopTyping(), 1000);
-    }
+  getChatMessages(chatWithUsername, offset, add = false) {
+    getChatMessagesAPI(chatWithUsername, offset, 10)
+      .then(res => {
+        this.props.receiveMessages(res.data, add);
+        this.setState({ messagesLoaded: true });
+      })
+      .catch(err => showError(AuthService.handleException(err)));
   }
 
   render() {
@@ -102,22 +101,6 @@ class ChatBlock extends Component {
     );
   }
 
-  getTypingText() {
-    let { typing } = this.props;
-    if (!typing.length) return "";
-    if (typing.length === 1) return typing[0].user + " is typing...";
-    if (typing.length === 2)
-      return typing[0].user + " and " + typing[1].user + " are typing...";
-    return (
-      typing[0].user +
-      ", " +
-      typing[1].user +
-      " and " +
-      (typing.length - 2) +
-      " more people are typing..."
-    );
-  }
-
   filterMessages() {
     return this.state.chatWith
       ? this.props.messages.filter(
@@ -127,6 +110,34 @@ class ChatBlock extends Component {
               message.sentTo === this.state.chatWith.friendUser.username)
         )
       : this.props.messages.filter(message => !message.isPrivate);
+  }
+
+  uploadFile(file) {
+    if (!file) return;
+
+    if (file.size / 1024 > 2048) {
+      showWarning("File size must be less than 2mb");
+      return;
+    }
+
+    this.setState({ uploadProgress: 0, showProgressBar: true });
+
+    uploadFileChatAPI(file, percentCompleted =>
+      this.setState({ uploadProgress: percentCompleted })
+    )
+      .then(res =>
+        this.setState(
+          { text: Conf.domain + res.data, uploadProgress: 100 },
+          () => {
+            this.sendMessage();
+            setTimeout(() => this.setState({ showProgressBar: false }), 1000);
+          }
+        )
+      )
+      .catch(res => {
+        this.setState({ uploadProgress: 0, showProgressBar: false });
+        showError(AuthService.handleException(res));
+      });
   }
 
   renderEnabled() {
@@ -149,35 +160,76 @@ class ChatBlock extends Component {
               </div>
             </div>
           </div>
-
-          <div className="chatBlock__messageBlock">
+          <div
+            className="chatBlock__messageBlock"
+            onScroll={event => {
+              if (
+                event.target.scrollTop === 0 &&
+                this.props.messages.length >= 10 &&
+                this.state.messagesLoaded
+              ) {
+                this.getChatMessages(
+                  this.state.chatWith
+                    ? this.state.chatWith.friendUser.username
+                    : "",
+                  this.props.messages.length,
+                  true
+                );
+              }
+            }}
+          >
             <ChatMessageList messages={this.filterMessages()} />
-          </div>
-          <div className="chatBlock__typingMessage">{this.getTypingText()}</div>
-          <div className="chatBlock__inputs">
+
             <input
-              type="text"
-              name="message"
-              className="browser-default inputOrigin"
-              value={this.state.text}
-              onChange={e => this.onInputChange(e, "text")}
-              placeholder="Your message..."
-              onKeyPress={e => {
-                if (e.key === "Enter") {
-                  this.stopTyping(true);
-                  this.sendMessage();
-                }
+              id="inputId"
+              type="file"
+              style={{ position: "fixed", top: "-100em" }}
+              onChange={e => {
+                this.uploadFile(e.target.files[0]);
               }}
             />
           </div>
-          <div
-            className="chatBlock__send"
-            onClick={() => {
-              this.stopTyping(true);
-              this.sendMessage();
-            }}
-          >
-            <Icon small>send</Icon>
+
+          <div>
+            {this.state.showProgressBar ? (
+              <ProgressBar
+                progress={this.state.uploadProgress}
+                className="chatBlock__progressBar"
+              />
+            ) : null}
+            <label
+              htmlFor="inputId"
+              className="chatBlock__send"
+              onClick={() => {
+                this.sendMessage();
+              }}
+            >
+              <Icon small>attach_file</Icon>
+            </label>
+            <div className="chatBlock__inputs">
+              <input
+                autoComplete="off"
+                type="text"
+                name="message"
+                className="browser-default inputOrigin"
+                value={this.state.text}
+                onChange={e => this.onInputChange(e, "text")}
+                placeholder="Your message..."
+                onKeyPress={e => {
+                  if (e.key === "Enter") {
+                    this.sendMessage();
+                  }
+                }}
+              />
+            </div>
+            <div
+              className="chatBlock__send"
+              onClick={() => {
+                this.sendMessage();
+              }}
+            >
+              <Icon small>send</Icon>
+            </div>
           </div>
         </div>
         <div className="chatBlock__friends z-depth-2">
@@ -193,7 +245,8 @@ class ChatBlock extends Component {
             src={Conf.domain + "images/globalChat.png"}
             onClick={() => {
               this.setState({
-                chatWith: ""
+                chatWith: "",
+                messagesLoaded: false
               });
               this.getChatMessages();
             }}
@@ -213,7 +266,8 @@ class ChatBlock extends Component {
                     }
                     onClick={() => {
                       this.setState({
-                        chatWith: friend
+                        chatWith: friend,
+                        messagesLoaded: false
                       });
                       this.getChatMessages(friend.friendUser.username);
                     }}
@@ -232,23 +286,31 @@ class ChatBlock extends Component {
   sendMessage() {
     let { User } = this.props;
     let username = User.username;
+    let avatarUrl = User.avatarUrl;
     let text = this.state.text.trim();
+    let tempId = md5(new Date().getTime().toString());
     if (text === "") return;
     if (hubConnection.Connected) {
       hubConnection.invoke(
         "SendMessage",
         text,
-        this.state.chatWith ? this.state.chatWith.friendUser.username : ""
+        this.state.chatWith ? this.state.chatWith.friendUser.username : "",
+        tempId
       );
-      this.props.sendMessage({
+      var message = {
         username: username,
         text: text,
         isPrivate: this.state.chatWith !== "",
         sentTo: this.state.chatWith
           ? this.state.chatWith.friendUser.username
           : "",
-          created: new Date()
-      });
+        created: new Date(),
+        avatarUrl: avatarUrl,
+        tempId: tempId,
+        type: "Text"
+      };
+
+      this.props.sendMessage(message);
       this.setState({ text: "" });
     }
   }
@@ -262,14 +324,11 @@ const mapDispatchToProps = dispatch => {
     receiveMessage: message => {
       dispatch(chatMessageReceived(message));
     },
-    receiveMessages: messages => {
-      dispatch(chatMessagesReceived(messages));
+    receiveMessages: (messages, add) => {
+      dispatch(chatMessagesReceived(messages, add));
     },
-    startTyping: user => {
-      dispatch(chatStartTyping(user));
-    },
-    stopTyping: user => {
-      dispatch(chatStopTyping(user));
+    chatMessageApproved: (message, tempId) => {
+      dispatch(chatMessageApproved(message, tempId));
     },
     chatViewed: () => {
       dispatch(chatViewed());

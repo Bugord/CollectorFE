@@ -13,11 +13,16 @@ import {
   DEBTS_UPDATE_END,
   DEBTS_CHANGES_LOADED,
   DEBTS_CHANGES_START_LOAD,
-  DEBTS_CHANGES_NEW_DEBT
+  DEBTS_CHANGES_NEW_DEBT,
+  PAY_NOTIFICATIONS_RECEIVED,
+  PAY_NOTIFICATION_RECEIVED,
+  PAY_NOTIFICATION_CONFIRMED,
+  CURRENCIES_LOADED
 } from "./debtsActions";
 
 const initialState = {
   debts: [],
+  payNotifications: [],
   addLoading: false,
   updateLoading: false,
   debtLoading: false,
@@ -27,7 +32,8 @@ const initialState = {
   changesLoading: false,
   debtLoadingId: "",
   hasMore: true,
-  hasMoreDebts: true
+  hasMoreDebts: true,
+  currencies: []
 };
 
 export function debtsApp(state = initialState, action) {
@@ -99,7 +105,8 @@ export function debtsApp(state = initialState, action) {
       return Object.assign({}, state, {
         debts: state.debts.map(debt =>
           debt.id === action.id
-            ? Object.assign(debt, { updating: false }, action.debt)
+            ? // ? Object.assign(debt, { updating: false }, action.debt)
+              action.debt
             : debt
         )
       });
@@ -119,6 +126,24 @@ export function debtsApp(state = initialState, action) {
     case DEBTS_CHANGES_START_LOAD:
       return Object.assign({}, state, {
         changesLoading: true
+      });
+    case PAY_NOTIFICATIONS_RECEIVED:
+      return Object.assign({}, state, {
+        payNotifications: action.payNotifications
+      });
+    case PAY_NOTIFICATION_RECEIVED:
+      return Object.assign({}, state, {
+        payNotifications: [...state.payNotifications, action.payNotification]
+      });
+    case PAY_NOTIFICATION_CONFIRMED:
+      return Object.assign({}, state, {
+        payNotifications: state.payNotifications.filter(
+          notification => notification.id !== action.payNotificationId
+        )
+      });
+    case CURRENCIES_LOADED:
+      return Object.assign({}, state, {
+        currencies: action.currencies
       });
     default:
       return state;

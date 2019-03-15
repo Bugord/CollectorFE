@@ -94,7 +94,7 @@ class DebtBlock extends Component {
       oldDebt.isOwnerDebter === debt.isOwnerDebter &&
       oldDebt.name === debt.name &&
       oldDebt.friend.id === debt.friend.id &&
-      oldDebt.dateOfOverdue.getTime() === debt.dateOfOverdue.getTime() &&
+      oldDebt.dateOfOverdue === debt.dateOfOverdue &&
       oldDebt.isClosed === debt.isClosed
     );
     return edited;
@@ -126,29 +126,23 @@ class DebtBlock extends Component {
     return valid;
   }
 
-  render() {
-    return this.renderTest();
-
-    // if (!this.props.friends.length) return null;
-
-    // if (!this.props.editable) {
-    //   if (this.props.asCollectionItem) return this.renderCollectionItem();
-    //   else return this.renderRegular();
-    // } else return this.renderEditable();
-  }
-
   renderDebtIcons(debt, editable) {
     let date = new Date(debt.created);
 
     return (
       <div
-        className={editable ? "debt__icons" : "debt__icons pointer__disabled"}
+        className={
+          editable ? "debt__icons editable" : "debt__icons pointer__disabled"
+        }
       >
         <div className="debt__icon">
           <span className="debt__icon__day">{date.getDate()}</span>
           <span className="debt__icon__month">
             {date.toLocaleString("en-us", { month: "short" })}
           </span>
+        </div>
+        <div className="debt__icon">
+          {debt.isMoney ? <Icon>attach_money</Icon> : <Icon>work</Icon>}
         </div>
         <div className={debt.dateOfOverdue || editable ? "debt__icon" : "hide"}>
           {debt.dateOfOverdue ? (
@@ -201,7 +195,11 @@ class DebtBlock extends Component {
         </div>
         <div
           onClick={() => this.setState({ editable: true })}
-          className={debt.isOwner && this.props.zoomed && !this.props.editable? "debt__icon debt__icon__edit" : "hide"}
+          className={
+            debt.isOwner && this.props.zoomed && !this.state.editable
+              ? "debt__icon debt__icon__edit"
+              : "hide"
+          }
         >
           <Icon>edit</Icon>
         </div>
@@ -243,7 +241,10 @@ class DebtBlock extends Component {
                     dangerMode: true
                   }).then(willDelete => {
                     if (willDelete) {
-                      this.setState({ editable: false, debt: this.state.oldDebt });
+                      this.setState({
+                        editable: false,
+                        debt: this.state.oldDebt
+                      });
                     }
                   });
                 else this.setState({ editable: false });
@@ -334,14 +335,14 @@ class DebtBlock extends Component {
       : null;
   }
 
-  renderTest() {
+  render() {
     let { debt } = this.state;
     let { editable } = this.state;
 
     return (
       <div className={debt.isClosed ? "card__item closed" : "card__item"}>
         <Card
-          className="hoverable"
+          className={this.state.editable ? "hoverable editable" : "hoverable"}
           header={
             <CardTitle
               image={require("../../images/TitleImage.png")}
@@ -415,7 +416,7 @@ class DebtBlock extends Component {
           actions={this.renderActions(debt, editable)}
         >
           {this.renderDebtIcons(debt, editable)}
-          {this.props.zoomed ? (
+          {this.props.zoomed && !this.state.editable ? (
             <div
               className="debtBlock__closeButton"
               onClick={() => this.props.handleCloseModal()}
@@ -450,6 +451,14 @@ class DebtBlock extends Component {
               spellCheck="false"
               onPaste={e => this.handlePaste(e)}
               ref={this.nameRef}
+              onFocus={() => {
+                if (debt.name === "Name" && this.props.new)
+                  this.setState({ debt: { ...this.state.debt, name: "" } });
+              }}
+              onBlur={() => {
+                if (this.state === "" && this.props.new)
+                  this.setState({ debt: { ...this.state.debt, name: "Name" } });
+              }}
             />
             <ContentEditable
               disabled={!editable}
@@ -459,6 +468,18 @@ class DebtBlock extends Component {
               ref={this.descriptionRef}
               spellCheck="false"
               onPaste={e => this.handlePaste(e)}
+              onFocus={() => {
+                if (debt.description === "Description" && this.props.new)
+                  this.setState({
+                    debt: { ...this.state.debt, description: "" }
+                  });
+              }}
+              onBlur={() => {
+                if (this.state.description === "" && this.props.new)
+                  this.setState({
+                    debt: { ...this.state.debt, description: "Description" }
+                  });
+              }}
             />
           </div>
         </Card>

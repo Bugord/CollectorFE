@@ -1,3 +1,8 @@
 @import "./components/styles/styles.css";
 @import "./components/styles/materializeOverride.css";
 @import "./components/styles/authorizationForm.css";
+@import "./components/debt/debtStyles.css";
+@import "./components/debt/payBlockStyles.css";
+@import "./components/filterBlock/filterBlock.css";
+@import "./components/payments/payments.css";
+@import "./components/statistics/payment.css";

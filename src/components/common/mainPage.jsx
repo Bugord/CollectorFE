@@ -10,13 +10,17 @@ import { getAllDebtsAPI, getDebtChangesAPI } from "../debt/debtService";
 import ChatBlock from "../chat/chatBlock";
 import Button from "react-materialize/lib/Button";
 import ReactModal from "react-modal";
-import { Row, Col, Modal } from "react-materialize";
+import { Row, Col, Modal, Collection, Collapsible } from "react-materialize";
 import DebtSearch from "../debt/debtSearch";
-import Icon from "react-materialize/lib/Icon";
 import ScrollUpButton from "react-scroll-up-button";
 import { compose } from "redux";
 import DebtChangesBlock from "../debt/debtChangesBlock";
 import { debtChangesStartLoad, debtChangesNewDebt } from "../debt/debtsActions";
+import { dynamicSort } from "./helperFunctions";
+import { NewDebtBlock } from "../debt/addDebtBlock";
+import { DebtInline } from "../debt/debtInline";
+import FilterBlock from "../filterBlock/filterBlock";
+import CollapsibleItem from "react-materialize/lib/CollapsibleItem";
 
 const customStyles = {
   content: {
@@ -28,18 +32,26 @@ const customStyles = {
 class MainPage extends Component {
   constructor(props) {
     super(props);
-    getAllFriendsAPI();
-    getAllDebtsAPI();
-    AuthService.getUserInfo();
+    if (!AuthService.loggedIn()) {
+      props.history.push("/login");
+    } else {
+      getAllFriendsAPI();
+      getAllDebtsAPI();
+    }
 
     this.searchBlock = React.createRef();
 
     this.state = {
       debts: this.props.debts,
       modalIsOpen: false,
-      gridView: true,
-      changesDebtId: 0
+      gridView: false,
+      changesDebtId: 0,
+      sortFilter: ""
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ debts: nextProps.debts }, () => this.sortDebts());
   }
 
   closeModal() {
@@ -58,6 +70,26 @@ class MainPage extends Component {
     });
   }
 
+  sortDebts() {
+    let debts = this.state.debts.slice();
+    switch (this.state.sortFilter) {
+      case "createDateDesc":
+        debts.sort(dynamicSort("created"));
+        break;
+      default:
+      case "createDateAsc":
+        debts.sort(dynamicSort("-created"));
+        break;
+      case "valueDesc":
+        debts.sort(dynamicSort("value"));
+        break;
+      case "valueAsc":
+        debts.sort(dynamicSort("-value"));
+        break;
+    }
+    this.setState({ debts: debts });
+  }
+
   render() {
     let { friends, debts } = this.props;
     return (
@@ -69,7 +101,12 @@ class MainPage extends Component {
           AnimationDuration={500}
           ContainerClassName="ScrollUpButton__Container"
           TransitionClassName="ScrollUpButton__Toggled"
-          style={{ zIndex: "25", right: "inherit", left: "20px" }}
+          style={{
+            zIndex: "25",
+            right: "inherit",
+            left: "20px",
+            borderRadius: "10px"
+          }}
         />
         {AuthService.loggedIn() ? null : <Redirect to="/login" />}
         <div className="row">
@@ -79,14 +116,23 @@ class MainPage extends Component {
                 <Col className="no-padding-on-small" s={12}>
                   <div className="debt__searchBox row z-depth-1 grey lighten-4">
                     <div className="col s12 l9">
-                      <DebtSearch
+                      <FilterBlock
+                        debts={this.props.debts}
+                        friends={this.props.friends}
+                      />
+                      {/* <DebtSearch
                         debtsCount={debts.length}
                         ref={this.searchBlock}
                         friends={friends}
-                      />
+                        onSortFilterChange={filter => {
+                          this.setState({ sortFilter: filter }, () =>
+                            this.sortDebts()
+                          );
+                        }}
+                      /> */}
                     </div>
 
-                    <Col s={12} l={4} xl={3}>
+                    {/* <Col s={12} l={4} xl={3}>
                       <Row>
                         <Button
                           onClick={() => this.openModal()}
@@ -95,24 +141,7 @@ class MainPage extends Component {
                           Add new debt
                         </Button>
                       </Row>
-                      {/* <Row>
-                        <Button
-                          floating
-                          large
-                          className="green lighten-2"
-                          waves="light"
-                          onClick={() =>
-                            this.setState({ gridView: !this.state.gridView })
-                          }
-                        >
-                          <Icon>
-                            {this.state.gridView
-                              ? "format_list_bulleted"
-                              : "apps"}
-                          </Icon>
-                        </Button>
-                      </Row> */}
-                    </Col>
+                    </Col> */}
                   </div>
                 </Col>
               </Row>
@@ -123,11 +152,19 @@ class MainPage extends Component {
                       <div className="col s12">
                         <h5>Friend list:</h5>
                         <div>
-                          <FriendsList
-                            friends={friends}
-                            editable={false}
-                            debts={debts}
-                          />
+                          <Collapsible>
+                            <CollapsibleItem
+                              className="no-padding-on-small"
+                              header="Friends"
+                              icon="supervisor_account"
+                            >
+                              <FriendsList
+                                friends={friends}
+                                editable={false}
+                                debts={debts}
+                              />
+                            </CollapsibleItem>
+                          </Collapsible>
                           <br />
                           <Link to="/friends" className="button button--green">
                             Edit
@@ -142,11 +179,13 @@ class MainPage extends Component {
                 <div className=" col s12 no-padding-on-small">
                   <div
                     className={
-                      this.state.gridView ? "debt__layout" : "collection"
+                      this.state.gridView
+                        ? "debt__layout"
+                        : "collection grey lighten-4"
                     }
                   >
-                    {this.props.debts.map(debt => {
-                      return (
+                    {this.state.gridView ? (
+                      this.state.debts.map(debt => (
                         <DebtBlock
                           key={debt.id}
                           debt={debt}
@@ -156,8 +195,40 @@ class MainPage extends Component {
                             this.openModalDebtChanges(debtId)
                           }
                         />
-                      );
-                    })}
+                      ))
+                    ) : (
+                      <div>
+                        <Row>
+                          <Col s={12}>
+                            <h5>Debts:</h5>
+                            <div className="debt-inline__block">
+                              <div className="debt-inline__addButton">
+                                <Button
+                                  title="Add new debt"
+                                  waves="light"
+                                  large
+                                  icon="add"
+                                  floating
+                                  className="green lighten-2"
+                                  onClick={() => this.openModal()}
+                                />
+                              </div>
+                              {this.state.debts.map(debt => (
+                                <DebtInline
+                                  key={debt.id}
+                                  debt={debt}
+                                  currencies={this.props.currencies}
+                                  friends={friends}
+                                  openModalDebtChanges={debtId =>
+                                    this.openModalDebtChanges(debtId)
+                                  }
+                                />
+                              ))}
+                            </div>
+                          </Col>
+                        </Row>
+                      </div>
+                    )}
                   </div>
                 </div>
                 {this.props.hasMoreDebts ? (
@@ -181,16 +252,20 @@ class MainPage extends Component {
                 className="col s12 m10 l6 xl4 offset-m1 offset-l3 offset-xl4"
                 portalClassName="row"
               >
-                <DebtBlock
+                <NewDebtBlock
+                  closeModal={() => this.closeModal()}
+                  currencies={this.props.currencies}
+                />
+                {/* <DebtBlock
                   new
                   editable
                   friends={friends}
                   handleCloseModal={() => this.closeModal()}
-                />
+                /> */}
               </ReactModal>
               <Modal
                 header="Debt changes"
-                trigger={<div id={"debtChangesTrigger"}/>}
+                trigger={<div id={"debtChangesTrigger"} />}
               >
                 <DebtChangesBlock
                   debtChanges={this.props.changes}
@@ -221,6 +296,7 @@ class MainPage extends Component {
                       editable={false}
                       debts={debts}
                     />
+
                     <br />
                     <Link to="/friends" className="button button--green">
                       Edit
@@ -247,7 +323,8 @@ const mapStateToProps = state => {
     hasMoreDebts: state.debtsApp.hasMoreDebts,
     changes: state.debtsApp.changes,
     hasMore: state.debtsApp.hasMore,
-    changesLoading: state.debtsApp.changesLoading
+    changesLoading: state.debtsApp.changesLoading,
+    currencies: state.debtsApp.currencies
   };
 };
 const mapDispatchToProps = dispatch => ({

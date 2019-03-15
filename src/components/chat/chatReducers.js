@@ -2,9 +2,8 @@ import {
   CHAT_MESSAGE_SENT,
   CHAT_MESSAGE_RECEIVED,
   CHAT_MESSAGES_RECEIVED,
-  CHAT_START_TYPING,
-  CHAT_STOP_TYPING,
-  CHAT_VIEWED
+  CHAT_VIEWED,
+  CHAT_MESSAGE_APPROVED
 } from "./chatActions";
 
 const initialState = {
@@ -26,15 +25,15 @@ export function chatApp(state = initialState, action) {
       });
     case CHAT_MESSAGES_RECEIVED:
       return Object.assign({}, state, {
-        messages: [...action.messages],
+        messages: action.add
+          ? [...action.messages, ...state.messages]
+          : [...action.messages]
       });
-    case CHAT_START_TYPING:
+    case CHAT_MESSAGE_APPROVED:
       return Object.assign({}, state, {
-        typing: [...state.typing, { user: action.user }]
-      });
-    case CHAT_STOP_TYPING:
-      return Object.assign({}, state, {
-        typing: state.typing.filter(user => user.user !== action.user)
+        messages: state.messages.map(message =>
+          message.tempId === action.tempId ? action.message : message
+        )
       });
     case CHAT_VIEWED:
       return Object.assign({}, state, {

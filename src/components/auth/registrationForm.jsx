@@ -3,6 +3,7 @@ import AuthService from "./authService";
 import { Link } from "react-router-dom";
 import { Button, Input } from "react-materialize";
 import Icon from "react-materialize/lib/Icon";
+import { showError } from "../common/helperFunctions";
 
 class RegistrationForm extends Component {
   constructor(props) {
@@ -23,8 +24,7 @@ class RegistrationForm extends Component {
       passwordRepeatError: "",
       usernameError: "",
       firstNameError: "",
-      lastNameError: "",
-      displayError: false
+      lastNameError: ""
     };
   }
 
@@ -109,14 +109,9 @@ class RegistrationForm extends Component {
       this.state.lastName
     )
       .then(() => this.props.history.push("/"))
-      .catch(res => this.setState({ errorMessage: res, displayError: true }));
-      
-    event.preventDefault();
-  }
+      .catch(res => showError(res));
 
-  onRegister(errorMessage) {
-    if (AuthService.loggedIn()) this.props.history.push("/");
-    this.setState({ errorMessage: errorMessage });
+    event.preventDefault();
   }
 
   render() {
@@ -261,26 +256,9 @@ class RegistrationForm extends Component {
                   <Link to="/login">already registered?</Link>
                 </div>
               </div>
-              <div className="row">
-                <div className="s12">{this.renderError()}</div>
-              </div>
             </form>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  renderError() {
-    return (
-      <div
-        className={
-          this.state.displayError
-            ? "errorMessage"
-            : "errorMessage hide-errorMessage"
-        }
-      >
-        {this.state.errorMessage}
       </div>
     );
   }

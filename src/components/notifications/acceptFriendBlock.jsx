@@ -20,7 +20,7 @@ class AcceptFriendBlock extends Popup {
   render() {
     return (
       <div
-        className="popup popup__acceptInvite z-depth-2 col"
+        className="popup popup__friendPicker z-depth-2 col"
         ref={this.setWrapperRef}
       >
         <div className="popup__name">Search friend</div>
@@ -42,7 +42,7 @@ class AcceptFriendBlock extends Popup {
           />
         </Row>
         <Row>
-          <Col s={12}>
+          <Col s={12} className="friendCollection">
             <FriendsList
               friends={this.props.friends}
               editable={false}
