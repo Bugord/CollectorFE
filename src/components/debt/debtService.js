@@ -15,7 +15,7 @@ import {
   currenciesLoaded
 } from "./debtsActions";
 import { hubConnection } from "../../hubConnection";
-import { showError } from "../common/helperFunctions";
+import { showError, showMessage } from "../common/helperFunctions";
 
 export function getCurrenciesAPI() {
   store.dispatch(debtsAddSend());
@@ -126,14 +126,18 @@ export function getDebtChangesAPI(id, offset, take) {
     .catch(() => {});
 }
 
-export function payDebtAPI(debtId, value, message) {
+export function payDebtAPI(debtId, value, message, isNotification, currencyId, token) {
   return AuthService.put("api/debt/pay", "", {
     debtId: debtId,
     value: value,
-    message: message
+    message: message,
+    isNotification: isNotification,
+    currencyId: currencyId,
+    token: token
   })
     .then(res => {
-      store.dispatch(debtUpdateEnd(debtId, { ...res.data, isClosed: false }));
+      showMessage("Debt pay successfully");
+      // store.dispatch(debtUpdateEnd(debtId, { ...res.data, isClosed: false }));
     })
     .catch(res => {
       throw AuthService.handleException(res);

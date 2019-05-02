@@ -15,7 +15,7 @@ export function notificationsApp(state = initialState, action) {
     case NOTIFICATION_CONFIRM:
       return Object.assign({}, state, {
         notifications: state.notifications.filter(
-          notification => notification.id != action.notificationId
+          notification => notification.id !== action.notificationId
         )
       });
     case NOTIFICATION_ADD:

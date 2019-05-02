@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Button } from "react-materialize";
 import NewFilter from "./newFilter";
 import Chip from "../common/chip/chip";
 import cx from "classnames";

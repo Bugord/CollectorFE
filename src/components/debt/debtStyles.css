@@ -37,7 +37,7 @@
 }
 .debt__value {
   width: 100%;
-  max-width: 150px;
+  max-width: calc(100% - 65px);
 }
 
 .debt__value .progress {
@@ -145,7 +145,7 @@
 }
 .debt-inline.closed {
   background-color: #d6d6d6;
-  box-shadow: inset 0 0 9px -5px black;
+  box-shadow: inset 0 0 9px -8px black;
 }
 .debt-inline.closed:hover {
   background-color: #cccccc;
@@ -218,6 +218,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.debt__icon-isOwner {
+  position: absolute;
+  color: #8eca88;
+  top: 5px;
+  right: 5px;
 }
 
 @media (max-width: 745px) {

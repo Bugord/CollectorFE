@@ -242,7 +242,7 @@ ul {
   position: sticky;
   right: 0;
   top: 0;
-  z-index: 100;
+  z-index: 10000;
   -webkit-box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.1);
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.1);

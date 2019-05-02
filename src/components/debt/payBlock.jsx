@@ -7,21 +7,23 @@ import { PayTypeCard } from "./payTypeCard";
 import { payDebtAPI } from "./debtService";
 import { showMessage, showError } from "../common/helperFunctions";
 import YandexMoneyForm from "../payments/yandexMoneyForm";
+import TestPage from "../forTestPurpose/testPage";
 
 export class PayBlock extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.formRef = React.createRef();
+    this.stripeFormRef = React.createRef();
 
     this.state = {
-      currencies: ["$", "RUB", "BYN"],
       value: "",
       message: "",
-      currency: "0",
+      currency: 0,
+      selectedCurrency: props.currencies[0],
       wasOpened: false,
       openPayTypes: false,
       selectedType: "",
+      enabledTypes: [0, 3],
       payTypes: [
         {
           name: "mastercard",
@@ -30,12 +32,12 @@ export class PayBlock extends Component {
         },
         { name: "visa", label: "VISA", image: "images/VISA.svg" },
         { name: "paypal", label: "PayPal", image: "images/PayPal.svg" },
-        { name: "webmoney", label: "WebMoney", image: "images/WebMoney.svg" },
-        {
-          name: "yandexmoney",
-          label: "Yandex.Money",
-          image: "images/yandexdengi.svg"
-        },
+        // { name: "webmoney", label: "WebMoney", image: "images/WebMoney.svg" },
+        // {
+        //   name: "yandexmoney",
+        //   label: "Yandex.Money",
+        //   image: "images/yandexdengi.svg"
+        // },
         {
           name: "message",
           label: "Send notification",
@@ -57,14 +59,31 @@ export class PayBlock extends Component {
     this.setState(newState);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.currencies)
+      this.setState({ selectedCurrency: nextProps.currencies[0] });
+  }
+
   render() {
+    if (!this.state.selectedCurrency || !this.props.debtCurrency)
+      return <div />;
     return (
       <div className="payBlock">
         <div className="payBlock__title">
           <span className="title__name">Debt paying</span>
           <br />
           <span className="title__maxValue">
-            {"Max value is " + this.props.maxValue}
+            {`Max value is ${(
+              (this.props.maxValue * this.state.selectedCurrency.rate) /
+              this.props.debtCurrency.rate
+            ).toFixed(2)} ${this.state.selectedCurrency.currencySymbol}`}
+          </span>
+          <br />
+          <span className="title__maxValue">
+            {`You will pay ${`${(
+              (this.state.value * this.props.debtCurrency.rate) /
+              this.state.selectedCurrency.rate
+            ).toFixed(2)} ${this.props.debtCurrency.currencySymbol}`}`}
           </span>
         </div>
         <form className="payBlock__value" ref={this.formRef}>
@@ -81,9 +100,14 @@ export class PayBlock extends Component {
                   onChange={e => this.onInputChange(e)}
                   required
                   min={0.01}
-                  max={this.props.maxValue}
+                  max={parseFloat(
+                    (
+                      (this.props.maxValue * this.state.selectedCurrency.rate) /
+                      this.props.debtCurrency.rate
+                    ).toFixed(2)
+                  )}
                 >
-                  <Icon>monetization_on</Icon>
+                  <Icon>payments</Icon>
                 </Input>
               </Col>
               <Col s={10} m={3} offset="s1">
@@ -92,12 +116,21 @@ export class PayBlock extends Component {
                   label="Currency"
                   s={12}
                   name="currency"
-                  value={this.state.currency}
-                  onChange={e => this.onInputChange(e)}
+                  // value={
+                  //   this.props.currencies.length !== 0
+                  //     ? "this.props.currencies[1].currencySymbol"
+                  //     : "..."
+                  // }
+                  onChange={e => {
+                    this.onInputChange(e);
+                    this.setState({
+                      selectedCurrency: this.props.currencies[e.target.value]
+                    });
+                  }}
                 >
-                  {this.state.currencies.map((value, index) => (
+                  {this.props.currencies.map((value, index) => (
                     <option key={index} value={index}>
-                      {value}
+                      {value.currencySymbol}
                     </option>
                   ))}
                 </Input>
@@ -171,12 +204,16 @@ export class PayBlock extends Component {
                 name={type.name}
                 label={type.label}
                 image={type.image}
+                disabled={!this.state.enabledTypes.includes(index)}
                 className={cx(
                   "hoverable",
                   "z-depth-2",
                   index === this.state.selectedType ? "active" : ""
                 )}
-                onClick={() => this.setState({ selectedType: index })}
+                onClick={() => {
+                  if (this.state.enabledTypes.includes(index))
+                    this.setState({ selectedType: index });
+                }}
               />
             ))}
           </div>
@@ -185,11 +222,20 @@ export class PayBlock extends Component {
             <span>
               {this.state.value +
                 " " +
-                this.state.currencies[this.state.currency]}
+                this.state.selectedCurrency.currencySymbol}
             </span>
           </div>
           <div>
-            <YandexMoneyForm />
+            {this.state.selectedType === 0 && (
+              <TestPage
+                ref={this.stripeFormRef}
+                value={this.state.value * 100}
+                currency={this.state.currency}
+              />
+            )}
+            {this.state.selectedType === 4 && (
+              <YandexMoneyForm target="Debt paying" value={this.state.value} />
+            )}
           </div>
           <div className="payBlock__payButton">
             <Row>
@@ -198,17 +244,41 @@ export class PayBlock extends Component {
                   type="button"
                   className="col s12 green lighten-2"
                   onClick={() => {
-                    payDebtAPI(
-                      this.props.debtId,
-                      this.state.value,
-                      this.state.message
-                    )
-                      .then(() => {
-                        this.props.closeModal();
-                        this.setState({ openPayTypes: false });
-                        showMessage("Debt pay was succeeded");
-                      })
-                      .catch(res => showError(res));
+                    if (
+                      this.state.selectedType === 0 ||
+                      this.state.selectedType === 1
+                    ) {
+                      if (this.stripeFormRef)
+                        this.stripeFormRef.current.submit().then(res => {
+                          payDebtAPI(
+                            this.props.debtId,
+                            this.state.value,
+                            this.state.message,
+                            this.state.selectedType === 3,
+                            this.state.selectedCurrency.id,
+                            res.id
+                          )
+                            .then(() => {
+                              this.props.closeModal();
+                              this.setState({ openPayTypes: false });
+                              // showMessage("Debt pay was succeeded");
+                            })
+                            .catch(res => showError(res));
+                        });
+                    } else
+                      payDebtAPI(
+                        this.props.debtId,
+                        this.state.value,
+                        this.state.message,
+                        this.state.selectedType === 3,
+                        this.state.selectedCurrency.id
+                      )
+                        .then(() => {
+                          this.props.closeModal();
+                          this.setState({ openPayTypes: false });
+                          // showMessage("Debt pay was succeeded");
+                        })
+                        .catch(res => showError(res));
                   }}
                 >
                   Pay

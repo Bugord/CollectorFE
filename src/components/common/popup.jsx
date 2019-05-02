@@ -80,8 +80,8 @@ export default class Popup extends Component {
               </Link>
             </li>
             <li>
-              <Link to="/login" onClick={this.logout}>
-                Super admin panel
+              <Link to="/statistics">
+                Statistics
               </Link>
             </li>
           </ul>

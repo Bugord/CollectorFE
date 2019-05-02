@@ -35,7 +35,7 @@ class ProfilePage extends Component {
 
     this.eventHandlers = {
       maxfilesexceeded: () => {
-        console.log("MAMAMAMAX");
+        console.log("MAX");
       },
       addedfile: file => {
         UpdateAvatar(file, percent => console.log(percent))

@@ -228,7 +228,7 @@ export class NewDebtBlock extends Component {
                         required
                         disabled={this.state.disabled}
                       >
-                        <Icon>attach_money</Icon>
+                        <Icon>payments</Icon>
                       </Input>
                       <Input
                         type="select"
@@ -267,7 +267,7 @@ export class NewDebtBlock extends Component {
                         required
                         disabled={this.state.disabled}
                       >
-                        <Icon>attach_money</Icon>
+                        <Icon>payments</Icon>
                       </Input>
                     </Col>
                   </Fragment>

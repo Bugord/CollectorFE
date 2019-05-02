@@ -22,6 +22,7 @@ import { PageNotFound } from "../errorPages/pageNotFound";
 import AuthService from "../auth/authService";
 import { getAllNotificationsAPI } from "../notifications/notificationService";
 import StatisticsPage from "../statistics/statisticsPage";
+import TestPage from "../forTestPurpose/testPage";
 
 export default class Application extends Component {
   componentDidMount() {
@@ -43,28 +44,31 @@ export default class Application extends Component {
   }
 
   render() {
-    console.log("App");
     return (
-      <BrowserRouter>
-        <main>
-          <div id="modalStore" />
-          <Header />
-          <Switch>
-            <Route exact path="/" component={mainPage} />
-            <Route path="/registration" component={RegistrationForm} />
-            <Route path="/friends" component={friendListPage} />
-            <Route path="/login" component={LoginForm} />
-            <Route path="/resetPassword/:token" component={ResetPasswordPage} />
-            <Route path="/confirmEmail/:token" component={ConfirmEmailPage} />
-            <Route path="/resetPassword" component={ResetPasswordPage} />
-            <Route path="/profile" component={profilePage} />
-            <Route path="/statistics" component={StatisticsPage} />
-            <Route exact path="/feedbacks" component={FeedbacksListPage} />
-            <Route path="/feedbacks/:id" component={FeedbackPage} />
-            <Route path="*" component={PageNotFound} />
-          </Switch>
-        </main>
-      </BrowserRouter>
+        <BrowserRouter>
+          <main>
+            <div id="modalStore" />
+            <Header />
+            <Switch>
+              <Route exact path="/" component={mainPage} />
+              <Route path="/registration" component={RegistrationForm} />
+              <Route path="/friends" component={friendListPage} />
+              <Route path="/login" component={LoginForm} />
+              <Route
+                path="/resetPassword/:token"
+                component={ResetPasswordPage}
+              />
+              <Route path="/confirmEmail/:token" component={ConfirmEmailPage} />
+              <Route path="/resetPassword" component={ResetPasswordPage} />
+              <Route path="/profile" component={profilePage} />
+              <Route path="/statistics" component={StatisticsPage} />
+              <Route path="/test" component={TestPage} />
+              <Route exact path="/feedbacks" component={FeedbacksListPage} />
+              <Route path="/feedbacks/:id" component={FeedbackPage} />
+              <Route path="*" component={PageNotFound} />
+            </Switch>
+          </main>
+        </BrowserRouter>
     );
   }
 }

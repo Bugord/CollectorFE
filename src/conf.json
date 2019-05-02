@@ -1,5 +1,8 @@
 {
   "domain2": "https://collector-api.com/",
   "domain": "https://localhost:5001/",
-  "currency": "BYR"
+  "maxFileSize": 3,
+  "stripeToken": "pk_test_t0xkwmHifM7YtO66yA4hnO3h",
+  "stripeCurrencies": ["USD", "RUB", "EUR"],
+  "exchangeRateApiUrl": "https://api.exchangeratesapi.io/latest"
 }

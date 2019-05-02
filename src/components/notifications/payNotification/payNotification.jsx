@@ -11,7 +11,7 @@ export const PayNotification = ({ payNotification }) => (
       <span>{payNotification.payerUsername}</span>
       <span>{" notifies you, that he(she) gave you "}</span>
       {payNotification.isMoney ? (
-        <span>{payNotification.value + "$"}</span>
+        <span>{payNotification.value + "" + payNotification.currency}</span>
       ) : (
         <span>{`"${payNotification.debtName}"`}</span>
       )}

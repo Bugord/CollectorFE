@@ -38,11 +38,22 @@ export const Payment = ({ payment, user, selectedDate }) => (
         alt="Profile"
       />
     </div>
-    <div>{moment(payment.date).format("dddd, MMMM Do YYYY")}</div>
-    <div>
-      {payment.value ? payment.value + payment.currency : payment.debtName}
+    <div className={cx("title", payment.isOwnerPay ? "debter" : "")}>
+      <Icon>insert_invitation</Icon>
+      <span className="border-bottom">{moment(payment.date).format("dddd, MMMM Do YYYY")} </span>
     </div>
-    <div>{payment.isOwnerPay ? "Yes" : "No"}</div>
+    <div className={cx("title", payment.isOwnerPay ? "debter" : "")}>
+      <Icon>
+        {typeof payment.value === "number" ? "payments" : "business_center"}
+      </Icon>
+      <span>
+        {payment.value
+          ? payment.value +
+            " " +
+            (payment.currency ? payment.currency.currencySymbol : "")
+          : payment.debtName}
+      </span>
+    </div>
   </CollectionItem>
 );
 

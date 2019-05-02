@@ -142,7 +142,7 @@ class DebtBlock extends Component {
           </span>
         </div>
         <div className="debt__icon">
-          {debt.isMoney ? <Icon>attach_money</Icon> : <Icon>work</Icon>}
+          {debt.isMoney ? <Icon>payments</Icon> : <Icon>work</Icon>}
         </div>
         <div className={debt.dateOfOverdue || editable ? "debt__icon" : "hide"}>
           {debt.dateOfOverdue ? (

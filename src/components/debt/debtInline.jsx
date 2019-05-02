@@ -105,14 +105,22 @@ export class DebtInline extends Component {
               debt.isOwnerDebter === debt.isOwner ? "title debter" : "title"
             }
           >
-            <Icon>{debt.isMoney ? "attach_money" : "business_center"}</Icon>
+            <Icon>{debt.isMoney ? "payment" : "business_center"}</Icon>
             {debt.isMoney ? (
               <span className="debt__value">
                 <Fragment>
                   {currency ? currency.currencySymbol : ""}
-                  {" " + debt.currentValue + "/" + debt.value}
+                  {" " +
+                    debt.currentValue.toFixed(2) +
+                    " (" +
+                    debt.pendingValue.toFixed(2) +
+                    ")/" +
+                    debt.value.toFixed(2)}
                   <ProgressBar
-                    progress={(debt.currentValue / debt.value) * 100}
+                    progress={
+                      ((debt.currentValue + debt.pendingValue) / debt.value) *
+                      100
+                    }
                   />
                 </Fragment>
               </span>
@@ -133,6 +141,11 @@ export class DebtInline extends Component {
             </Chip>
           ) : null}
 
+          {debt.isOwner && (
+            <div className="debt__icon-isOwner" title="Debt owner">
+              <Icon green>assignment_ind</Icon>
+            </div>
+          )}
           {!debt.isClosed && (
             <Modal
               id={"modal" + debt.id}
@@ -154,12 +167,16 @@ export class DebtInline extends Component {
             >
               <PayBlock
                 ref={this.payBlockRef}
-                maxValue={this.props.debt.value - this.props.debt.currentValue}
+                maxValue={
+                  this.props.debt.value -
+                  (this.props.debt.currentValue + this.props.debt.pendingValue)
+                }
                 debtId={debt.id}
                 isMoney={debt.isMoney}
-                currency={this.props.currencies.find(
+                debtCurrency={this.props.currencies.find(
                   currency => currency.id === debt.currencyId
                 )}
+                currencies={this.props.currencies}
                 closeModal={() => {
                   document
                     .getElementById("modal" + debt.id)

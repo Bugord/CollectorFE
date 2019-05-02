@@ -14,7 +14,7 @@ import ReactTooltip from "react-tooltip";
 import Icon from "react-materialize/lib/Icon";
 import { compose } from "redux";
 import AuthService from "../auth/authService";
-import { showError, showMessage, showWarning } from "../common/helperFunctions";
+import { showError, showWarning } from "../common/helperFunctions";
 import ProgressBar from "react-materialize/lib/ProgressBar";
 import md5 from "js-md5";
 import { uploadFileChatAPI, getChatMessagesAPI } from "./chatService";
@@ -115,8 +115,8 @@ class ChatBlock extends Component {
   uploadFile(file) {
     if (!file) return;
 
-    if (file.size / 1024 > 2048) {
-      showWarning("File size must be less than 2mb");
+    if (file.size > Conf.maxFileSize * 1048576) {
+      showWarning(`File size must be less than ${Conf.maxFileSize}mb`);
       return;
     }
 

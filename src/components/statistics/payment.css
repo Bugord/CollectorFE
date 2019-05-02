@@ -2,6 +2,7 @@
   position: relative;
   padding-left: 160px !important;
   min-height: 80px;
+  text-align: left;
 }
 
 .payment.selected {
@@ -23,37 +24,122 @@
   padding-top: 17px;
 }
 
+.payment > .title > i,
 .payment__avatars > div > i {
   color: #8eca88;
 }
+.payment > .title.debter > i,
 .payment__avatars > .debter > i {
   color: #d15959;
 }
 
+.payment > .title {
+  display: flex;
+}
+
+.payment > .title > span {
+  margin-left: 5px;
+  line-height: 25px;
+}
+
 .statistics .payments.closed {
   overflow: auto;
-  max-height: 400px;
+  max-height: 700px;
 }
 
 .statistics .payments {
-  border: 1px solid #c5c5c5;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.border-bottom {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.statistics .tabs-block {
+  position: relative;
+  /* height: 65px; */
+}
+
+.statistics .tabs-block .row {
+  margin: 0;
+}
+
+.statistics .tabs-block .tabs {
+  height: 65px;
 }
 
 .clickable > i {
   cursor: pointer;
 }
 
+.tabs .tab a{
+  margin-top: 12px;
+}
+
 .clickable :active {
   transform: translateY(1px);
 }
 
-.chart {
+.chart-block {
   margin: auto;
   background-color: white;
-  max-height: 500px;
+  margin-bottom: 30px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.chart-block .chart {
+  padding: 15px;
 }
 
 .statistics .button-more {
   background-color: white;
-  border: 1px solid #c5c5c5;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.chart-buttons {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.chart-button {
+  width: 100%;
+  padding-bottom: 12px;
+  height: 92px;
+  text-align: left;
+  padding: 15px 25px;
+}
+
+.chart-button:hover {
+  cursor: pointer;
+  background-color: #f4f4f4;
+}
+
+.chart-button.selected {
+  background-color: #e2e2e2;
+}
+
+.chart-button .title {
+  font-size: 12px;
+  line-height: 16px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.chart-button .text {
+  font-size: 24px;
+  line-height: 32px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.date-selector {
+  position: absolute;
+  top: 0;
+  right: 10px;
+}
+
+.date-selector .input-field {
+  width: 300px;
 }
