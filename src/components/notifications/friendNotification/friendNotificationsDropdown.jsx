@@ -38,8 +38,8 @@ class InvitesDropdown extends Popup {
           <Fragment>
             <FriendNotificationList
               notifications={this.props.invites}
-              acceptInvite={this.openAcceptInviteBlock.bind(this)}
-              denyInvite={this.denyInvite.bind(this)}
+              acceptInvite={id => this.openAcceptInviteBlock(id)}
+              denyInvite={id => this.denyInvite(id)}
             />
             <PayNotificationList
               payNotifications={this.props.payNotifications}
@@ -61,15 +61,18 @@ class InvitesDropdown extends Popup {
   }
 
   openAcceptInviteBlock(id) {
+    debugger
     this.setState({ showAcceptInviteBlock: true, selectedInvite: id });
   }
 
   acceptInvite(friendName, friendId) {
+  debugger
     acceptFriendAPI(this.state.selectedInvite, true, friendName, friendId);
     this.setState({ showAcceptInviteBlock: false });
   }
 
   denyInvite(id) {
+    debugger
     acceptFriendAPI(id, false);
   }
 

@@ -28,7 +28,7 @@ export class NewDebtBlock extends Component {
       value: "",
       currentValue: "",
       name: "",
-      currency: this.props.currencies[0].id.toString(),
+      currency: this.props.currencies[0] ? this.props.currencies[0].id.toString() : "",
       description: "",
       dateOfOverdue: "",
       files: []
@@ -272,24 +272,24 @@ export class NewDebtBlock extends Component {
                     </Col>
                   </Fragment>
                 ) : (
-                  <Col s={11}>
-                    <Input
-                      type="text"
-                      label="Name"
-                      s={12}
-                      name="name"
-                      onChange={e => this.onInputChange(e)}
-                      value={this.state.name}
-                      validate={!this.state.isMoney}
-                      required
-                      minLength={3}
-                      maxLength={100}
-                      disabled={this.state.disabled}
-                    >
-                      <Icon>work</Icon>
-                    </Input>
-                  </Col>
-                )}
+                    <Col s={11}>
+                      <Input
+                        type="text"
+                        label="Name"
+                        s={12}
+                        name="name"
+                        onChange={e => this.onInputChange(e)}
+                        value={this.state.name}
+                        validate={!this.state.isMoney}
+                        required
+                        minLength={3}
+                        maxLength={100}
+                        disabled={this.state.disabled}
+                      >
+                        <Icon>work</Icon>
+                      </Input>
+                    </Col>
+                  )}
               </Row>
               <Row>
                 <Col s={11}>
@@ -318,7 +318,7 @@ export class NewDebtBlock extends Component {
                     onChange={e => this.onInputChange(e)}
                     // value={this.state.dateOfOverdue}
                     options={{
-                      onStart: function() {
+                      onStart: function () {
                         if (dateOfOverdue)
                           this.set("select", moment(dateOfOverdue));
                       }
@@ -393,36 +393,36 @@ export class NewDebtBlock extends Component {
                   </Col>
                 )
               ) : (
-                <Fragment>
-                  <Col s={10} m={4} offset="s1 m1">
-                    <Button type="submit" className="col s12 green lighten-2">
-                      {this.props.debt ? "Save" : "Add"}
+                  <Fragment>
+                    <Col s={10} m={4} offset="s1 m1">
+                      <Button type="submit" className="col s12 green lighten-2">
+                        {this.props.debt ? "Save" : "Add"}
+                      </Button>
+                    </Col>
+                    <Col s={10} m={4} offset="s1 m2">
+                      <Button
+                        type="button"
+                        className="col s12 red lighten-2"
+                        onClick={() =>
+                          swal({
+                            title: this.props.debt
+                              ? "Cancel debt saving?"
+                              : "Cancel debt adding?",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true
+                          }).then(willDelete => {
+                            if (willDelete) {
+                              this.props.closeModal();
+                            }
+                          })
+                        }
+                      >
+                        Cancel
                     </Button>
-                  </Col>
-                  <Col s={10} m={4} offset="s1 m2">
-                    <Button
-                      type="button"
-                      className="col s12 red lighten-2"
-                      onClick={() =>
-                        swal({
-                          title: this.props.debt
-                            ? "Cancel debt saving?"
-                            : "Cancel debt adding?",
-                          icon: "warning",
-                          buttons: true,
-                          dangerMode: true
-                        }).then(willDelete => {
-                          if (willDelete) {
-                            this.props.closeModal();
-                          }
-                        })
-                      }
-                    >
-                      Cancel
-                    </Button>
-                  </Col>
-                </Fragment>
-              )}
+                    </Col>
+                  </Fragment>
+                )}
             </Row>
           </form>
         </div>
