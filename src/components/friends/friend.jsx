@@ -151,6 +151,11 @@ export default class Friend extends Component {
         ) : (
           ""
         )}
+        <div className="debtValue">
+          <div className="o1">{friend.owe1}</div>
+          <div className="o2">{friend.owe2}</div>
+          <div className="o3">{friend.owe2 - friend.owe1}</div>
+        </div>
 
         <form className={this.props.editable ? "secondary-content" : "hide"}>
           <div

@@ -10,7 +10,7 @@ import { getAllDebtsAPI, getDebtChangesAPI } from "../debt/debtService";
 import ChatBlock from "../chat/chatBlock";
 import Button from "react-materialize/lib/Button";
 import ReactModal from "react-modal";
-import { Row, Col, Modal,  Collapsible } from "react-materialize";
+import { Row, Col, Modal, Collapsible } from "react-materialize";
 import ScrollUpButton from "react-scroll-up-button";
 import { compose } from "redux";
 import DebtChangesBlock from "../debt/debtChangesBlock";
@@ -111,15 +111,15 @@ class MainPage extends Component {
         <div className="row">
           {!this.props.debtsLoading || this.props.updated ? (
             <div className="col s12 l8 xl9 no-padding-on-small">
-              <Row>
+              {/* <Row>
                 <Col className="no-padding-on-small" s={12}>
                   <div className="debt__searchBox row z-depth-1 grey lighten-4">
                     <div className="col s12 l9">
-                      <FilterBlock
+                      {/* <FilterBlock
                         debts={this.props.debts}
                         friends={this.props.friends}
-                      />
-                      {/* <DebtSearch
+                      /> 
+                       <DebtSearch
                         debtsCount={debts.length}
                         ref={this.searchBlock}
                         friends={friends}
@@ -128,10 +128,10 @@ class MainPage extends Component {
                             this.sortDebts()
                           );
                         }}
-                      /> */}
+                      /> 
                     </div>
 
-                    {/* <Col s={12} l={4} xl={3}>
+                     <Col s={12} l={4} xl={3}>
                       <Row>
                         <Button
                           onClick={() => this.openModal()}
@@ -140,12 +140,13 @@ class MainPage extends Component {
                           Add new debt
                         </Button>
                       </Row>
-                    </Col> */}
+                    </Col> 
                   </div>
                 </Col>
               </Row>
-              <Row>
-                <div className="col xl3 l4 s12 hide-on-large-only no-padding-on-small">
+               */}
+              <Row className="hide-on-large-only">
+                <div className="col xl3 l4 s12 no-padding-on-small">
                   {this.props.friends.length || !this.props.friendsLoading ? (
                     <div className="debt__searchBox row z-depth-1 grey lighten-4">
                       <div className="col s12">
@@ -212,6 +213,10 @@ class MainPage extends Component {
                                   onClick={() => this.openModal()}
                                 />
                               </div>
+                              <FilterBlock
+                                debts={this.props.debts}
+                                friends={this.props.friends}
+                              />
                               {this.state.debts.map(debt => (
                                 <DebtInline
                                   key={debt.id}

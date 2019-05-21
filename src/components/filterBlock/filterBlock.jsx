@@ -121,7 +121,7 @@ export default class FilterBlock extends Component {
   render() {
     return (
       <div className="filterBlock">
-        <h4>Filters</h4>
+        {/* <h4>Filters</h4> */}
         <div
           className={cx(
             "newFilterBlock",

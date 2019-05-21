@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   /* background-color: #f3f3f3; */
-  min-height: 100vh;
+  min-height: calc(100vh - 20px);
   /* background-color: #fdfdfd */
   background: linear-gradient(to top left, #cad5ef, #feffdb);
 }
@@ -12,6 +12,24 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
+}
+
+.debtValue {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.debtValue .o1{
+  color: #f44336;
+}
+
+.debtValue .o2{
+  color: #53bd22;
+}
+
+.debtValue .o3{
+  color: cornflowerblue;
 }
 
 .floatClear {

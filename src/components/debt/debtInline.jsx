@@ -83,7 +83,12 @@ export class DebtInline extends Component {
     return (
       <Fragment>
         <CollectionItem
-          className={cx("avatar", "debt-inline", debt.isClosed ? "closed" : "")}
+          className={cx(
+            "avatar",
+            "debt-inline",
+            debt.isClosed ? "closed" : "",
+            debt.isOwnerDebter === debt.isOwner ? "debter" : ""
+          )}
         >
           <div
             className="debtInline__trigger"

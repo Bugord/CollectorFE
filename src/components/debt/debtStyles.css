@@ -157,6 +157,20 @@
 .debt-inline > .title.debter > i {
   color: #d15959;
 }
+
+.debt-inline > .title.debter .progress {
+  background-color: #e6c8c8;
+}
+.debt-inline > .title.debter .progress > .determinate {
+  background-color: #d15959;
+}
+.debt-inline.debter .debt__pay-button {
+  background-color: #d15959 !important;
+}
+.debt-inline.debter .debt__icon-isOwner {
+  color: #d15959;
+}
+
 .debt-inline > .title > span {
   margin-left: 5px;
   line-height: 25px;
